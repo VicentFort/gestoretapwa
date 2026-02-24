@@ -2,5 +2,7 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import "./registerServiceWorker";
 import router from "./router";
-
-createApp(App).use(router).mount("#app");
+import { createPinia } from "pinia";
+import "./registerServiceWorker";
+import vuetify from "./plugins/vuetify";
+createApp(App).use(router).use(vuetify).use(createPinia()).mount("#app");

@@ -1,18 +1,23 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+    <p v-if="auth.fallaInfo">
+      <FallaMain />
+    </p>
+    <p v-if="!auth.token">
+      <UnloggedHome/>
+    </p>
   </div>
 </template>
 
-<script>
+<script setup>
 // @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
-
-export default {
-  name: "HomeView",
+import FallaMain from "@/components/falla-view/FallaMain.vue";
+import { useAuthStore } from "@/stores/auth";
+import UnloggedHome from "@/components/UnloggedHome.vue";
+const auth = useAuthStore();
+defineProps({
   components: {
-    HelloWorld,
+    FallaMain,
   },
-};
+});
 </script>
