@@ -1,11 +1,7 @@
 <template>
   <nav style="text-align: left;">
-    <router-link to="/" class="text-router-link">
-      Falla
-    </router-link> |
-    <router-link to="/user" class="text-router-link">
-      Usuari
-    </router-link> |
+    <router-link to="/" class="text-router-link">Falla</router-link> |
+    <router-link to="/user" class="text-router-link">Usuari</router-link> |
     <router-link to="/adminPanel" v-if="auth.userInfo?.adminAccess">Administrar Falla</router-link>
   </nav>
   <router-view/>

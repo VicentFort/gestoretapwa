@@ -10,6 +10,7 @@ export const useEventStore = defineStore("event", {
         async fetchFallaEvents() {
             try {
                 const response = await api.get('/falla/events')
+                
                 if(response.data.sucess!= null && !response.data?.success) throw response.data.message
                 this.fallaEvents = response.data
                 sessionStorage.setItem("fallaEvents", JSON.stringify(this.fallaEvents))

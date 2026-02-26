@@ -25,7 +25,7 @@ const handleLogout = async () => {
 <template>
   <div class="auth-container">
     <div v-if="!auth.token">
-    <h2>Iniciar Sesión</h2>
+    <h2>Iniciar Sessió</h2>
     <form @submit.prevent="handleLogin" class="login-form">
       <input
         id="email"
@@ -39,7 +39,7 @@ const handleLogout = async () => {
         id="password"
         v-model="password"
         type="password"
-        placeholder="Contraseña"
+        placeholder="Contrasenya"
         required
       />
       <button type="submit">Entrar</button>

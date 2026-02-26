@@ -13,8 +13,9 @@ import { ref } from 'vue';
 </script>
 
 <template>
-    <div name="CONTAINER" class="w-100 update-container">
+    <div class="w-100 update-container">
         <form @submit.prevent="sendUpdateForm" class="w-100 update-form">
+            <h4>Nom d'usuari</h4>
             <input
                 v-model="uName",
                 id="uName"
@@ -22,6 +23,7 @@ import { ref } from 'vue';
                 required="false"
                 class="w-100"
             />
+            <h4>Cognoms</h4>
             <input
                 v-model="uSurname"
                 id="uSurname"
@@ -29,12 +31,21 @@ import { ref } from 'vue';
                 required="false"
                 class="w-100"
             />
+            <h4>Data d'aniversari</h4>
             <input
                 v-model="uBirthday"
                 id="uBirthday"
                 required="false"
                 type="date"
                 class="w-100"
+            />
+            <h4>Mostrar aniversari</h4>
+            <input
+                v-model="uShowBday"
+                id="uShowBday"
+                :required="false"
+                type="checkbox"
+                class="w-100 h-100"
             />
             <button type="submit" class="update-button">Guarda canvis</button>
         </form>
@@ -53,13 +64,12 @@ import { ref } from 'vue';
     min-height: 20%;
 }
 .update-form{
-    max-width: max-content;
-    padding: 10px;
     display: block;
-    flex-direction: column;
-    justify-content: center;
+    background-color: slategray;
+    flex-direction: row;
+    justify-items: center;  
     align-content: center;
-    gap: 15px;             
+    width: 100%;       
 }
 input{
     width: 100%;

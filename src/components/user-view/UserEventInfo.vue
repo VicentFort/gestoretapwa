@@ -5,7 +5,9 @@ import { useEventStore } from '@/stores/event';
 
 const auth = useAuthStore()
 const eventStore = useEventStore()
-eventStore.fecthUserEvents()
+if(eventStore.userEvents == null) {
+    eventStore.fecthUserEvents()
+}
 </script>
 
 <template>
@@ -25,30 +27,28 @@ eventStore.fecthUserEvents()
 
 <style>
 .event-item{
-    width: 100%;
-    background-color: white;
-    align-self: center;
-    display:block;
-    align-content: center;
-    justify-content: center;
-    margin-top:2%;
-    gap:15px;
-
+   width: 100%;
+    display: block;
     border-color: black;
+    background-color: white;
     border-style: solid;
-    border-width: 10%;
+    border-width: 2px;
+    border-radius: 10px;
+    padding: 10px;
+    max-width: 250px;
+    margin: 1px;
 }
 .event-list{
 
-    background-color: slategray;
+     display: block;
+    background-color: white;
+    flex-direction: row;
+    justify-items: center;  
     align-content: center;
-    justify-content: center;
+    width: 100%; 
 }
 .event-list-container{
     background-color: slategray;
 
-    border-color: black;
-    border-width: 10px;
-    border-style: solid;
 }
 </style>

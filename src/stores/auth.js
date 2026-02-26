@@ -66,7 +66,6 @@ export const useAuthStore = defineStore("auth", {
     },
     async updateUser(uName, uSurname, uBday, uShowBday) {
       try {
-          
           const response = await api.put('/user/update', {
               name: uName,
               surname: uSurname,
