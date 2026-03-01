@@ -4,7 +4,8 @@ import UserInfo from '@/components/user-view/UserInfo.vue';
 import LoginForm from '../LoginForm.vue';
 import { ref } from 'vue';
 import UserUpdateForm from './UserUpdateForm.vue';
-import UserEventInfo from './UserEventInfo.vue';
+import UserEventInfo from './events/UserEventInfo.vue';
+import UserNeedsInfo from './needs/UserNeedsInfo.vue';
 const auth = useAuthStore()
 const tab = ref('one')
 </script>
@@ -30,7 +31,7 @@ const tab = ref('one')
                 <UserUpdateForm/>
             </v-tabs-window-item>
             <v-tabs-window-item value="three">
-                
+                <UserNeedsInfo/>
             </v-tabs-window-item>
         </v-tabs-window>
 
@@ -43,7 +44,7 @@ const tab = ref('one')
     
 </template>
 
-<style>
+<style scoped>
 .user-tab{
     width: auto;
     display: block;

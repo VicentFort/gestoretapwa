@@ -52,7 +52,7 @@ import { ref } from 'vue';
     </div>
 </template>
 
-<style>
+<style scoped>
 .update-container {
     background-color: slategray;
     flex-grow: 1;

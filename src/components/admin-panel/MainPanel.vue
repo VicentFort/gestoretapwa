@@ -1,6 +1,6 @@
 <template>
     <div>
-    <h2>Panel de control de la falla: {{ auth.fallaInfo?.name }}</h2>
+    <h2>Panel de control de la falla: {{ auth.fallaAdminInfo?.name }}</h2>
     <v-sheet elevation="2">
         <v-tabs v-model="tab" color="primary">
             <v-tab value="one">Events</v-tab>
@@ -32,5 +32,6 @@ import { ref } from 'vue';
 import EventPanel from './EventPanel.vue';
 
 const auth = useAuthStore()
+auth.fetchFallaAdminInfo()
 const tab = ref('one')
 </script>

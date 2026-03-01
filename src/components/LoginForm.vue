@@ -53,7 +53,7 @@ const handleLogout = async () => {
   </div>
 </template>
 
-<style>
+<style scoped>
 .auth-container {
   background-color: slategray;
   display: flex;

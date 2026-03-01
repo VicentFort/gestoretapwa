@@ -1,7 +1,7 @@
 <template>
     <v-dialog v-model="show" width="500">
     <v-card v-if="event">
-      <v-card-title class="text-h5 bg-primary text-white">
+      <v-card-title class="text-h5 text-white bg-primary">
         {{ event.name }}
       </v-card-title>
 
@@ -9,12 +9,18 @@
         {{ event.description }}
       </v-card-text>
 
-      <v-divider></v-divider>
+      <v-card-text>
+        Necessitats alimentaries del event: {{ event.foodNeeds?.length }}
+      </v-card-text>
+
+      <v-divider>
+
+      </v-divider>
 
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="grey-darken-1" variant="text" @click="show = false">
-          Cerrar
+          Tanca
         </v-btn>
       </v-card-actions>
     </v-card>
