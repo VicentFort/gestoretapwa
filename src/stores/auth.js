@@ -66,8 +66,7 @@ export const useAuthStore = defineStore("auth", {
       try {
           const response = await api.post("/user/addFoodNeed?description="+description+'')
           if(response.data?.success != null && !response.data.success) throw response.data?.message
-          this.userInfo = response.data
-          sessionStorage.setItem("userInfo", JSON.parse(this.userInfo))
+          this.fetchUserInfo()
           
         } catch(error) {
           console.error(error)

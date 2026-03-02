@@ -1,95 +1,89 @@
 <script setup>
 import { useAuthStore } from '@/stores/auth';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
     const auth = useAuthStore()
+    const menu = ref(false)
+    const valid = ref(false)
     const uName = ref(auth.userInfo?.name || '')
     const uSurname = ref(auth.userInfo?.surname || '')
-    const uBirthday = ref(auth.userInfo?.birthday || '')
+    const uBirthday = ref(auth.userInfo?.birthday || new Date())
     const uShowBday = ref(auth.userInfo?.showBday || '')
     const sendUpdateForm = () => {
         auth.updateUser(uName.value, uSurname.value, uBirthday.value, uShowBday.value)
     }
+    const formattedDate = computed(() => {
+        if (!uBirthday.value) return ''
+        
+        // Convertimos el objeto Date a un string legible
+        return new Date(uBirthday.value).toLocaleDateString('ca-ES', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        })
+    })
 </script>
 
 <template>
-    <div class="w-100 update-container">
-        <form @submit.prevent="sendUpdateForm" class="w-100 update-form">
-            <h4>Nom d'usuari</h4>
-            <input
-                v-model="uName",
-                id="uName"
-                placeholder="Nom de l'usuari"
-                required="false"
-                class="w-100"
-            />
-            <h4>Cognoms</h4>
-            <input
-                v-model="uSurname"
-                id="uSurname"
-                placeholder="Cognoms de l'usuari"
-                required="false"
-                class="w-100"
-            />
-            <h4>Data d'aniversari</h4>
-            <input
-                v-model="uBirthday"
-                id="uBirthday"
-                required="false"
-                type="date"
-                class="w-100"
-            />
-            <h4>Mostrar aniversari</h4>
-            <input
-                v-model="uShowBday"
-                id="uShowBday"
-                :required="false"
-                type="checkbox"
-                class="w-100 h-100"
-            />
-            <button type="submit" class="update-button">Guarda canvis</button>
-        </form>
-    </div>
+    <v-container>
+        <v-form @submit.prevent="sendUpdateForm" v-model="valid" theme="form" class="w-100">
+            <v-card>
+                <v-card-title class="bg-ternary">Info de: {{ auth.userInfo.name }}</v-card-title>
+                <v-row>
+                    <v-col cols="12" md="6">
+                        <v-text-field 
+                        label="Nom d'usuari"
+                        v-model="uName"
+                        id="uName"
+                        />
+                    </v-col>
+                    <v-col cols="12" md="6">
+                        <v-text-field 
+                        label="Cognoms"
+                        v-model="uSurname"
+                        id="uName"
+                        />
+                    </v-col>
+                    <v-col cols="12" class="py-0"> 
+                        <v-text-field
+                            v-model="formattedDate"
+                            label="Data d'aniversari"
+                            prepend-inner-icon="mdi-calendar"
+                            readonly
+                            variant="outlined"
+                            @click="menu = true"
+                        ></v-text-field>
+
+                        <v-dialog v-model="menu" max-width="340">
+                            <v-card>
+                            <v-date-picker
+                                v-model="uBirthday"
+                                title="Selecciona la data"
+                                header="Aniversari"
+                                @update:model-value="menu = false"
+                            ></v-date-picker>
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn variant="text" color="primary" @click="menu = false">Tancar</v-btn>
+                            </v-card-actions>
+                            </v-card>
+                        </v-dialog>
+                    </v-col>
+                    <v-col cols="12" md="6" >
+                        <v-switch
+                        label="Aniversari públic"
+                        v-model="uShowBday"
+                        />
+                    </v-col>
+                </v-row>
+                <v-card-options>
+                    <v-btn text="Guarda canvis" class="bg-secondary" @click=sendUpdateForm type="submit"></v-btn>
+                </v-card-options>
+               
+            </v-card>
+        </v-form>        
+    </v-container>
 </template>
 
 <style scoped>
-.update-container {
-    background-color: slategray;
-    flex-grow: 1;
-    display: block;
-    width: 100%;
-    box-sizing: border-box;
-    justify-content: left;
-    align-items: left;
-    min-height: 20%;
-}
-.update-form{
-    display: block;
-    background-color: slategray;
-    flex-direction: row;
-    justify-items: center;  
-    align-content: center;
-    width: 100%;       
-}
-input{
-    width: 100%;
-    display: block;
-    border-color: black;
-    background-color: white;
-    border-style: solid;
-    border-radius: 10px;
-    padding: 10px;
-    max-width: 250px;
-}
-.update-button {
-    margin: auto;
-    display: flex;
-    padding: 1rem;
-    border-radius: 8px;
-    background-color: white;
-    border-color: black;
-    border-width: 10%;
-    border-style: solid;
-    color: black;
-}
 </style>

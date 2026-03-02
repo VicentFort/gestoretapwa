@@ -15,10 +15,9 @@ const showEvent = (event) => {
 </script>
 
 <template>
-    <div class="event-list-container">
-        <br style="background-color: slategray">
-            <v-list class="event-list">
-                <v-list-item class="event-item"
+    <v-container>
+            <v-list>
+                <v-list-item
                     v-for="event in auth.userInfo.events" 
                     :key="event.id"
                     :title="event.title"
@@ -29,35 +28,9 @@ const showEvent = (event) => {
             <v-dialog v-model="isDialogOpen" width="auto">
                 <UserEventDialog v-model="isDialogOpen" :event="selectedEvent"/>
             </v-dialog>
-    </div>
+        </v-container>
 
 </template>
 
 <style scoped>
-.event-item{
-    width: 100%;
-    display: block;
-    border-color: black;
-    background-color: white;
-    border-style: solid;
-    border-width: 2px;
-    border-radius: 10px;
-    justify-self: center;
-    padding: 10px;
-    max-width: 250px;
-    margin: 1px;
-}
-.event-list{
-
-    display: block;
-    background-color: white;
-    flex-direction: row;
-    justify-items: center;  
-    align-content: center;
-    width: 100%; 
-}
-.event-list-container{
-    background-color: slategray;
-
-}
 </style>

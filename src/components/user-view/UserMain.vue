@@ -6,70 +6,52 @@ import { ref } from 'vue';
 import UserUpdateForm from './UserUpdateForm.vue';
 import UserEventInfo from './events/UserEventInfo.vue';
 import UserNeedsInfo from './needs/UserNeedsInfo.vue';
+import { useDisplay } from 'vuetify/lib/composables/display';
 const auth = useAuthStore()
 const tab = ref('one')
+const mobile = useDisplay()
 </script>
 
 <template>
+    <v-container>
+        <v-col justify="center">
+            <v-row rows="12" xs="6">
+                <v-container v-if="auth.token && auth.userInfo">
+                    <UserInfo/>
+                    
+                    <v-sheet elevation="2" rounder="lg" :class="mobile ? 'pa-1' : 'pa-5'">
+                        <v-tabs v-model="tab" color="primary" :direction="mobile ? 'horizontal' : 'vertical'">
+                            <v-tab value="one" :class="mobile ? 'pa-1': 'pa-5'">Els meus events</v-tab>
+                            <v-tab value="two">Editar perfil</v-tab>
+                            <v-tab value="three">Preferències</v-tab>
+                        </v-tabs>
+                    </v-sheet>
+                    <v-window v-model="tab" class="mt-4">
+                        <v-window-item value="one" >
+                            <UserEventInfo/>
+                        </v-window-item>
+
+                        <v-window-item value="two">
+                            <UserUpdateForm/>
+                        </v-window-item>
+
+                        <v-window-item value="three">
+                            <UserNeedsInfo/>
+                        </v-window-item>
+                    </v-window>
+                </v-container>
+            <LoginForm />  
+        </v-row>
+        </v-col>
+    </v-container>
+
     
-    <div v-if="auth.token && auth.userInfo" class="user-container">
-        <UserInfo/>
-        <v-sheet elevation="2">
-        <v-tabs v-model="tab" class="user-tabs">
-            <v-tab value="one" class="user-tab">Els meus events</v-tab>
-            <v-tab value="two" class="user-tab">Editar perfil</v-tab>
-            <v-tab value="three" class="user-tab">Preferències</v-tab>
-        </v-tabs>
 
-        <v-divider></v-divider>
-
-        <v-tabs-window v-model="tab">
-            <v-tabs-window-item value="one">
-                <UserEventInfo/>
-            </v-tabs-window-item>
-            <v-tabs-window-item value="two">
-                <UserUpdateForm/>
-            </v-tabs-window-item>
-            <v-tabs-window-item value="three">
-                <UserNeedsInfo/>
-            </v-tabs-window-item>
-        </v-tabs-window>
-
-    </v-sheet>
-    </div>
-    <div>
-     <LoginForm />   
-    </div>
+    
     
     
 </template>
 
 <style scoped>
-.user-tab{
-    width: auto;
-    display: block;
-    padding: auto;
-    background-color: slateblue;
-    border: solid black;
-    border-width: 2px;
-    max-width: max-content;
-    justify-self: center;
-}
-.user-tabs{
-    display: block;
-    background-color: slategray;
-    flex-direction: row;
-    justify-items: center;  
-    align-content: center;
-    width: 100%;
-}
-.user-container{
-    background-color: slategray;
-    display: block;
-    width: 100%;
-    box-sizing: border-box;
-    justify-content: center;
-    align-items: center;
-    min-height: 20%;
-}
+
 </style>

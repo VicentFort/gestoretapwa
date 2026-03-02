@@ -23,34 +23,38 @@ const handleLogout = async () => {
 </script>
 
 <template>
-  <div class="auth-container">
-    <div v-if="!auth.token">
-    <h2>Iniciar Sessió</h2>
-    <form @submit.prevent="handleLogin" class="login-form">
-      <input
-        id="email"
-        autocomplete="false"
-        v-model="email"
-        type="email"
-        placeholder="Email"
-        required
-      />
-      <input
-        id="password"
-        v-model="password"
-        type="password"
-        placeholder="Contrasenya"
-        required
-      />
-      <button type="submit">Entrar</button>
-    </form>
-    </div>
-    
-    <p v-if="auth.token">
-      <button @click="handleLogout" class="logout-button">Log out</button>
-    </p>
-    <p v-if="error" style="color: red">{{ error }}</p>
-  </div>
+  <v-container v-if="!auth.token">
+        <v-form ref="form" v-model="valid" @submit.prevent="handleLogin">
+          <v-card class="pa-5">
+            <v-card-title class="bg-ternary">Log In</v-card-title>
+            <v-row>
+              <v-col cols="12" md="6">
+                <v-text-field
+                    v-model="email"
+                    type="email"
+                    label="Correu electrònic"
+                    required
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" md="6">
+                <v-text-field
+                    v-model="password"
+                    type="password"
+                    label="Contrasenya"
+                    required
+                ></v-text-field>
+              </v-col>
+            </v-row>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn type="submit" class="bg-secondary" :disabled="password=='' || email==''">Log in</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-form>
+  </v-container>
+  <v-container>
+    <v-btn @click="handleLogout" class="bg-secondary">Log out</v-btn>
+  </v-container>
 </template>
 
 <style scoped>

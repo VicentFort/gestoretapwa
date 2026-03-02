@@ -1,18 +1,20 @@
 <script setup>
 import { useAuthStore } from '@/stores/auth';
-
+import { computed } from 'vue';
+import { useDisplay } from 'vuetify/lib/composables/display';
 const auth = useAuthStore()
+const mobile = useDisplay()
 </script>
 
 <template>
-    <div class="user-info-container">
-        <h2>Benvingut: {{ auth.userInfo?.name }} {{ auth.userInfo?.surname }}</h2>
-        <img src="@/assets/ic_gestoreta_logo.png">
-    </div>
+    <v-container>
+        <v-label class='text-primary' :text="'Benvingut: '"></v-label>
+        <br>
+        <v-label clasS='text-primary'>{{ auth.userInfo.name }} {{ auth.userInfo.surname }} </v-label>
+        <v-img src="../../assets/user_ph.png"></v-img>
+    </v-container>    
 </template>
 
 <style>
-.user-info-container{
-    background-color: slategray;
-}
+
 </style>

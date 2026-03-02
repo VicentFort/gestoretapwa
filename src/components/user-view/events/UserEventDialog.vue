@@ -1,7 +1,7 @@
 <template>
     <v-dialog v-model="show" width="500" >
     <v-card v-if="event">
-      <v-card-title class="dialog-header" >
+      <v-card-title class="bg-primary">
         Títol: {{ event?.title }}
       </v-card-title>
 
@@ -53,10 +53,5 @@ const addToCallendar = async () => {
 </script>
 
 <style>
-.dialog-header {
-    background-color: slateblue;
-    color:white;
 
-    
-}
 </style>
