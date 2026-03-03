@@ -3,10 +3,11 @@ import { useAuthStore } from '@/stores/auth';
 import UserInfo from '@/components/user-view/UserInfo.vue';
 import LoginForm from '../LoginForm.vue';
 import { ref } from 'vue';
-import UserUpdateForm from './UserUpdateForm.vue';
+import UserUpdateForm from '@/components/user-view/user-update/UserUpdateForm.vue';
 import UserEventInfo from './events/UserEventInfo.vue';
 import UserNeedsInfo from './needs/UserNeedsInfo.vue';
 import { useDisplay } from 'vuetify/lib/composables/display';
+import UserPrefsInfo from './needs/UserPrefsInfo.vue';
 const auth = useAuthStore()
 const tab = ref('one')
 const mobile = useDisplay()
@@ -15,13 +16,13 @@ const mobile = useDisplay()
 <template>
     <v-container>
         <v-col justify="center">
-            <v-row rows="12" xs="6">
+            <v-row rows="12" md="6">
                 <v-container v-if="auth.token && auth.userInfo">
                     <UserInfo/>
                     
-                    <v-sheet elevation="2" rounder="lg" :class="mobile ? 'pa-1' : 'pa-5'">
+                    <v-sheet elevation="2" rounder="lg" :class="mobile ?'pa-1' : 'pa-5'">
                         <v-tabs v-model="tab" color="primary" :direction="mobile ? 'horizontal' : 'vertical'">
-                            <v-tab value="one" :class="mobile ? 'pa-1': 'pa-5'">Els meus events</v-tab>
+                            <v-tab value="one" :class="mobile ?'pa-1': 'pa-5'">Els meus events</v-tab>
                             <v-tab value="two">Editar perfil</v-tab>
                             <v-tab value="three">Preferències</v-tab>
                         </v-tabs>
@@ -37,6 +38,7 @@ const mobile = useDisplay()
 
                         <v-window-item value="three">
                             <UserNeedsInfo/>
+                            <UserPrefsInfo/>
                         </v-window-item>
                     </v-window>
                 </v-container>

@@ -5,12 +5,14 @@
             <v-text-field
             v-model="description"
             id="description"
+
             placeholder="Descripció de la necessitat alimentària."
             :required="true"
             />
             <v-divider></v-divider>
             <v-card-actions>
-                <v-btn color="grey-darken-1" variant="text" @click="saveNeed" :disabled="description==''">Guarda</v-btn>
+                <v-btn  variant="text" @click="saveNeed" :disabled="description==''">Guarda</v-btn>
+                <v-btn  variant="text" @click="show=false" >Tanca</v-btn>
             </v-card-actions>
 
         </v-card>
@@ -33,7 +35,7 @@ const show = computed({
 })
 const description = ref('')
 const saveNeed = async () => {
-    await auth.addFoodNeed(description)
+    await auth.addFoodNeed(description.value)
     show.value = false
 }
 </script>

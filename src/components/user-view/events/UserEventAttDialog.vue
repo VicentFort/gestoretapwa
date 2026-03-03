@@ -15,7 +15,7 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="grey-darken-1" variant="text" @click="deleteAssist">No assistir</v-btn>
+        <v-btn color="grey-darken-1" variant="text" @click="deleteAssist">Assistir</v-btn>
         <v-spacer></v-spacer>
         <v-btn color="grey-darken-1" variant="text" @click="show = false">Tanca</v-btn>
       </v-card-actions>
@@ -63,7 +63,7 @@ const closeError = () => {
 
 const deleteAssist = async () => {
   try {
-    await auth.deleteAssist(props.event.id)
+    await auth.joinEvent(props.event.id)
     show.value = false
   } catch (err) {
     error.value=err 

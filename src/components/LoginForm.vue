@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { useAuthStore } from "@/stores/auth";
 
 const auth = useAuthStore();
+const showErrorDiag = ref(false)
 const email = ref("");
 const password = ref("");
 const error = ref("");
@@ -12,14 +13,21 @@ const handleLogin = async () => {
     await auth.login(email.value, password.value);
     error.value = "";
   } catch (err) {
-    error.value = err.message;
-    console.error(err);
+    error.value = err;
+    showErrorDiag.value = true;
   }
 };
 
 const handleLogout = async () => {
+  email.value=''
+  password.value=''
   auth.logout();
 };
+
+const closeError = async () => {
+  error.value = ''
+  showErrorDiag.value = false
+}
 </script>
 
 <template>
@@ -51,43 +59,27 @@ const handleLogout = async () => {
             </v-card-actions>
           </v-card>
         </v-form>
-  </v-container>
-  <v-container>
+    </v-container>
+    <v-container v-if="auth.token">
     <v-btn @click="handleLogout" class="bg-secondary">Log out</v-btn>
   </v-container>
+    <v-dialog v-model="showErrorDiag" max-width="400">
+            <v-card>
+                <v-card-title class="text-h5 text-white bg-error">Error</v-card-title>
+                    
+                    <v-card-text class="pa-4">
+                    {{ error }}
+                    </v-card-text>
+                    
+                    <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="error" variant="text" @click="closeError">
+                        Tanca
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
 </template>
 
 <style scoped>
-.auth-container {
-  background-color: slategray;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 10%;
-
-}
-
-.login-form {
-  width: fit-content;
-  padding: 10px;
-  display: flex;
-  flex-direction: column; /* Pone los inputs uno debajo del otro */
-  gap: 15px;             /* Espacio entre campos */
-  border: 2px solid transparent;
-  border-radius: 10px;
-  background: darkorange;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-}
-
-.logout-button {
-    margin: auto;
-    display: flex;
-    padding: 1rem;
-    border-radius: 8px;
-    background-color: white;
-    border-color: black;
-    border-width: 10%;
-    border-style: solid;
-    color: black;
-}
 </style>

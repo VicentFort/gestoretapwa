@@ -1,10 +1,12 @@
 <template>
   <v-app>
-    <v-container class="d-flex align-center">
+    <v-container class="align-center d-flex">
       <v-app-bar>
 
       <v-toolbar-title class="font-weight-bold text-primary" >
-        Gestoreta
+        <v-icon size="large">
+          <img src="@/assets/ic_gestoreta_logo.png" width=40 height=40  alt="icon" />
+        </v-icon>
       </v-toolbar-title>
 
       <v-spacer></v-spacer>

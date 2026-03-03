@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <p v-if="auth.fallaInfo">
+    <p v-if="auth.token">
       <FallaMain />
     </p>
     <p v-if="!auth.token">

@@ -8,10 +8,12 @@ const mobile = useDisplay()
 
 <template>
     <v-container>
-        <v-label class='text-primary' :text="'Benvingut: '"></v-label>
+        <v-label class='text-primary' :text="'Hola: '"></v-label>
         <br>
         <v-label clasS='text-primary'>{{ auth.userInfo.name }} {{ auth.userInfo.surname }} </v-label>
-        <v-img src="../../assets/user_ph.png"></v-img>
+        <v-img>
+            <img width="40" height="40" src="../../assets/user_ph.png">
+        </v-img>
     </v-container>    
 </template>
 

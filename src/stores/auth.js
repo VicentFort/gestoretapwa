@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import api from "./api";
+import { formToJSON } from "axios";
 
 
 export const useAuthStore = defineStore("auth", {
@@ -15,8 +16,13 @@ export const useAuthStore = defineStore("auth", {
         const response = await api.post("/auth/login", {
           email,
           password,
-        });
-
+        }).catch(function (error) {
+              if(!error.response.data?.success) {
+                console.error(error.response.data.message)
+                throw error.response.data.message
+              }
+              throw error.message
+            })
         this.token = response.data; // El string del JWT
         this.userEmail = email;
 
@@ -28,7 +34,7 @@ export const useAuthStore = defineStore("auth", {
         
 
       } catch (error) {
-        console.error(error);
+        throw error
       }
     },
     logout() {
@@ -51,7 +57,12 @@ export const useAuthStore = defineStore("auth", {
               surname: uSurname,
               birthday: uBday,
               showBday: uShowBday
-          })
+          }).catch(function (error) {
+              if(!error.response.data?.success) {
+                throw error.response.data.message
+              }
+              throw error.message
+            })
           if(response.data.success != null && !response.data.success) {
             throw response.data?.message
           }
@@ -59,13 +70,14 @@ export const useAuthStore = defineStore("auth", {
           sessionStorage.setItem("userInfo", JSON.stringify(this.userInfo));
 
       } catch(error) {
-        console.error(error)
+        throw error
       }
     },
     async addFoodNeed(description) {
       try {
-          const response = await api.post("/user/addFoodNeed?description="+description+'')
-          if(response.data?.success != null && !response.data.success) throw response.data?.message
+          const response = await api.post('/user/addFoodNeed?description', {
+            desc: description
+          });        
           this.fetchUserInfo()
           
         } catch(error) {
@@ -74,16 +86,27 @@ export const useAuthStore = defineStore("auth", {
       },
       async deleteNeed(needId) {
         try {
-          const response = await api.delete("/user/deleteNeed?needId="+needId+'')
-          if(response.data.sucess!= null && !response.data?.success) throw response.data.message
-          await this.fecthUserInfo()
+          const response = await api.delete("/user/deleteNeed?needId="+needId+'').catch(function (error) {
+              if(!error.response.data?.success) {
+                console.error(error.response.data.message)
+                throw error.response.data.message
+              }
+              throw error.message
+            })
+          await this.fetchUserInfo()
         } catch(error) {
           console.error(error)
         }
       },
       async fetchUserInfo() {
         try {
-          const responseInfo = await api.get("/user/getUserInfo");
+          const responseInfo = await api.get("/user/getUserInfo").catch(function (error) {
+              if(!error.response.data?.success) {
+                console.error(error.response.data.message)
+                throw error.response.data.message
+              }
+              throw error.message
+            });
 
           this.userInfo = responseInfo.data;
           sessionStorage.setItem("userInfo", JSON.stringify(this.userInfo));
@@ -96,7 +119,9 @@ export const useAuthStore = defineStore("auth", {
           console.error(error)
         }
       },
-      async addEvent(event) {
+      async addEvent(event, tag, users) {
+        console.log(tag)
+        console.log(users)
         try {
           const response = await api.post('/event/create', {
             title: event.title,
@@ -107,22 +132,191 @@ export const useAuthStore = defineStore("auth", {
             maxPeople: event.maxPeople,
             date: event.date,
             fallaId: this.fallaAdminInfo.fallaId,
-            tagId: event.tagId
-          })
+            tagId: tag,
+            startHour: event.startHour,
+            endHour: event.endHour,
+            attendants: users
+          }).catch(function (error) {
+              if(!error.response.data?.success) {
+                console.error(error.response.data.message)
+                throw error.response.data.message
+              }
+              throw error.message
+            })
           if(response.data.sucess!= null && !response.data?.success) throw response.data.message
           await this.fetchFallaAdminInfo()
         } catch(error) {
-          console.error(error)
+          throw error
         }
       },
       async fetchFallaAdminInfo() {
         try {
-          const response = await api.get('/falla/info')
-          if(response.data.sucess!= null && !response.data?.success) throw response.data.message
+          const response = await api.get('/falla/info').catch(function (error) {
+              if(!error.response.data?.success) {
+                console.error(error.response.data.message)
+                throw error.response.data.message
+              }
+              throw error.message
+            })
           this.fallaAdminInfo = response.data
           sessionStorage.setItem('fallaAdminInfo', JSON.stringify(this.fallaAdminInfo))
         } catch(error) {
-          console.log(error)
+          console.error(error)
+        }
+      },
+      async deleteEvent(eventId) {
+          try {
+            const response = await api.delete('/event/delete/'+eventId).catch(function (error) {
+              if(!error.response.data?.success) {
+                console.error(error.response.data.message)
+                throw error.response.data.message
+              }
+              throw error.message
+            })
+          } catch(error) {
+            console.error(error)
+          } finally {
+            await this.fetchFallaAdminInfo()
+          }
+      },
+      async deletePref(prefId) {
+          try {
+            const response = await api.delete('/user/removeAttPrefs',{data:[prefId]}).catch(function (error) {
+              if(!error.response.data?.success) {
+                console.error(error.response.data.message)
+                throw error.response.data.message
+              }
+              throw error.message
+            })
+          } catch(error) {
+            console.error(error)
+          } finally {
+            await this.fetchUserInfo()
+          }
+      },
+      async addAttPref(tagId) {
+
+         try {
+            const response = await api.post('/user/addAttPrefs', new Number(tagId)).catch(function (error) {
+              if(!error.response.data?.success) {
+                console.error(error.response.data.message)
+                throw error.response.data.message
+              }
+              throw error.message
+            })
+          } catch(error) {
+            console.error(error)
+            throw error
+          } finally {
+            await this.fetchUserInfo()
+          }
+      },
+      async editAdminAccess(userId, adminAccess) {
+        try {
+          const response = await api.post('/falla/editAdminAccess/'+userId, new Boolean(adminAccess)).catch(function (error) {
+              if(!error.response.data?.success) {
+                console.error(error.response.data.message)
+                throw error.response.data.message
+              }
+              throw error.message
+            })
+          
+        } catch(error) {
+          console.error(error)
+          throw error
+        } finally {
+          this.fetchFallaAdminInfo()
+          this.fetchUserInfo()
+        }
+      },
+      async addTag(name) {
+        try {
+          const response = await api.post('/falla/addEventTag',name)
+          if(response.data.sucess != null || response.data?.success==false) throw response.data.message
+          this.fetchFallaAdminInfo()
+          this.fetchUserInfo()
+        } catch(error) {
+          console.error(error)
+          throw error
+        } finally {
+
+        }
+      },
+      async deleteTag(id) {
+        try {
+          const response = await api.delete('/falla/deleteEventTag',{
+            data: new Number(id)
+          })
+          if(response.data.sucess != null || response.data?.success==false) throw response.data.message
+          this.fetchFallaAdminInfo()
+          this.fetchUserInfo()
+        } catch(error) {
+          console.error(error)
+          throw error
+        }
+      },
+      async updateEvent(eventDto, eventId) {
+        try {
+          const response = await api.put('/event/update/'+eventId,{
+            "title": eventDto.title,
+              "publicField": eventDto.publicField,
+              "done": eventDto.done,
+              "price": eventDto.price,
+              "description": eventDto.description,
+              "maxPeople": eventDto.maxPeople,
+              "date": eventDto.date,
+              "tagId": eventDto.tagId,
+              "startHour": eventDto.startHour,
+              "endHour": eventDto.endHour
+          })
+          if(response.data.sucess != null || response.data?.success==false) throw response.data.message
+        } catch(error) {
+          console.error(error)
+          throw error
+        } finally {
+          this.fetchFallaAdminInfo()
+          this.fetchUserInfo()
+        }
+      },
+      async joinEvent(eventId) {
+        try {
+          const response = await api.post('/event/join/'+eventId)
+          if(response.data.sucess != null || response.data?.success==false) throw response.data.message
+  
+        } catch(error) {
+          throw error
+        } finally {
+          this.fetchFallaAdminInfo()
+          this.fetchUserInfo()
+        }
+      },
+      async deleteAssist(eventId) {
+         try {
+          const response = await api.delete('/event/leave/'+eventId).catch(function (error) {
+              if(!error.response.data?.success) {
+                console.error(error.response.data.message)
+                throw error.response.data.message
+              }
+              throw error.message
+            })
+        } catch(error) {
+          throw error
+        } finally {
+          this.fetchFallaAdminInfo()
+          this.fetchUserInfo()
+        }
+      },
+      async createUser(user) {
+        try {
+          const response = await api.post('/user/create', user).catch(function (error) {
+              if(!error.response.data?.success) {
+                console.error(error.response.data.message)
+                throw error.response.data.message
+              }
+              throw error.message
+          })
+        } catch (error) {
+          throw error
         }
       }
     }

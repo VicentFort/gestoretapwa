@@ -1,35 +1,46 @@
 <template>
-    <div>
-    <h2>Panel de control de la falla: {{ auth.fallaAdminInfo?.name }}</h2>
+    <v-container>
+
+    <v-card-title>
+        Panel de control de la falla:
+    </v-card-title>
+    <v-card-title>
+        {{ auth.fallaAdminInfo?.name }}
+    </v-card-title>
     <v-sheet elevation="2">
         <v-tabs v-model="tab" color="primary">
             <v-tab value="one">Events</v-tab>
-            <v-tab value="two">Item Two</v-tab>
-            <v-tab value="three">Item Three</v-tab>
+            <v-tab value="two">Membres</v-tab>
+            <v-tab value="three">Pagaments</v-tab>
         </v-tabs>
-
+        </v-sheet>
         <v-divider></v-divider>
 
-        <v-tabs-window v-model="tab">
+        <v-window v-model="tab">
             <v-tabs-window-item value="one">
                 <EventPanel/>
+                <TagPanel/>
             </v-tabs-window-item>
             <v-tabs-window-item value="two">
-                
+                <UsersPanel/>
+                <RequestPanel/>
             </v-tabs-window-item>
             <v-tabs-window-item value="three">
                 
             </v-tabs-window-item>
-        </v-tabs-window>
+        </v-window>
 
-    </v-sheet>
-    </div>
+    </v-container>
+
 </template>
 
 <script setup>
 import { useAuthStore } from '@/stores/auth';
 import { ref } from 'vue';
-import EventPanel from './EventPanel.vue';
+import EventPanel from './event-panel/EventPanel.vue';
+import UsersPanel from './user-panel/UsersPanel.vue';
+import RequestPanel from './user-panel/RequestPanel.vue';
+import TagPanel from './event-panel/TagPanel.vue';
 
 const auth = useAuthStore()
 auth.fetchFallaAdminInfo()

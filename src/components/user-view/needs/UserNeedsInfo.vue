@@ -27,7 +27,6 @@ const deleteNeed = (need) => {
                     v-for="need in auth.userInfo?.foodNeeds" 
                     :key="need.foodNeedId"
                     :title="need.description"
-                    class="food-item"
                     @click="deleteNeed(need)"
                 >
             </v-list-item>

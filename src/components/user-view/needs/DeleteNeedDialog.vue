@@ -48,7 +48,7 @@ const exit = () => {
                     <v-divider></v-divider>
                     <v-card-actions>
                         <v-btn color="grey-darken-1" variant="text" @click="deleteNeed">Eliminar</v-btn>
-                        <v-btn color="grey-darken-1" variant="text" @click="exit">Cancel·la</v-btn>
+                        <v-btn color="grey-darken-1" variant="text" @click="exit">Tanca</v-btn>
                     </v-card-actions>
                 </v-card>      
             </v-col>

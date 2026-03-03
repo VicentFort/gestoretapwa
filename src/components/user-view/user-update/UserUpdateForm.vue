@@ -3,14 +3,27 @@ import { useAuthStore } from '@/stores/auth';
 import { ref, computed } from 'vue';
 
     const auth = useAuthStore()
+    const error = ref('')
+    const showErrorDiag = ref(false)
+    const showSuccessDiag = ref(false)
     const menu = ref(false)
-    const valid = ref(false)
+
     const uName = ref(auth.userInfo?.name || '')
     const uSurname = ref(auth.userInfo?.surname || '')
     const uBirthday = ref(auth.userInfo?.birthday || new Date())
     const uShowBday = ref(auth.userInfo?.showBday || '')
-    const sendUpdateForm = () => {
-        auth.updateUser(uName.value, uSurname.value, uBirthday.value, uShowBday.value)
+    const sendUpdateForm = async () => {
+        try {
+            await auth.updateUser(uName.value, uSurname.value, uBirthday.value, uShowBday.value)
+            showSuccessDiag.value = true
+        } catch(err) {
+            error.value = err
+            showErrorDiag.value = true
+        }
+    }
+    const closeError = () => {
+        error.value = ''
+        showErrorDiag.value = false
     }
     const formattedDate = computed(() => {
         if (!uBirthday.value) return ''
@@ -26,26 +39,31 @@ import { ref, computed } from 'vue';
 
 <template>
     <v-container>
-        <v-form @submit.prevent="sendUpdateForm" v-model="valid" theme="form" class="w-100">
+        <v-form @submit.prevent="sendUpdateForm" class="w-100">
             <v-card>
                 <v-card-title class="bg-ternary">Info de: {{ auth.userInfo.name }}</v-card-title>
                 <v-row>
                     <v-col cols="12" md="6">
-                        <v-text-field 
+                        <v-text-field
+                        class="text-primary"
                         label="Nom d'usuari"
+                        :rules="[v => !!v || 'Nom necessari']"
                         v-model="uName"
                         id="uName"
                         />
                     </v-col>
                     <v-col cols="12" md="6">
                         <v-text-field 
+                        class="text-primary"
                         label="Cognoms"
                         v-model="uSurname"
+                        :rules="[v => !!v || 'Cognoms necessaris']"
                         id="uName"
                         />
                     </v-col>
                     <v-col cols="12" class="py-0"> 
                         <v-text-field
+                            class="text-primary"
                             v-model="formattedDate"
                             label="Data d'aniversari"
                             prepend-inner-icon="mdi-calendar"
@@ -57,6 +75,7 @@ import { ref, computed } from 'vue';
                         <v-dialog v-model="menu" max-width="340">
                             <v-card>
                             <v-date-picker
+                                class="text-primary"
                                 v-model="uBirthday"
                                 title="Selecciona la data"
                                 header="Aniversari"
@@ -64,23 +83,50 @@ import { ref, computed } from 'vue';
                             ></v-date-picker>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
-                                <v-btn variant="text" color="primary" @click="menu = false">Tancar</v-btn>
+                                <v-btn variant="text" @click="menu = false">Tancar</v-btn>
                             </v-card-actions>
                             </v-card>
                         </v-dialog>
                     </v-col>
                     <v-col cols="12" md="6" >
                         <v-switch
+                        class="text-primary"
                         label="Aniversari públic"
                         v-model="uShowBday"
                         />
                     </v-col>
                 </v-row>
                 <v-card-options>
-                    <v-btn text="Guarda canvis" class="bg-secondary" @click=sendUpdateForm type="submit"></v-btn>
+                    <v-btn text="Guarda canvis" class="bg-secondary" type="submit" :disabled="uSurname=='' || uName=='' "></v-btn>
                 </v-card-options>
+                
                
             </v-card>
+            <v-dialog v-model="showSuccessDiag" max-width="400">
+                <v-card>
+                    <v-card-title class="bg-secondary">Usuari actualitzat</v-card-title>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn variant="text" @click="showSuccessDiag=false">Tanca</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+            <v-dialog v-model=showErrorDiag width=400px>
+                <v-card>
+                <v-card-title class="text-h5 text-white bg-error">Error</v-card-title>
+                    
+                    <v-card-text class="pa-4">
+                    {{ error }}
+                    </v-card-text>
+                    
+                    <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="error" variant="text" @click="closeError">
+                        Tanca
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+            </v-dialog>
         </v-form>        
     </v-container>
 </template>
