@@ -40,6 +40,7 @@
                             <v-date-picker
                                 v-model="birthday"
                                 color="secondary"
+                                title="Data de naixement"
                                 width="100%"
                             ></v-date-picker>
                     </v-col>

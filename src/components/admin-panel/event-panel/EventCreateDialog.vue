@@ -154,10 +154,11 @@ const event = reactive({
   description: '',
   price: 0,
   maxPeople: 0,
-  date: new Date(),
+  date: null,
   fallaId: auth.fallaAdminInfo.fallaId,
   startHour: '',
   endHour: '',
+  createdBy: auth.userInfo.name + ' ' + auth.userInfo.surname
 })
 const props = defineProps({
     modelValue: Boolean
@@ -172,8 +173,10 @@ const submitForm = async () => {
     const { valid: isValid } = await form.value.validate()
     if (isValid) {
         try {
-        await auth.addEvent(event, selectedTag.value, selectedUsers.value)
-        show.value = false
+            console.log(event.createdBy)
+            const eventData = await auth.addEvent(event, selectedTag.value, selectedUsers.value)
+            await auth.joinEvent(eventData?.id)
+            show.value = false
         } catch(error) {
             console.error(error)
         }

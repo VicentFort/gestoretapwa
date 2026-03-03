@@ -3,7 +3,7 @@
     <v-container class="align-center d-flex">
       <v-app-bar>
 
-      <v-toolbar-title class="font-weight-bold text-primary" >
+      <v-toolbar-title class="font-weight-bold text-primary">
         <v-icon size="large">
           <img src="@/assets/ic_gestoreta_logo.png" width=40 height=40  alt="icon" />
         </v-icon>
@@ -27,13 +27,14 @@
 
           @click="reloadAll" 
           color="grey"
-        >Reload</v-btn>
+          icon="mdi-refresh"
+        ></v-btn>
       </div>
 
       <div class="hidden-md-and-up">
         <v-menu>
           <template v-slot:activator="{ props }">
-            <v-btn class="bg-secondary" v-bind="props"></v-btn>
+            <v-btn class="bg-secondary" v-bind="props" icon="mdi-menu"></v-btn>
           </template>
           <v-list>
             <v-list-item to="/">Falla</v-list-item>

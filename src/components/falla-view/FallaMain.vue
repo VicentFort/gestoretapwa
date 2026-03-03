@@ -18,27 +18,20 @@ const tabFalla = ref('one')
                     <v-card-title>{{ auth.userInfo.fallaInfo.name }}</v-card-title>
                     <v-sheet elevation="2" rounder="lg" :class="mobile ?'pa-1' : 'pa-5'">
                         <v-tabs v-model="tabFalla" color="primary" :direction="mobile ? 'horizontal' : 'vertical'">
-                            <v-tab value="one" :class="mobile ?'pa-1': 'pa-5'">Informació</v-tab>
-                            <v-tab value="two">Events</v-tab>
-                            <v-tab value="three">Preferències</v-tab>
+                            <v-tab value="one" :class="mobile ?'pa-1': 'pa-5'">Events</v-tab>
+                            <v-tab value="two">Informació</v-tab>
                         </v-tabs>
                     </v-sheet>
                     <v-window v-model="tabFalla" class="mt-4">
                         <v-window-item value="one" >
-                            <FallaInfo/>
-                        </v-window-item>
-                            
-                        <v-window-item value="two">
                             <EventList/>
                             <EventCallendar/>
                         </v-window-item>
-
-                        <v-window-item value="three">
+                            
+                        <v-window-item value="two">
+                            <FallaInfo/>
                         </v-window-item>
                     </v-window>
-                </v-container>
-                <v-container v-if="!auth.userInfo.fallaInfo">
-
                 </v-container>
             </v-row>
         </v-col>

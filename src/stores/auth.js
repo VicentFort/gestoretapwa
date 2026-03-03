@@ -120,9 +120,8 @@ export const useAuthStore = defineStore("auth", {
         }
       },
       async addEvent(event, tag, users) {
-        console.log(tag)
-        console.log(users)
         try {
+          console.log(event.createdBy)
           const response = await api.post('/event/create', {
             title: event.title,
             publicField: event.publicField,
@@ -130,12 +129,13 @@ export const useAuthStore = defineStore("auth", {
             price: event.price,
             description: event.description,
             maxPeople: event.maxPeople,
-            date: event.date,
+            date: event.date ? new Date(event.date).toLocaleDateString('en-CA') : null,
             fallaId: this.fallaAdminInfo.fallaId,
             tagId: tag,
             startHour: event.startHour,
             endHour: event.endHour,
-            attendants: users
+            attendants: users,
+            createdBy: event.createdBy
           }).catch(function (error) {
               if(!error.response.data?.success) {
                 console.error(error.response.data.message)
@@ -143,10 +143,12 @@ export const useAuthStore = defineStore("auth", {
               }
               throw error.message
             })
-          if(response.data.sucess!= null && !response.data?.success) throw response.data.message
-          await this.fetchFallaAdminInfo()
+            return response.data;
         } catch(error) {
           throw error
+        } finally{
+          await this.fetchFallaAdminInfo()
+          await this.fetchUserInfo()
         }
       },
       async fetchFallaAdminInfo() {
@@ -264,7 +266,7 @@ export const useAuthStore = defineStore("auth", {
               "price": eventDto.price,
               "description": eventDto.description,
               "maxPeople": eventDto.maxPeople,
-              "date": eventDto.date,
+              "date": eventDto.date ? new Date(eventDto.date).toLocaleDateString('en-CA') : null,
               "tagId": eventDto.tagId,
               "startHour": eventDto.startHour,
               "endHour": eventDto.endHour
@@ -274,8 +276,8 @@ export const useAuthStore = defineStore("auth", {
           console.error(error)
           throw error
         } finally {
-          this.fetchFallaAdminInfo()
-          this.fetchUserInfo()
+          await this.fetchFallaAdminInfo()
+          await this.fetchUserInfo()
         }
       },
       async joinEvent(eventId) {

@@ -1,9 +1,9 @@
 <template>
-    <v-card>
-        <v-card-title class="text-h2">
+    <v-card class="bg-ternary">
+        <v-card-title >
             Benvingut a Gestoreta
         </v-card-title>
-        <v-card-subtitle class="text-h5">
+        <v-card-subtitle>
             L'aplicació de gestió de falles i casals
         </v-card-subtitle>
     </v-card>

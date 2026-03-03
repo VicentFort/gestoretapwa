@@ -2,22 +2,28 @@
     <v-dialog v-model="show" width="500">
     <v-card v-if="event">
       <v-card-title class="text-h5 text-white bg-secondary">
-        {{  event.title }}
+      {{  event.title }}
       </v-card-title>
       <v-card-text class="pa-4">
-        {{ event.description }}
+      {{ event.description }}
       </v-card-text>
       <v-card-text>
-        Etiqueta: {{ event.tagName }}
+      Etiqueta: {{ event.tagName }}
       </v-card-text>
       <v-card-text>
-        Data: {{ event.date }}
+      Data: {{ event.date }}
+      </v-card-text>
+      <v-card-text v-if="event.assists">
+      Número d'assistències: {{ event?.assists?.length }}
       </v-card-text>
       <v-card-text>
-        Necessitats alimentaries del event: {{ event.foodNeeds?.length }}
+      Necessitats alimentaries del event: {{ event.foodNeeds?.length }}
       </v-card-text>
       <v-card-text>
-        Encarregats del event: {{ event.attendantNames?.length }}
+      Encarregats del event: {{ event.attendantNames?.length }}
+      </v-card-text>
+      <v-card-text>
+      Creat per: {{ event.createdBy }}
       </v-card-text>
 
       <v-divider>
