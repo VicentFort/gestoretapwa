@@ -8,7 +8,7 @@
                 <v-list-item 
                     v-for="user in auth.fallaAdminInfo.users" 
                     :key="user.id"
-                    :title="user.name"
+                    :title="user.name + ' ' + user.surname"
                     link
                     @click="openUserDetails(user)"
                 >
