@@ -1,21 +1,24 @@
 <template>
-    <v-container>
-        <v-card>
-            <v-card-title class="bg-ternary">Llistat d'events</v-card-title>
-            <v-list>
-                <v-list-item
-                    v-for="event in auth.userInfo.fallaInfo.events" 
-                    :key="event.id"
-                    :title="event.title"
-                    @click="showEvent(event)"
-                >
-            </v-list-item>
-            </v-list>
-            <v-dialog v-model="isDialogOpen" width="auto">
-                <FallaEventDialog v-model="isDialogOpen" :event="selectedEvent"/>
-            </v-dialog>        
-        </v-card>
-    </v-container>
+    <v-row class="fill-height">
+        <v-col>
+            <v-card>
+                <v-card-title class="bg-ternary">Llistat d'events</v-card-title>
+                <v-list>
+                    <v-list-item
+                        v-for="event in auth.userInfo.fallaInfo.events" 
+                        :key="event.id"
+                        :title="event.title"
+                        @click="showEvent(event)"
+                    >
+                </v-list-item>
+                </v-list>
+                <v-dialog v-model="isDialogOpen" width="auto">
+                    <FallaEventDialog v-model="isDialogOpen" :event="selectedEvent"/>
+                </v-dialog>        
+            </v-card>
+        </v-col>
+    </v-row>
+    
 </template>
 
 <script setup>

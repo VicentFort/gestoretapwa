@@ -2,11 +2,8 @@
   <v-row class="fill-height">
     <v-col>
       <v-sheet height="64" class="bg-ternary">
-        
+        <v-text v-if="calendar" class="text-primary text-body-2 text-sm-h6"> Calendari d'events</v-text>
         <v-toolbar flat class="bg-ternary" density="comfortable">
-            <v-toolbar-title v-if="calendar" class="text-primary text-body-2 text-sm-h6">
-                {{ calendar.title }}
-            </v-toolbar-title>
 
             <v-spacer></v-spacer>
 
