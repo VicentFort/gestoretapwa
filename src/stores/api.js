@@ -1,7 +1,7 @@
 import axios from "axios";
 
 
-const API_IP = "http://37.135.29.68:8080";
+const API_IP = "https://gestoretaapp-production.up.railway.app";
 const LOCAL_API_IP = "http://localhost:8080";
 const GOOGLE_CALLENDAR_API = 'https://www.googleapis.com/auth/calendar';
 const api = axios.create({
