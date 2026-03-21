@@ -1,7 +1,8 @@
 <template>
   <v-row class="fill-height">
     <v-col>
-      <v-sheet height="64" class="bg-ternary">
+      <v-card>
+      <v-sheet height="64" class="bg-ternary sheet-container">
         <v-text v-if="calendar" class="text-primary text-body-2 text-sm-h6"> Calendari d'events</v-text>
         <v-toolbar flat class="bg-ternary" density="comfortable">
 
@@ -31,6 +32,7 @@
 
       <v-sheet height="600">
         <v-calendar
+        class="bg-primary"
           ref="calendar"
           v-model="focus"
           :events="formattedEvents"
@@ -47,10 +49,8 @@
         offset-y
         :close-on-content-click="false"
         >
-          <v-card min-width="300px" flat>
-            <v-toolbar :color="selectedEvent.color" dark>
-              <v-toolbar-title>{{ selectedEvent.title }}</v-toolbar-title>
-            </v-toolbar>
+          <v-card min-width="300px" flat class="bg-primary">
+            <v-card-title class="bg-ternary">{{ selectedEvent.title }}</v-card-title>
             <v-card-text>
               <div class="mb-2 text-subtitle-1">
                 <strong>Etiqueta:</strong> {{ selectedEvent.tagName }}
@@ -64,10 +64,10 @@
               <div><strong>Fí:</strong> {{ selectedEvent.endHour }}</div>
             </v-card-text>
             <v-card-actions>
-              <v-btn variant="text" color="secondary" @click="joinEvent">
+              <v-btn variant="text" color="black" class="bg-ternary" @click="joinEvent">
                 Assistir
               </v-btn>
-              <v-btn variant="text" color="secondary" @click="selectedOpen = false">
+              <v-btn variant="text" color="black"  class="bg-ternary" @click="selectedOpen = false">
                 Tanca
               </v-btn>
             </v-card-actions>
@@ -79,7 +79,7 @@
                 <v-card-title>{{ selectedEvent.title }}</v-card-title>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="error" variant="text" @click="showAssistSuccess=false">
+                    <v-btn color="ternary" variant="text" @click="showAssistSuccess=false">
                         Tanca
                     </v-btn>
                 </v-card-actions>
@@ -105,6 +105,7 @@
             </v-card>
         </v-dialog>
       </v-sheet>
+      </v-card>
     </v-col>
   </v-row>
 </template>
@@ -220,3 +221,12 @@ const joinEvent = async () => {
     }
 }
 </script>
+
+<style>
+.sheet-container{
+    border-color: #FF7F50;
+    border-width: 10px;
+    border-style: solid;
+}
+
+</style>

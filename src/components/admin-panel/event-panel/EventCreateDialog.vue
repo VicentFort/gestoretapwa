@@ -40,11 +40,57 @@
                         </v-col>
 
                         <v-col cols="12" class="justify-center d-flex">
-                            <v-date-picker
-                                v-model="event.date"
-                                color="secondary"
-                                width="100%"
-                            ></v-date-picker>
+                            <v-text-field
+                            class="text-primary"
+                            v-model="formattedDate"
+                            label="Data d'inici"
+                            prepend-inner-icon="mdi-calendar"
+                            readonly
+                            variant="outlined"
+                            @click="dateMenu = true"
+                            ></v-text-field>
+                            <v-dialog v-model="dateMenu" max-width="340">
+                                <v-card>
+                                    <v-date-picker
+                                        class="text-primary"
+                                        v-model="event.date"
+                                        title="Selecciona la data"
+                                        header="Data d'inici de l'event"
+                                        @update:model-value="dateMenu = false"
+                                    ></v-date-picker>
+                                    <v-card-actions>
+                                        <v-spacer></v-spacer>
+                                        <v-btn variant="text" @click="dateMenu = false">Tancar</v-btn>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-dialog>
+                        </v-col>
+
+                        <v-col cols="12" class="justify-center d-flex">
+                            <v-text-field
+                            class="text-primary"
+                            v-model="formattedEndDate"
+                            label="Data de fi"
+                            prepend-inner-icon="mdi-calendar"
+                            readonly
+                            variant="outlined"
+                            @click="endDateMenu = true"
+                         ></v-text-field>
+                            <v-dialog v-model="endDateMenu" max-width="340">
+                                <v-card>
+                                    <v-date-picker
+                                        class="text-primary"
+                                        v-model="event.endDate"
+                                        title="Selecciona la data"
+                                        header="Data de fi de l'event"
+                                        @update:model-value="endDateMenu = false"
+                                    ></v-date-picker>
+                                    <v-card-actions>
+                                        <v-spacer></v-spacer>
+                                        <v-btn variant="text" @click="endDateMenu = false">Tancar</v-btn>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-dialog>
                         </v-col>
 
                         <v-col cols="12">
@@ -158,8 +204,13 @@ const event = reactive({
   fallaId: auth.fallaAdminInfo.fallaId,
   startHour: '',
   endHour: '',
+  endDate: null,
+  open: true,
+  createdAt: Date.now(),
   createdBy: auth.userInfo.name + ' ' + auth.userInfo.surname
 })
+const dateMenu = ref(false)
+const endDateMenu = ref(false)
 const props = defineProps({
     modelValue: Boolean
 })
@@ -183,6 +234,28 @@ const submitForm = async () => {
         
     }
 }
+const formattedDate = computed(() => {
+        if (!event.date) return ''
+        
+        // Convertimos el objeto Date a un string legible
+        return new Date(event.date).toLocaleDateString('ca-ES', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        })
+})
+
+const formattedEndDate = computed(() => {
+        if (!event.endDate) return ''
+        
+        // Convertimos el objeto Date a un string legible
+        return new Date(event.endDate).toLocaleDateString('ca-ES', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        })
+ })
+
 </script>
 
 <style scoped>

@@ -61,7 +61,7 @@ const closeError = async () => {
         </v-form>
     </v-container>
     <v-container v-if="auth.token">
-    <v-btn @click="handleLogout" class="bg-secondary">Log out</v-btn>
+    <v-btn @click="handleLogout" class="bg-ternary">Log out</v-btn>
   </v-container>
     <v-dialog v-model="showErrorDiag" max-width="400">
             <v-card>

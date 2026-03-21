@@ -38,17 +38,18 @@ const exit = () => {
     <v-dialog v-model="show" width="600">
         <v-row>
             <v-col>
-                <v-card>
-                    <v-card-title :style="{ fontSize: titleSize }" class="bg-secondary">
+                <v-card class="bg-primary">
+                    <v-card-title :style="{ fontSize: titleSize }" class="bg-ternary">
                        Eliminar la necessitat alimentària?
                     </v-card-title>
+                    <v-divider></v-divider>
                     <v-card-text>
                         {{ need.description }}
                     </v-card-text>
                     <v-divider></v-divider>
                     <v-card-actions>
-                        <v-btn color="grey-darken-1" variant="text" @click="deleteNeed">Eliminar</v-btn>
-                        <v-btn color="grey-darken-1" variant="text" @click="exit">Tanca</v-btn>
+                        <v-btn color="grey-darken-1" variant="text" class="bg-ternary" @click="deleteNeed">Eliminar</v-btn>
+                        <v-btn color="grey-darken-1" variant="text" class="bg-ternary" @click="exit">Tanca</v-btn>
                     </v-card-actions>
                 </v-card>      
             </v-col>

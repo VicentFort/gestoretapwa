@@ -18,7 +18,7 @@
           v-if="auth.userInfo?.adminAccess" 
           to="/adminPanel" 
           variant="text" 
-          color="secondary"
+          color="primary"
         >
           Administrar
         </v-btn>
@@ -68,15 +68,6 @@ const reloadAll = async () => {
 
 </script>
 <style lang="css">
-@import './style/main.css';
-.reload-btn {
-  margin-right: 20px;
-  justify-self: right;
-  align-self: right;
-  justify-content: right;
-  align-content: right;
-
-}
 
 
 </style>

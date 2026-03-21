@@ -2,8 +2,8 @@
     <v-dialog v-model="show" width="600">
         <v-row>
             <v-col>
-                <v-card>
-                    <v-card-title :style="{ fontSize: titleSize }" class="bg-secondary">
+                <v-card class="bg-primary">
+                    <v-card-title :style="{ fontSize: titleSize }" class="bg-ternary">
                        Eliminar la disposició?
                     </v-card-title>
                     <v-card-text>
@@ -11,8 +11,8 @@
                     </v-card-text>
                     <v-divider></v-divider>
                     <v-card-actions>
-                        <v-btn variant="text" @click="deletePref">Eliminar</v-btn>
-                        <v-btn variant="text" @click="exit">Tanca</v-btn>
+                        <v-btn variant="text" class="bg-ternary" @click="deletePref">Eliminar</v-btn>
+                        <v-btn variant="text" class="bg-ternary" @click="exit">Tanca</v-btn>
                     </v-card-actions>
                 </v-card>      
             </v-col>

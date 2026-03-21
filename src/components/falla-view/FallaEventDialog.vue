@@ -1,7 +1,7 @@
 <template>
-    <v-dialog v-model="show" width="500" >
-    <v-card v-if="event">
-      <v-card-title class="bg-secondary">
+    <v-dialog v-model="show" width="500">
+    <v-card v-if="event"  class="bg-primary" >
+      <v-card-title class="bg-ternary">
         Títol: {{ event?.title }}
       </v-card-title>
 
@@ -15,9 +15,9 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="grey-darken-1" variant="text" @click="joinEvent">Assistir</v-btn>
+        <v-btn color="grey-darken-1"   class="bg-ternary"  variant="text" @click="joinEvent">Assistir</v-btn>
         <v-spacer></v-spacer>
-        <v-btn color="grey-darken-1" variant="text" @click="show = false">Tanca</v-btn>
+        <v-btn color="grey-darken-1"  class="bg-ternary"  variant="text" @click="show = false">Tanca</v-btn>
       </v-card-actions>
       <v-dialog v-model="showAssistSuccess" max-width="400">
             <v-card>

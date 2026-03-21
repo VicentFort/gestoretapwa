@@ -1,10 +1,10 @@
 <template>
     <v-container>
-        <v-card>
+        <v-card class="bg-primary">
             <v-card-title class='bg-ternary'>
                 Llistat de membres
             </v-card-title>
-            <v-list>
+            <v-list class="bg-primary">
                 <v-list-item 
                     v-for="user in auth.fallaAdminInfo.users" 
                     :key="user.id"

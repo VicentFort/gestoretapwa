@@ -18,8 +18,16 @@
 
         <v-window v-model="tab">
             <v-tabs-window-item value="one">
-                <EventPanel/>
-                <TagPanel/>
+                <v-row rows="12" md="6">
+                    <v-col>
+                        <EventPanel/>
+                    </v-col>
+                    <v-col>
+                       <TagPanel/>
+                    </v-col>
+                </v-row>
+                    
+                
             </v-tabs-window-item>
             <v-tabs-window-item value="two">
                 <UsersPanel/>

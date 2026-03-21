@@ -40,12 +40,12 @@ import { ref, computed } from 'vue';
 <template>
     <v-container>
         <v-form @submit.prevent="sendUpdateForm" class="w-100">
-            <v-card>
+            <v-card class="bg-primary">
                 <v-card-title class="bg-ternary">Info de: {{ auth.userInfo.name }}</v-card-title>
                 <v-row>
                     <v-col cols="12" md="6">
                         <v-text-field
-                        class="text-primary"
+                        class="text-black"
                         label="Nom d'usuari"
                         :rules="[v => !!v || 'Nom necessari']"
                         v-model="uName"
@@ -54,7 +54,7 @@ import { ref, computed } from 'vue';
                     </v-col>
                     <v-col cols="12" md="6">
                         <v-text-field 
-                        class="text-primary"
+                        class="text-black"
                         label="Cognoms"
                         v-model="uSurname"
                         :rules="[v => !!v || 'Cognoms necessaris']"
@@ -63,7 +63,7 @@ import { ref, computed } from 'vue';
                     </v-col>
                     <v-col cols="12" class="py-0"> 
                         <v-text-field
-                            class="text-primary"
+                            class="text-black"
                             v-model="formattedDate"
                             label="Data d'aniversari"
                             prepend-inner-icon="mdi-calendar"
@@ -75,7 +75,7 @@ import { ref, computed } from 'vue';
                         <v-dialog v-model="menu" max-width="340">
                             <v-card>
                             <v-date-picker
-                                class="text-primary"
+                                class="text-black"
                                 v-model="uBirthday"
                                 title="Selecciona la data"
                                 header="Aniversari"
@@ -90,14 +90,14 @@ import { ref, computed } from 'vue';
                     </v-col>
                     <v-col cols="12" md="6" >
                         <v-switch
-                        class="text-primary"
+                        class="text-black"
                         label="Aniversari públic"
                         v-model="uShowBday"
                         />
                     </v-col>
                 </v-row>
                 <v-card-options>
-                    <v-btn text="Guarda canvis" class="bg-secondary" type="submit" :disabled="uSurname=='' || uName=='' "></v-btn>
+                    <v-btn text="Guarda canvis" class="bg-ternary" type="submit" :disabled="uSurname=='' || uName=='' "></v-btn>
                 </v-card-options>
                 
                
@@ -131,5 +131,11 @@ import { ref, computed } from 'vue';
     </v-container>
 </template>
 
-<style scoped>
+<style>
+.v-card{
+    border-color: #FF7F50;
+    border-width: 10px;
+    border-style: solid;
+}
+
 </style>

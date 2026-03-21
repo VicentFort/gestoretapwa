@@ -6,6 +6,7 @@ import * as directives from 'vuetify/directives'
 import { aliases, mdi } from 'vuetify/iconsets/mdi'
 
 export default createVuetify({
+  
   components,
   directives,
   icons: {
@@ -22,12 +23,11 @@ export default createVuetify({
       form:{
         dark:false,
         colors: {
-          primary: '#ff8c00',
-          background: '#888888',
-          primary: '#888888',
-          secondary: '#000000',
-          ternary: '#ffffff',
-          surface: '#dea921'
+          background: '#87CEEB',
+          primary: '#F5F5F5',
+          secondary: '#87CEEB',
+          ternary: '#FF7F50',
+          surface: '#FF7F50'
 
         },
         variables: {
@@ -38,11 +38,11 @@ export default createVuetify({
       light: {
         dark:false,
         colors: {
-          surface: '#ebb675',
-          background: '#b4aaa4',
-          primary: '#000000',
-          secondary: '#7368b6',
-          ternary:'#ba8d1d'
+          background: '#7fa1af',
+          secondary: '#7fa1af',
+          primary: '#F5F5F5',
+          ternary: '#FF7F50',
+          surface: '#FF7F50'
 
           
         }

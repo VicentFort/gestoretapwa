@@ -1,16 +1,16 @@
 <template>
     <v-dialog v-model="show" width="500">
-        <v-card v-if="user">
-        <v-card-title class="text-h5 text-white bg-secondary">{{ user.name }} {{ user.surname }}</v-card-title>
-        <v-card-text class="pa-4">{{ user.birthday }}</v-card-text>
-        <v-switch 
-            v-if="user.id!=auth.userInfo.id"
-            v-model="adminAccess"
-            class="text-primary"
-            label="Administrador"
-            @click="editAdminAccess"
-        ></v-switch>
-        <v-divider></v-divider>
+        <v-card v-if="user"  class="bg-primary">
+            <v-card-title class="text-h5 text-black bg-ternary">{{ user.name }} {{ user.surname }}</v-card-title>
+            <v-card-text class="pa-4">{{ user.birthday }}</v-card-text>
+            <v-switch 
+                v-if="user.id!=auth.userInfo.id"
+                v-model="adminAccess"
+                class="text-black"
+                label="Administrador"
+                @click="editAdminAccess"
+            ></v-switch>
+            <v-divider></v-divider>
 
         <v-card-actions>
             <v-spacer></v-spacer>

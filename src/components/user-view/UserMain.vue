@@ -37,8 +37,14 @@ const mobile = useDisplay()
                         </v-window-item>
 
                         <v-window-item value="three">
-                            <UserNeedsInfo/>
-                            <UserPrefsInfo/>
+                            <v-row rows="12" md="6">
+                                <v-col> 
+                                    <UserNeedsInfo/>
+                                </v-col>
+                                <v-col>
+                                    <UserPrefsInfo/>
+                                </v-col>
+                            </v-row>
                         </v-window-item>
                     </v-window>
                 </v-container>

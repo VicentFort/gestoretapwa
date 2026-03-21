@@ -20,9 +20,9 @@ const deleteNeed = (need) => {
 
 <template>
     <v-container v-if="auth.userInfo?.foodNeeds">
-        <v-card>
+        <v-card class="bg-primary">
            <v-card-title class="bg-ternary">Les meues preferències alimentàries:</v-card-title>
-           <v-list>
+           <v-list clasS="bg-primary">
                 <v-list-item
                     v-for="need in auth.userInfo?.foodNeeds" 
                     :key="need.foodNeedId"
@@ -35,7 +35,7 @@ const deleteNeed = (need) => {
                 
             </v-divider>
             <v-card-actions class="justify-center">
-                <v-btn @click="openDialog" class="bg-secondary">Afegir Necessitat</v-btn>
+                <v-btn @click="openDialog" class="bg-ternary">Afegir Necessitat</v-btn>
             </v-card-actions>
             <v-dialog v-model="isDialogOpen">
                 <AddNeedDialog v-model="isDialogOpen" ></AddNeedDialog>

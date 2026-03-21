@@ -20,11 +20,11 @@ const openCreateEvent = () => {
 
 <template>
     <v-container>
-        <v-card>
+        <v-card class="bg-primary" >
             <v-card-title class='bg-ternary'>
                 Llistat d'events
             </v-card-title>
-            <v-list>
+            <v-list class="bg-primary">
                 <v-list-item 
                     v-for="event in auth.fallaAdminInfo.events" 
                     :key="event.id"
@@ -34,8 +34,8 @@ const openCreateEvent = () => {
                 >
             </v-list-item>
             </v-list>
-            <v-divider></v-divider>
 
+            <v-divider></v-divider>
 
             <v-dialog v-model="isDetailsOpen" width="auto">
                 <EventDialog v-model="isDetailsOpen" :event="selectedEvent"/>
@@ -44,8 +44,16 @@ const openCreateEvent = () => {
                 <EventCreateDialog v-model="isCreateOpen"/>
             </v-dialog>
             <v-card-actions class="justify-center">
-               <v-btn class="justify-center bg-secondary" type="text" @click='openCreateEvent'>Crear Event</v-btn> 
+               <v-btn class="justify-center bg-ternary" type="text" @click='openCreateEvent'>Crear Event</v-btn> 
             </v-card-actions>
         </v-card>
     </v-container>
 </template>
+
+<style>
+.v-card{
+    border-color: #FF7F50;
+    border-width: 10px;
+    border-style: solid;
+}
+</style>

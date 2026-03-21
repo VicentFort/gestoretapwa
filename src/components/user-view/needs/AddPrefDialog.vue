@@ -1,9 +1,8 @@
 <template>
      <v-dialog v-model="show" width="500">
-        <v-card>
-            <v-card-title class="bg-secondary">Afig disposició</v-card-title>
+        <v-card class="bg-primary">
+            <v-card-title class="bg-ternary">Afig disposició</v-card-title>
             <v-select
-
                 v-model="tag.id"
                 :items="auth.userInfo.fallaInfo.tags"
                 item-title="name"
@@ -14,8 +13,8 @@
             ></v-select>
             <v-divider></v-divider>
             <v-card-actions>
-                <v-btn  variant="text" @click="submitForm" >Guarda</v-btn>
-                <v-btn  variant="text" @click="show=false" >Tanca</v-btn>
+                <v-btn  variant="text" @click="submitForm" class="bg-ternary" >Guarda</v-btn>
+                <v-btn  variant="text" @click="show=false" class="bg-ternary">Tanca</v-btn>
             </v-card-actions>
 
         </v-card>

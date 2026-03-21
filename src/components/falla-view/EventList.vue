@@ -1,9 +1,9 @@
 <template>
     <v-row class="fill-height">
         <v-col>
-            <v-card>
+            <v-card class="bg-primary">
                 <v-card-title class="bg-ternary">Llistat d'events</v-card-title>
-                <v-list>
+                <v-list class="bg-primary">
                     <v-list-item
                         v-for="event in auth.userInfo.fallaInfo.events" 
                         :key="event.id"
@@ -36,3 +36,6 @@ const showEvent = (event) => {
   isDialogOpen.value = true;
 };
 </script>
+<style>
+
+</style>

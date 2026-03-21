@@ -21,11 +21,11 @@ const openCreateTag = () => {
 
 <template>
     <v-container>
-        <v-card>
+        <v-card class="bg-primary">
             <v-card-title class='bg-ternary'>
                 Llistat d'etiquetes d'events
             </v-card-title>
-            <v-list>
+            <v-list class="bg-primary">
                 <v-list-item 
                     v-for="tag in auth.fallaAdminInfo.tags" 
                     :key="tag.id"
@@ -45,8 +45,11 @@ const openCreateTag = () => {
                 <TagCreateDialog v-model="isCreateOpen"/>
             </v-dialog>
             <v-card-actions class="justify-center">
-               <v-btn class="justify-center bg-secondary" type="text" @click='openCreateTag'>Crar Etiqueta</v-btn> 
+               <v-btn class="justify-center bg-ternary" type="text" @click='openCreateTag'>Crar Etiqueta</v-btn> 
             </v-card-actions>
         </v-card>
     </v-container>
 </template>
+<style>
+
+</style>

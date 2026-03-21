@@ -6,5 +6,20 @@
   text-align: center;
 }
 
+.v-card{
+    border-color: #FF7F50;
+    border-width: 10px;
+    border-style: solid;
+}
 
-
+.v-application .v-list-item {
+    width: 300px;
+    justify-content: center;
+    justify-items: center;
+    justify-self: center;
+    background-color: #ff7f50 !important;
+    margin-top: 2%;
+    border: 5px solid #ff7f50 !important; /* Resumido */
+    border-radius: 10px !important;
+    overflow: hidden; /* Vital para que el fondo no se salga de las esquinas */
+}
