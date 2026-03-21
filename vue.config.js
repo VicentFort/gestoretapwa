@@ -14,6 +14,7 @@ module.exports = defineConfig({
   },
   devServer: {
     host:'0.0.0.0',
+    /*
     server: {
       type:'https',
       options: {
@@ -21,6 +22,7 @@ module.exports = defineConfig({
         cert: readFileSync('./certificates/37.135.29.68+2.pem'),
       }
     },
+    */
     port: 5173
   },
 });
