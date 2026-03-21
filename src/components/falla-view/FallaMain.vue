@@ -24,7 +24,7 @@ const tabFalla = ref('one')
                     </v-sheet>
                     <v-window v-model="tabFalla" class="mt-4">
                         <v-window-item value="one" >
-                            <v-row cols="12" md="6">
+                            <v-row rows="12" md="6">
                                 <v-col>
                                     <EventList/>
                                 </v-col>
