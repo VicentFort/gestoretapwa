@@ -24,47 +24,49 @@ const showEvent = (event) => {
 </script>
 
 <template>
-    <v-row rows="12" md="6">
-       <v-col>
-            <v-container>
-                <v-card class="bg-primary">
-                    <v-card-title class="bg-ternary">Assistències</v-card-title>
-                    <v-list class="bg-primary">
-                        <v-list-item
-                            v-for="event in auth.userInfo.events" 
-                            :key="event.id"
-                            :title="event.title"
-                            @click="showEvent(event)"
-                        >
-                        </v-list-item>
-                    </v-list>
-                </v-card>
-            </v-container>
-       </v-col>
-       <v-col>
-            <v-container>
-                <v-divider></v-divider>
-                <v-card>
-                    <v-card-title class="bg-ternary">Events amb càrrec</v-card-title>
-                    <v-list class="bg-primary">
-                        <v-list-item
-                            v-for="event in auth.userInfo?.attEvents" 
-                            :key="event.id"
-                            :title="event.title"
-                            @click="showAttEvent(event)"
-                        >
-                        </v-list-item>
-                    </v-list>
-                </v-card>
-                <v-dialog v-model="isDialogOpen" width="auto">
-                    <UserEventDialog v-model="isDialogOpen" :event="selectedEvent"/>
-                </v-dialog>
-                <v-dialog v-model="isAttDialogOpen" width="auto">
-                    <UserEventAttDialog v-model="isAttDialogOpen" :event="selectedAttEvent"/>
-                </v-dialog>
-            </v-container> 
-       </v-col> 
-    </v-row>
+    <v-container>
+        <v-row rows="12" md="6">
+        <v-col>
+                <v-container>
+                    <v-card class="bg-primary">
+                        <v-card-title class="bg-ternary">Assistències</v-card-title>
+                        <v-list class="bg-primary">
+                            <v-list-item
+                                v-for="event in auth.userInfo.events" 
+                                :key="event.id"
+                                :title="event.title"
+                                @click="showEvent(event)"
+                            >
+                            </v-list-item>
+                        </v-list>
+                    </v-card>
+                </v-container>
+        </v-col>
+        <v-col>
+                <v-container>
+                    <v-divider></v-divider>
+                    <v-card>
+                        <v-card-title class="bg-ternary">Events amb càrrec</v-card-title>
+                        <v-list class="bg-primary">
+                            <v-list-item
+                                v-for="event in auth.userInfo?.attEvents" 
+                                :key="event.id"
+                                :title="event.title"
+                                @click="showAttEvent(event)"
+                            >
+                            </v-list-item>
+                        </v-list>
+                    </v-card>
+                    <v-dialog v-model="isDialogOpen" width="auto">
+                        <UserEventDialog v-model="isDialogOpen" :event="selectedEvent"/>
+                    </v-dialog>
+                    <v-dialog v-model="isAttDialogOpen" width="auto">
+                        <UserEventAttDialog v-model="isAttDialogOpen" :event="selectedAttEvent"/>
+                    </v-dialog>
+                </v-container> 
+        </v-col> 
+        </v-row>
+    </v-container>
     
      
 </template>

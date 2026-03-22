@@ -1,12 +1,13 @@
 <template>
     <v-dialog v-model="show" width="500">
             
-                <v-card class="pa-2">
-                    <v-card-title class="bg-secondary">Afegir etiqueta</v-card-title>
+                <v-card class="bg-primary pa-2">
+                    <v-card-title class="bg-ternary">Afegir etiqueta</v-card-title>
                     <v-form ref="form" v-model="valid" @submit.prevent="submitForm">
                     <v-row>
                         <v-col cols="12">
                             <v-text-field
+                                class="text-black"
                                 v-model="tagName"
                                 :counter="100"
                                 label="Nom d'etiqueta"
@@ -18,8 +19,8 @@
                 
                 <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn class="text-white bg-secondary" type="submit" :disabled="!valid">Crear</v-btn>
-                <v-btn class="text-white bg-secondary" variant="text" @click="show = false">Tanca</v-btn>
+                <v-btn class="text-white bg-primary" type="submit" :disabled="!valid">Crear</v-btn>
+                <v-btn class="text-white bg-primary" variant="text" @click="show = false">Tanca</v-btn>
             </v-card-actions>
             </v-form>
             </v-card>

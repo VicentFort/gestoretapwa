@@ -22,4 +22,11 @@
     border: 5px solid #ff7f50 !important; /* Resumido */
     border-radius: 10px !important;
     overflow: hidden; /* Vital para que el fondo no se salga de las esquinas */
+    
+}
+@media (max-width: 600px) {
+      .v-application .v-list-item {
+        width: 150px !important; /* Se encoge en pantallas grandes */
+        margin-top: 2% !important;
+      }
 }

@@ -1,7 +1,7 @@
 <template>
     <v-dialog v-model="show" width="500">
-                <v-card class="pa-2">
-                    <v-card-title class="bg-secondary">Afegir event</v-card-title>
+                <v-card class="bg-primary pa-2">
+                    <v-card-title class="bg-ternary">Afegir event</v-card-title>
                     <v-form ref="form" v-model="valid" @submit.prevent="submitForm">
                     <v-row>
                         <v-col cols="12">
@@ -41,7 +41,7 @@
 
                         <v-col cols="12" class="justify-center d-flex">
                             <v-text-field
-                            class="text-primary"
+                            class="text-black"
                             v-model="formattedDate"
                             label="Data d'inici"
                             prepend-inner-icon="mdi-calendar"
@@ -49,10 +49,10 @@
                             variant="outlined"
                             @click="dateMenu = true"
                             ></v-text-field>
-                            <v-dialog v-model="dateMenu" max-width="340">
+                            <v-dialog v-model="dateMenu" max-width="340 bg-ternary">
                                 <v-card>
                                     <v-date-picker
-                                        class="text-primary"
+                                        class="text-black"
                                         v-model="event.date"
                                         title="Selecciona la data"
                                         header="Data d'inici de l'event"
@@ -60,7 +60,7 @@
                                     ></v-date-picker>
                                     <v-card-actions>
                                         <v-spacer></v-spacer>
-                                        <v-btn variant="text" @click="dateMenu = false">Tancar</v-btn>
+                                        <v-btn variant="text" class="bg-ternary" @click="dateMenu = false">Tancar</v-btn>
                                     </v-card-actions>
                                 </v-card>
                             </v-dialog>
@@ -68,7 +68,7 @@
 
                         <v-col cols="12" class="justify-center d-flex">
                             <v-text-field
-                            class="text-primary"
+                            class="text-black"
                             v-model="formattedEndDate"
                             label="Data de fi"
                             prepend-inner-icon="mdi-calendar"
@@ -79,7 +79,7 @@
                             <v-dialog v-model="endDateMenu" max-width="340">
                                 <v-card>
                                     <v-date-picker
-                                        class="text-primary"
+                                        class="text-black"
                                         v-model="event.endDate"
                                         title="Selecciona la data"
                                         header="Data de fi de l'event"
@@ -97,7 +97,7 @@
                             <v-switch
                                 v-model="event.publicField"
                                 label="Event públic"
-                                color="primary"
+                                color="secondary"
                             ></v-switch>
                         </v-col>
 
@@ -134,20 +134,21 @@
                                 persistent-hint
                                 item-title="username"
                                 item-value="id"
-                                label="2. Usuaris disponibles"
+                                label="Usuaris disponibles"
                                 multiple
                                 chips
                                 variant="outlined"
-                                class="mt-4"
+                                class="mt-4 bg-primary"
                                 >
                                 <template v-slot:chip="{ props, item }">
                                     <v-chip
+                                    class="bg-primary"
                                     v-bind="props"
                                     :text="item.raw.username" 
                                     ></v-chip>
                                 </template>
                                 <template v-slot:no-data>
-                                    <v-list-item>
+                                    <v-list-item class="bg-primary">
                                     <v-list-item-title>
                                         No hi ha usuaris disponibles per a l'etiqueta "{{ selectedTag.name }}"
                                     </v-list-item-title>
@@ -159,8 +160,8 @@
                 
                 <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn class="text-white bg-secondary" type="submit" :disabled="!valid">Crear</v-btn>
-                <v-btn class="text-white bg-secondary" variant="text" @click="show = false">Tanca</v-btn>
+                <v-btn class="text-white bg-ternary" type="submit" :disabled="!valid">Crear</v-btn>
+                <v-btn class="text-white bg-ternary" variant="text" @click="show = false">Tanca</v-btn>
             </v-card-actions>
             </v-form>
             </v-card>

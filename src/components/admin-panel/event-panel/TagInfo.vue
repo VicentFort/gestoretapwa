@@ -1,18 +1,18 @@
 <template>
     <v-dialog v-model="show" width="500">
-    <v-card v-if="tag">
-      <v-card-title class="text-h5 text-white bg-secondary">
+    <v-card v-if="tag" class="bg-primary">
+      <v-card-title class="text-h5 text-black bg-ternary">
         {{  tag.name }}
       </v-card-title>
 
       <v-divider></v-divider>
 
       <v-card-actions>
-        <v-btn class="bg-secondary" variant="text" @click="confirmDelete">
+        <v-btn class="bg-primary" variant="text" @click="confirmDelete">
           Elimina
         </v-btn>
         <v-spacer></v-spacer>
-        <v-btn class="bg-secondary" variant="text" @click="show = false">
+        <v-btn class="bg-primary" variant="text" @click="show = false">
           Tanca
         </v-btn>
       </v-card-actions>
@@ -24,7 +24,7 @@
             Estàs a punt d'eliminar la etiqueta: 
             <strong>{{ tag?.name }}</strong>.
             <br><br>
-            <span class="text-caption text-grey">Esta acció no es pot desfer i s'eliminaran tots els events associats.</span>
+            <span class="text-caption text-black">Esta acció no es pot desfer i s'eliminaran tots els events associats.</span>
           </v-card-text>
 
           <v-divider></v-divider>

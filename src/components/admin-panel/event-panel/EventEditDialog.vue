@@ -1,7 +1,7 @@
 <template>
     <v-dialog v-model="show" width="500">
-            <v-card class="pa-2">
-                <v-card-title class="bg-secondary">Editar event</v-card-title>
+            <v-card class="bg-primary pa-2">
+                <v-card-title class="bg-ternary">Editar event</v-card-title>
                 <v-form ref="form" v-model="valid" @submit.prevent="submitForm">
                 <v-row>
                     <v-col cols="12">
