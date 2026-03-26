@@ -101,18 +101,7 @@
                             ></v-switch>
                         </v-col>
 
-                        <v-col cols="12" md="6">
-                            <v-select
-                                v-model="selectedTag"
-                                :items="tags"
-                                item-title="name"
-                                item-value="id"
-                                label="Selecciona una etiqueta"
-                                :rules="[v => !!v || 'Has de seleccionar una etiqueta']"
-                                persistent-hint
-                                variant="outlined"
-                            ></v-select>
-                        </v-col>
+                       
                         <v-col cols="12" md="6">
                             <v-text-field type="time"
                                 v-model="event.startHour"
@@ -124,6 +113,18 @@
                                 v-model="event.endHour"
                                 label="Hora de fí"
                             />
+                        </v-col>
+                         <v-col cols="12" md="6">
+                            <v-select
+                                v-model="selectedTag"
+                                :items="tags"
+                                item-title="name"
+                                item-value="id"
+                                label="Selecciona una etiqueta"
+                                :rules="[v => !!v || 'Has de seleccionar una etiqueta']"
+                                persistent-hint
+                                variant="outlined"
+                            ></v-select>
                         </v-col>
                         <v-col cols="12" md="6">
                             <v-select
@@ -207,7 +208,7 @@ const event = reactive({
   endHour: '',
   endDate: null,
   open: true,
-  createdAt: Date.now(),
+  createdAt: new Date(),
   createdBy: auth.userInfo.name + ' ' + auth.userInfo.surname
 })
 const dateMenu = ref(false)
@@ -225,7 +226,7 @@ const submitForm = async () => {
     const { valid: isValid } = await form.value.validate()
     if (isValid) {
         try {
-            console.log(event.createdBy)
+            if(event.endDate < event.date) { event.endDate = event.date}
             const eventData = await auth.addEvent(event, selectedTag.value, selectedUsers.value)
             await auth.joinEvent(eventData?.id)
             show.value = false
@@ -236,26 +237,27 @@ const submitForm = async () => {
     }
 }
 const formattedDate = computed(() => {
-        if (!event.date) return ''
-        
-        // Convertimos el objeto Date a un string legible
-        return new Date(event.date).toLocaleDateString('ca-ES', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-        })
+  if (!event.date) return ''
+  const dateObj = new Date(event.date)
+  const offset = dateObj.getTimezoneOffset() * 60000
+  const localISO = new Date(dateObj.getTime() - offset).toISOString()
+  
+  // Extraemos YYYY-MM-DD y HH:mm:ss.SSS
+  const [date, timeWithZ] = localISO.split('T')
+  const time = timeWithZ.slice(0, 12) 
+  return `${date} ${time}`
 })
 
 const formattedEndDate = computed(() => {
-        if (!event.endDate) return ''
-        
-        // Convertimos el objeto Date a un string legible
-        return new Date(event.endDate).toLocaleDateString('ca-ES', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-        })
- })
+  if (!event.endDate) return ''
+  const dateObj = new Date(event.endDate)
+  const offset = dateObj.getTimezoneOffset() * 60000
+  const localISO = new Date(dateObj.getTime() - offset).toISOString()
+  
+  const [date, timeWithZ] = localISO.split('T')
+  const time = timeWithZ.slice(0, 12)
+  return `${date} ${time}`
+})
 
 </script>
 

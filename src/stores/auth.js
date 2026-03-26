@@ -50,13 +50,14 @@ export const useAuthStore = defineStore("auth", {
 
       delete api.defaults.headers.common["Authorization"];
     },
-    async updateUser(uName, uSurname, uBday, uShowBday) {
+    async updateUser(uName, uSurname, uBday, uShowBday, uNickname) {
       try {
           const response = await api.put('/user/update', {
               name: uName,
               surname: uSurname,
               birthday: uBday,
-              showBday: uShowBday
+              showBday: uShowBday,
+              nickname: uNickname
           }).catch(function (error) {
               if(!error.response.data?.success) {
                 throw error.response.data.message
@@ -107,8 +108,10 @@ export const useAuthStore = defineStore("auth", {
               }
               throw error.message
             });
-
+          
+            orderJSONStructure(responseInfo.data)
           this.userInfo = responseInfo.data;
+    
           sessionStorage.setItem("userInfo", JSON.stringify(this.userInfo));
 
           if(this.userInfo.adminAccess==true) {
@@ -121,7 +124,6 @@ export const useAuthStore = defineStore("auth", {
       },
       async addEvent(event, tag, users) {
         try {
-          console.log(event.createdBy)
           const response = await api.post('/event/create', {
             title: event.title,
             publicField: event.publicField,
@@ -129,13 +131,16 @@ export const useAuthStore = defineStore("auth", {
             price: event.price,
             description: event.description,
             maxPeople: event.maxPeople,
-            date: event.date ? new Date(event.date).toLocaleDateString('en-CA') : null,
+            date: formatToYYYYMMDD(event.date),
             fallaId: this.fallaAdminInfo.fallaId,
             tagId: tag,
             startHour: event.startHour,
             endHour: event.endHour,
             attendants: users,
-            createdBy: event.createdBy
+            createdBy: event.createdBy,
+            open: event.open,
+            createdAt: event.createdAt,
+            endDate: formatToYYYYMMDD(event.endDate)
           }).catch(function (error) {
               if(!error.response.data?.success) {
                 console.error(error.response.data.message)
@@ -160,6 +165,7 @@ export const useAuthStore = defineStore("auth", {
               }
               throw error.message
             })
+            orderJSONStructure(response.data)
           this.fallaAdminInfo = response.data
           sessionStorage.setItem('fallaAdminInfo', JSON.stringify(this.fallaAdminInfo))
         } catch(error) {
@@ -324,3 +330,55 @@ export const useAuthStore = defineStore("auth", {
     }
   },
 );
+
+
+const formatToBackend = (date) => {
+  if (!date) return null
+  const d = new Date(date)
+  const offset = d.getTimezoneOffset() * 60000
+  const localISO = new Date(d.getTime() - offset).toISOString()
+  return localISO.replace('T', ' ').replace('Z', '')
+}
+const formatToYYYYMMDD = (date) => {
+  if (!date) return null;
+
+  const d = formatToBackend(date);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+/**
+ * Ordena recursivamente todos los arrays de un JSON sin importar su estructura interna.
+ */
+function orderJSONStructure(data) {
+  // 1. Si no es objeto o es nulo, terminamos (Caso base)
+  if (typeof data !== 'object' || data === null) {
+    return data;
+  }
+
+  // 2. Si es un Array, lo ordenamos primero
+  if (Array.isArray(data)) {
+    data.sort((a, b) => {
+      // Convertimos a string para tener una base de comparación universal
+      // Esto funciona para números, strings, y objetos (los ordena por su representación)
+      const valA = (typeof a === 'object') ? JSON.stringify(a) : a;
+      const valB = (typeof b === 'object') ? JSON.stringify(b) : b;
+
+      if (valA < valB) return -1;
+      if (valA > valB) return 1;
+      return 0;
+    });
+
+    // 3. Después de ordenar el array, entramos en sus elementos por si tienen más arrays
+    data.forEach(item => orderJSONStructure(item));
+  } else {
+    // 4. Si es un objeto, recorremos sus claves
+    Object.keys(data).forEach(key => {
+      data[key] = orderJSONStructure(data[key]);
+    });
+  }
+
+  return data;
+}

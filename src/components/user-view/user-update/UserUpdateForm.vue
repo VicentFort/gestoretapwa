@@ -12,9 +12,10 @@ import { ref, computed } from 'vue';
     const uSurname = ref(auth.userInfo?.surname || '')
     const uBirthday = ref(auth.userInfo?.birthday || new Date())
     const uShowBday = ref(auth.userInfo?.showBday || '')
+    const uNickname = ref(auth.userInfo?.nickname || '')
     const sendUpdateForm = async () => {
         try {
-            await auth.updateUser(uName.value, uSurname.value, uBirthday.value, uShowBday.value)
+            await auth.updateUser(uName.value, uSurname.value, uBirthday.value, uShowBday.value, uNickname.value)
             showSuccessDiag.value = true
         } catch(err) {
             error.value = err
@@ -46,47 +47,11 @@ import { ref, computed } from 'vue';
                     <v-col cols="12" md="6">
                         <v-text-field
                         class="text-black"
-                        label="Nom d'usuari"
-                        :rules="[v => !!v || 'Nom necessari']"
-                        v-model="uName"
+                        label="Nickname / Malnom"
+                        :rules="[v => !!v || 'Nickname necessari']"
+                        v-model="uNickname"
                         id="uName"
                         />
-                    </v-col>
-                    <v-col cols="12" md="6">
-                        <v-text-field 
-                        class="text-black"
-                        label="Cognoms"
-                        v-model="uSurname"
-                        :rules="[v => !!v || 'Cognoms necessaris']"
-                        id="uName"
-                        />
-                    </v-col>
-                    <v-col cols="12" class="py-0"> 
-                        <v-text-field
-                            class="text-black"
-                            v-model="formattedDate"
-                            label="Data d'aniversari"
-                            prepend-inner-icon="mdi-calendar"
-                            readonly
-                            variant="outlined"
-                            @click="menu = true"
-                        ></v-text-field>
-
-                        <v-dialog v-model="menu" max-width="340">
-                            <v-card>
-                            <v-date-picker
-                                class="text-black"
-                                v-model="uBirthday"
-                                title="Selecciona la data"
-                                header="Aniversari"
-                                @update:model-value="menu = false"
-                            ></v-date-picker>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn variant="text" @click="menu = false">Tancar</v-btn>
-                            </v-card-actions>
-                            </v-card>
-                        </v-dialog>
                     </v-col>
                     <v-col cols="12" md="6" >
                         <v-switch

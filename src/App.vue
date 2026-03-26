@@ -1,5 +1,16 @@
 <template>
   <v-app>
+    <v-overlay
+      :model-value="loadingStore.isLoading"
+      class="justify-center align-center"
+      persistent
+    >
+      <v-progress-circular
+        color="primary"
+        indeterminate
+        size="64"
+        />
+    </v-overlay>
     <v-container class="align-center d-flex">
       <v-app-bar>
 
@@ -43,8 +54,10 @@
               Administrar Falla
             </v-list-item>
             <v-divider v-if="auth.token"></v-divider>
-            <v-list-item v-if="auth.token" @click="reloadAll" prepend-icon="mdi-refresh">
-              Reload
+            <v-list-item v-if="auth.token" prepend-icon="mdi-refresh">
+              <v-btn icon @click="authStore.fetchUserInfo()">
+                <v-icon>mdi-refresh</v-icon>
+              </v-btn>
             </v-list-item>
           </v-list>
         </v-menu>
@@ -59,12 +72,20 @@
   </v-app>
 </template>
 <script setup>
+import { onMounted, ref } from 'vue';
 import { useAuthStore } from './stores/auth';
+import { useLoadingStore } from './stores/loadingStore';
 
+const loadingStore = useLoadingStore()
 const auth = useAuthStore()
 const reloadAll = async () => {
   await auth.fetchUserInfo()
 }
+onMounted(async () => {
+  if(auth.token) {
+    await auth.fetchUserInfo()
+  }
+})
 
 </script>
 <style lang="css">

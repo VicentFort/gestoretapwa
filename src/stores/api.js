@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useLoadingStore } from "./loadingStore";
 
 
 const API_IP = "https://gestoretaapp-production.up.railway.app";
@@ -8,6 +9,8 @@ const api = axios.create({
   baseURL: API_IP
 })
 api.interceptors.request.use(config => {
+  const loading = useLoadingStore()
+  loading.show()
   const token = sessionStorage.getItem('token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -16,6 +19,19 @@ api.interceptors.request.use(config => {
 }, error => {
   return Promise.reject(error);
 });
+api.interceptors.response.use(
+  response => {
+    const loading = useLoadingStore();
+    loading.hide(); // Desactivamos al recibir respuesta
+    return response;
+  },
+  error => {
+    const loading = useLoadingStore();
+    loading.hide(); // Desactivamos aunque falle
+    return Promise.reject(error);
+  }
+);
+
 
 export default api
 /*

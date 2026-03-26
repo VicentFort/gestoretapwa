@@ -3,6 +3,7 @@ import { useAuthStore } from '@/stores/auth';
 import UserEventDialog from './UserEventDialog.vue';
 import { ref } from 'vue';
 import UserEventAttDialog from './UserEventAttDialog.vue';
+import UserEventFilter from './UserEventFilter.vue';
 
 
 const auth = useAuthStore()
@@ -11,6 +12,16 @@ const selectedEvent = ref(null);
 
 const isAttDialogOpen = ref(false);
 const selectedAttEvent = ref(null)
+// 1. Inicializamos con los eventos actuales del store
+const events = ref(auth.userInfo?.events ? [...auth.userInfo.events] : [])
+
+// 2. Esta función debe actualizar la variable 'events' que usa el v-for
+const handleFilter = (filteredList) => {
+    // Si filteredList llega, lo asignamos. 
+    // Si por alguna razón llegara vacío o null al vaciar, 
+    // nos aseguramos de traer la lista maestra del store.
+    events.value = filteredList || [...auth.userInfo.events];
+};
 
 const showAttEvent = (event) => {
     selectedAttEvent.value = event
@@ -32,13 +43,16 @@ const showEvent = (event) => {
                         <v-card-title class="bg-ternary">Assistències</v-card-title>
                         <v-list class="bg-primary">
                             <v-list-item
-                                v-for="event in auth.userInfo.events" 
+                                v-for="event in events" 
                                 :key="event.id"
                                 :title="event.title"
                                 @click="showEvent(event)"
                             >
                             </v-list-item>
                         </v-list>
+                        <v-card-actions class="justify-center align-center">
+                            <UserEventFilter @update-filter="handleFilter"></UserEventFilter>
+                        </v-card-actions>
                     </v-card>
                 </v-container>
         </v-col>

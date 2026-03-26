@@ -6,18 +6,18 @@
       </v-card-title>
 
       <v-card-text class="pa-4">Descripció: {{ event?.description }}</v-card-text>
-
-      <v-card-text class="pa-4">Data i hora: {{ event?.date }}</v-card-text>
-
-      <v-card-text class="pa-4">Etiqueta {{ event?.tagName }}</v-card-text>
+      <v-card-text class="pa-4">Data: {{ formattedDate }}</v-card-text>
+      <v-card-text class="pa-4">Hora: {{ formattedTime }} </v-card-text>
+      <v-card-text class="pa-4">Etiqueta: {{ event?.tagName }}</v-card-text>
+      <v-card-text class="pa-4">Estat: {{ formattedOpen }}</v-card-text>
 
       <v-divider></v-divider>
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="grey-darken-1"   class="bg-ternary"  variant="text" @click="joinEvent">Assistir</v-btn>
+        <v-btn color="grey-darken-1" class="bg-ternary" variant="text" :disabled="!event.open" @click="joinEvent">Assistir</v-btn>
         <v-spacer></v-spacer>
-        <v-btn color="grey-darken-1"  class="bg-ternary"  variant="text" @click="show = false">Tanca</v-btn>
+        <v-btn color="grey-darken-1" class="bg-ternary"  variant="text" @click="show = false">Tanca</v-btn>
       </v-card-actions>
       <v-dialog v-model="showAssistSuccess" max-width="400">
             <v-card>
@@ -87,6 +87,31 @@ const closeError = () => {
     showErrorDiag.value = false
     error.value=''
 }
+//Para mostrar las fechas formateadas del evento. Si es en el mismo dia muestra solo la fecha inicial, si es de varios muestra las 2.
+const formattedDate = computed(() => {
+    if(props.event.date == props.event.endDate) return `${new Date(props.event.date).toLocaleDateString('ca-ES',{
+      day:'2-digit',
+      month:'2-digit',
+      year:'2-digit'
+    })}`
+    return `${new Date(props.event.date).toLocaleDateString('ca-ES',{
+      day:'2-digit',
+      month:'2-digit',
+      year:'2-digit'
+    })} fins a: ${new Date(props.event.endDate).toLocaleDateString('ca-ES',{
+      day:'2-digit',
+      month:'2-digit',
+      year:'2-digit'
+    })}` 
+})
+
+const formattedTime = computed(() => {
+    return `${props.event.startHour.substring(0,2)}:${props.event.startHour.substring(3,5)}`
+})
+
+const formattedOpen = computed(() => {
+    return props.event.open ? 'Obert' : 'Tancat'
+})
 </script>
 
 <style>

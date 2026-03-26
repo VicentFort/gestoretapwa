@@ -51,6 +51,8 @@ import RequestPanel from './user-panel/RequestPanel.vue';
 import TagPanel from './event-panel/TagPanel.vue';
 
 const auth = useAuthStore()
-auth.fetchFallaAdminInfo()
+if(!auth.fallaAdminInfo) {
+    auth.fetchFallaAdminInfo()
+}
 const tab = ref('one')
 </script>
