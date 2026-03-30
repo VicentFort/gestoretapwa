@@ -6,7 +6,7 @@ const API_IP = "https://gestoretaapp-production.up.railway.app";
 const LOCAL_API_IP = "http://localhost:8080";
 const GOOGLE_CALLENDAR_API = 'https://www.googleapis.com/auth/calendar';
 const api = axios.create({
-  baseURL: API_IP
+  baseURL: LOCAL_API_IP
 })
 api.interceptors.request.use(config => {
   const loading = useLoadingStore()
