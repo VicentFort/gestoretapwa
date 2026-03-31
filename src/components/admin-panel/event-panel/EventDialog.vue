@@ -14,9 +14,9 @@
       Data: {{formattedDate}}
       </v-card-text>
       <v-card-text v-if="event.assists">
-      Número d'assistències: {{ event?.assists?.length }}
+      Assistències: {{ event?.assists?.length }}
       </v-card-text>
-      <v-card-text v-if="event.foodNeeds.length>0">
+      <v-card-text v-if="event.checkNeeds == true && event.foodNeeds.length>0">
       Necessitats alimentaries del event: {{ event.foodNeeds?.length }}
       </v-card-text>
       <v-card-text v-if="event.attendantNames.length>0">

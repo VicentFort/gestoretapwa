@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import EventDialog from './EventDialog.vue';
 import { useAuthStore } from '@/stores/auth';
 import EventCreateDialog from './EventCreateDialog.vue';
@@ -7,6 +7,19 @@ const auth = useAuthStore()
 const isDetailsOpen = ref(false);
 const isCreateOpen = ref(false)
 const selectedEvent = ref(null);
+const events = ref(null)
+const showClosed = ref(false)
+const toggleClosedEvents = () => {
+    showClosed.value = !showClosed.value
+}
+const orderedEvents = computed(() => {
+    let base = events.value ? [...events.value] : [...(auth.fallaAdminInfo?.events) || []]
+
+    if(!showClosed.value) {
+        base = base.filter(e => e.open == true)
+    }
+    return base.sort((a,b) => (b.open ? 1 : 0) - (a.open ? 1 : 0))
+})
 
 const openDetails = (event) => {
   selectedEvent.value = event;
@@ -20,17 +33,18 @@ const openCreateEvent = () => {
 
 <template>
     <v-container>
-        <v-card class="bg-primary" >
+        <v-card class="bg-primary event-list" >
             <v-card-title class='bg-ternary'>
                 Llistat d'events
             </v-card-title>
             <v-list class="bg-primary">
                 <v-list-item 
-                    v-for="event in auth.fallaAdminInfo.events" 
+                    v-for="event in orderedEvents" 
                     :key="event.id"
                     :title="event.title"
                     link 
                     @click="openDetails(event)"
+                    :class="event.open == true ? 'item-open' : 'item-closed'"
                 >
             </v-list-item>
             </v-list>
@@ -44,7 +58,23 @@ const openCreateEvent = () => {
                 <EventCreateDialog v-model="isCreateOpen"/>
             </v-dialog>
             <v-card-actions class="justify-center">
-               <v-btn class="justify-center bg-ternary" type="text" @click='openCreateEvent'>Crear Event</v-btn> 
+                <v-row>
+                    <v-col cols="12" md="6">
+                        <v-btn 
+                        :icon="showClosed ? 'mdi-filter' : 'mdi-clock-outline'" 
+                        :class="showClosed ? 'bg-secondary' : 'bg-ternary'"
+                        @click="toggleClosedEvents"
+                        ></v-btn>
+                        <span class="ml-2 text-caption">
+                        {{ showClosed ? 'Mostrant tots' : 'Només oberts' }}
+                        </span>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                        <v-btn class="justify-center bg-ternary" type="text" @click='openCreateEvent'>Crear Event</v-btn> 
+
+                    </v-col>
+                </v-row>
+                
             </v-card-actions>
         </v-card>
     </v-container>

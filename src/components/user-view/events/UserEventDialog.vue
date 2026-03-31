@@ -1,7 +1,7 @@
 <template>
     <v-dialog v-model="show" width="500" >
     <v-card v-if="event" class="bg-primary">
-      <v-card-title class="bg-ternary">
+      <v-card-title class="bg-secondary">
         Títol: {{ event?.title }}
       </v-card-title>
 

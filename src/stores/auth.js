@@ -131,7 +131,7 @@ export const useAuthStore = defineStore("auth", {
             price: event.price,
             description: event.description,
             maxPeople: event.maxPeople,
-            date: formatToYYYYMMDD(event.date),
+            date:formatToYYYYMMDD(formatToBackend(event.date)),
             fallaId: this.fallaAdminInfo.fallaId,
             tagId: tag,
             startHour: event.startHour,
@@ -140,7 +140,8 @@ export const useAuthStore = defineStore("auth", {
             createdBy: event.createdBy,
             open: event.open,
             createdAt: event.createdAt,
-            endDate: formatToYYYYMMDD(event.endDate)
+            endDate: formatToYYYYMMDD(formatToBackend(event.endDate)),
+            checkNeeds: event.checkNeeds
           }).catch(function (error) {
               if(!error.response.data?.success) {
                 console.error(error.response.data.message)
@@ -275,7 +276,8 @@ export const useAuthStore = defineStore("auth", {
               "date": eventDto.date ? new Date(eventDto.date).toLocaleDateString('en-CA') : null,
               "tagId": eventDto.tagId,
               "startHour": eventDto.startHour,
-              "endHour": eventDto.endHour
+              "endHour": eventDto.endHour,
+              "checkNeeds": eventDto.checkNeeds
           })
           if(response.data.sucess != null || response.data?.success==false) throw response.data.message
         } catch(error) {
@@ -342,7 +344,7 @@ const formatToBackend = (date) => {
 const formatToYYYYMMDD = (date) => {
   if (!date) return null;
 
-  const d = formatToBackend(date);
+  const d = new Date(date);
   const year = d.getFullYear();
   const month = String(d.getMonth() + 1).padStart(2, '0');
   const day = String(d.getDate()).padStart(2, '0');

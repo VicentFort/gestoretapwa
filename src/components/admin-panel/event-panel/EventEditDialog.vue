@@ -54,7 +54,14 @@
                             color="primary"
                         ></v-switch>
                     </v-col>
-
+                    <v-col cols="12" md="6">
+                            <v-switch
+                            v-model="event.checkNeeds"
+                            label="Event amb necessitats alimentàries"
+                            color="secondary"
+                            >
+                            </v-switch>
+                        </v-col>
                     <v-col cols="12" md="6">
                         <v-select
                             v-model="event.tagId"

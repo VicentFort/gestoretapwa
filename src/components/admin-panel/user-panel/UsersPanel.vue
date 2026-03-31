@@ -6,10 +6,11 @@
             </v-card-title>
             <v-list class="bg-primary">
                 <v-list-item 
-                    v-for="user in auth.fallaAdminInfo.users" 
+                    v-for="user in orderedUsers" 
                     :key="user.id"
                     :title="user.name + ' ' + user.surname"
                     link
+                    class="text-primary"
                     @click="openUserDetails(user)"
                 >
             </v-list-item>
@@ -26,11 +27,26 @@
 
 <script setup>
 import { useAuthStore } from '@/stores/auth';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import UserDetails from './UserDetails.vue';
 
 
 const auth = useAuthStore()
+const users = ref(null)
+
+const orderedUsers = computed(() => {
+    let base = users.value 
+        ? [...users.value] 
+        : [...(auth.fallaAdminInfo?.users || [])];
+
+    if (!base.length) return [];
+
+    return base.sort((a, b) => {
+        const nameA = a.name || '';
+        const nameB = b.name || '';
+        return nameA.localeCompare(nameB);
+    });
+})
 const selectedUser = ref(null)
 const isDetailsOpen = ref(false)
 

@@ -22,7 +22,7 @@ const deleteNeed = (need) => {
     <v-container v-if="auth.userInfo?.foodNeeds">
         <v-card class="bg-primary">
            <v-card-title class="bg-ternary">Les meues preferències alimentàries:</v-card-title>
-           <v-list clasS="bg-primary">
+           <v-list clasS="bg-primary text-primary">
                 <v-list-item
                     v-for="need in auth.userInfo?.foodNeeds" 
                     :key="need.foodNeedId"

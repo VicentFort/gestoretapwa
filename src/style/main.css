@@ -24,6 +24,22 @@
     overflow: hidden; /* Vital para que el fondo no se salga de las esquinas */
     
 }
+
+#app .event-list .v-list-item.item-open {
+  background-color: rgb(var(--v-theme-ternary)) !important;
+  border-color: rgb(var(--v-theme-ternary)) !important;
+}
+
+#app .event-list .v-list-item.item-closed {
+  background-color: rgb(var(--v-theme-error)) !important;
+  border-color: rgb(var(--v-theme-error)) !important;
+}
+
+/* Si quieres que el texto se lea bien (blanco o negro según fondo) */
+#app .event-list .v-list-item {
+    color: white !important; 
+}
+
 @media (max-width: 600px) {
       .v-application .v-list-item {
         width: 150px !important; /* Se encoge en pantallas grandes */

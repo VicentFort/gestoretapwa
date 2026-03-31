@@ -22,22 +22,6 @@
                                 required
                             ></v-textarea>
                         </v-col>
-                        <v-col cols="12" md="6">
-                            <v-text-field 
-                                v-model.number="event.price"
-                                label="Preu"
-                                type="number"
-                                prefix="€"
-                            ></v-text-field>
-                        </v-col>
-                            
-                        <v-col cols="12" md="6">
-                            <v-text-field
-                                v-model.number="event.maxPeople"
-                                label="Aforament"
-                                type="number"
-                            ></v-text-field>
-                        </v-col>
 
                         <v-col cols="12" class="justify-center d-flex">
                             <v-text-field
@@ -92,16 +76,6 @@
                                 </v-card>
                             </v-dialog>
                         </v-col>
-
-                        <v-col cols="12">
-                            <v-switch
-                                v-model="event.publicField"
-                                label="Event públic"
-                                color="secondary"
-                            ></v-switch>
-                        </v-col>
-
-                       
                         <v-col cols="12" md="6">
                             <v-text-field type="time"
                                 v-model="event.startHour"
@@ -114,7 +88,25 @@
                                 label="Hora de fí"
                             />
                         </v-col>
-                         <v-col cols="12" md="6">
+                        
+                        <v-col cols="12" md="6">
+                            <v-switch
+                                v-model="event.publicField"
+                                label="Event públic"
+                                color="secondary"
+                            ></v-switch>
+                        </v-col>
+                        
+                        <v-col cols="12" md="6">
+                            <v-switch
+                            v-model="event.checkNeeds"
+                            label="Event amb necessitats alimentàries"
+                            color="secondary"
+                            >
+                            </v-switch>
+                        </v-col>
+
+                        <v-col cols="12" md="6">
                             <v-select
                                 v-model="selectedTag"
                                 :items="tags"
@@ -156,6 +148,22 @@
                                     </v-list-item>
                                 </template>
                             </v-select>
+                        </v-col>
+                        <v-col cols="12" md="6">
+                            <v-text-field 
+                                v-model.number="event.price"
+                                label="Preu"
+                                type="number"
+                                prefix="€"
+                            ></v-text-field>
+                        </v-col>
+                            
+                        <v-col cols="12" md="6">
+                            <v-text-field
+                                v-model.number="event.maxPeople"
+                                label="Aforament"
+                                type="number"
+                            ></v-text-field>
                         </v-col>
                     </v-row>
                 
@@ -209,7 +217,8 @@ const event = reactive({
   endDate: null,
   open: true,
   createdAt: new Date(),
-  createdBy: auth.userInfo.name + ' ' + auth.userInfo.surname
+  createdBy: auth.userInfo.name + ' ' + auth.userInfo.surname,
+  checkNeeds: false
 })
 const dateMenu = ref(false)
 const endDateMenu = ref(false)

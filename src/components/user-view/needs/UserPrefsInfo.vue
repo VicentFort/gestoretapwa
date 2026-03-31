@@ -2,7 +2,7 @@
     <v-container v-if="auth.userInfo?.eventTagPrefs && auth.userInfo?.fallaInfo">
         <v-card class="bg-primary">
             <v-card-title class="bg-ternary">Disposicions d'encarregat:</v-card-title>
-            <v-list class="bg-primary">
+            <v-list class="bg-primary text-primary">
                 <v-list-item
                     v-for="pref in auth.userInfo?.eventTagPrefs"
                     class="text-black"

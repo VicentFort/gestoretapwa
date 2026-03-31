@@ -13,7 +13,7 @@
                     variant="outlined"
                     @click="dateMenu = true"
                     ></v-text-field>
-                    <v-dialog v-model="dateMenu" max-width="340 bg-ternary">
+                    <v-dialog v-model="dateMenu" max-width="340"a>
                         <v-card>
                             <v-date-picker
                                 class="text-black"
@@ -23,7 +23,14 @@
                                 @update:model-value="dateMenu = false"
                             ></v-date-picker>
                             <v-card-actions>
+                                <v-btn 
+                                    :icon="showClosed ? 'mdi-eye' : 'mdi-eye-off'" 
+                                    :class="showClosed ? 'bg-secondary' : 'bg-grey-lighten-1'"
+                                    @click="toggleClosed"
+                                    title="Mostrar tancats"
+                                ></v-btn>
                                 <v-spacer></v-spacer>
+
                                 <v-btn variant="text" class="bg-ternary" @click="dateMenu = false">Tancar</v-btn>
                             </v-card-actions>
                         </v-card>
@@ -39,7 +46,7 @@
                     variant="outlined"
                     @click="endDateMenu = true"
                     ></v-text-field>
-                    <v-dialog v-model="endDateMenu" max-width="340 bg-ternary">
+                    <v-dialog v-model="endDateMenu"max-width="340">
                         <v-card>
                             <v-date-picker
                                 class="text-black"
@@ -77,6 +84,14 @@
             <v-card-actions>
                 <v-btn class="text-white bg-ternary" type="text" @click="emptyFields">Buidar</v-btn>
                 <v-btn class="text-white bg-ternary" type="submit" :disabled="!valid">Filtrar</v-btn>
+                <v-btn 
+                :icon="showClosed ? 'mdi-filter' : 'mdi-clock-outline'" 
+                :class="showClosed ? 'bg-secondary' : 'bg-ternary'"
+                @click="toggleClosed"
+                ></v-btn>
+                <span class="ml-2 text-caption">
+                {{ showClosed ? 'Mostrant tots' : 'Només oberts' }}
+                </span>
             </v-card-actions>
         </v-form>
     </v-card>
@@ -88,8 +103,14 @@ import { ref, computed } from 'vue';
 
 
 
-const form = ref(null)
-const emit = defineEmits(['update-filter'])
+const showClosed = ref(false);
+
+const emit = defineEmits(['update-filter', 'toggle-closed']); // <--- Añadimos el nuevo emit
+
+const toggleClosed = () => {
+    showClosed.value = !showClosed.value;
+    emit('toggle-closed', showClosed.value); // Avisamos al padre del cambio
+};
 const valid = ref(false)
 const dateMenu = ref(false)
 const endDateMenu = ref(false)
@@ -100,6 +121,7 @@ const date = ref('')
 const endDate = ref('')
 const tag = ref(null)
 const maxPrice = ref(null)
+
 const submitForm = () => {
     let filtered = auth.userInfo.events?.filter(event => {
         const meetsMaxPrice = (maxPrice.value !== null && maxPrice.value !== '') 
@@ -128,7 +150,10 @@ const emptyFields = () => {
     endDate.value = null
     maxPrice.value = null
     tag.value = null
+    showClosed.value = false;
+    emit('toggle-closed', false);
     emit('update-filter', [...auth.userInfo.events]);
+
 }
 
 

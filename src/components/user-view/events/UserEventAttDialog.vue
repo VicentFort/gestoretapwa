@@ -18,7 +18,7 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="grey-darken-1" variant="text" class="bg-ternary" @click="deleteAssist">Assistir</v-btn>
+        <v-btn color="grey-darken-1" variant="text" class="bg-ternary" @click="assistEvent" :disabled="event.open==false">Assistir</v-btn>
         <v-spacer></v-spacer>
         <v-btn color="grey-darken-1" variant="text"  class="bg-ternary" @click="show = false">Tanca</v-btn>
       </v-card-actions>
@@ -64,7 +64,7 @@ const closeError = () => {
   showErrorDiag.value = false
 }
 
-const deleteAssist = async () => {
+const assistEvent = async () => {
   try {
     await auth.joinEvent(props.event.id)
     show.value = false
