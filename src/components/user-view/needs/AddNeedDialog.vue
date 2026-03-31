@@ -21,7 +21,7 @@
             </v-select>
             <v-divider></v-divider>
             <v-card-actions>
-                <v-btn  variant="text" @click="saveNeed"  class="bg-ternary" :disabled="description==''">Guarda</v-btn>
+                <v-btn  variant="text" @click="saveNeed"  class="bg-ternary" :disabled="desc==''">Guarda</v-btn>
                 <v-btn  variant="text" @click="show=false" class="bg-ternary">Tanca</v-btn>
             </v-card-actions>
 
