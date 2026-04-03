@@ -7,7 +7,7 @@
 }
 
 .v-card{
-    border-color: #FF7F50;
+    border-color: rgb(var(--v-theme-ternary));
     border-width: 10px;
     border-style: solid;
 }
@@ -17,9 +17,9 @@
     justify-content: center;
     justify-items: center;
     justify-self: center;
-    background-color: #ff7f50 !important;
+    background-color: rgb(var(--v-theme-ternary)) !important;
     margin-top: 2%;
-    border: 5px solid #ff7f50 !important; /* Resumido */
+    border: 5px solid rgb(var(--v-theme-ternary)) !important;
     border-radius: 10px !important;
     overflow: hidden; /* Vital para que el fondo no se salga de las esquinas */
     
@@ -37,7 +37,7 @@
 
 /* Si quieres que el texto se lea bien (blanco o negro según fondo) */
 #app .event-list .v-list-item {
-    color: white !important; 
+    color: rgb(var(--v-theme-primary)) !important; 
 }
 
 @media (max-width: 600px) {

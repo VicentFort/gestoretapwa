@@ -143,15 +143,15 @@ const formattedEvents = computed(() => {
 
   return rawEvents.map(event => {
    
-    const datePart = event.date.includes('T') 
+    const dateStartPart = event.date.includes('T') 
       ? event.date.split('T')[0] 
       : event.date
+    const dateEndPart = event.endDate.includes('T') ? event.endDate.split('T')[0] : event.endDate
 
     // 2. Combinamos con las horas (ya tienen formato HH:mm:ss)
     // El formato final para el constructor será: "2026-03-03T09:23:17"
-    const startDateTime = new Date(`${datePart}T${event.startHour}`)
-    const endDateTime = new Date(`${datePart}T${event.endHour}`)
-    console.log(startDateTime)
+    const startDateTime = new Date(`${dateStartPart}T${event.startHour}`)
+    const endDateTime = new Date(`${dateEndPart}T${event.endHour}`)
     return {
       ...event,
       name: event.title,

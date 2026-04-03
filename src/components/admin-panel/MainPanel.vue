@@ -8,10 +8,10 @@
         {{ auth.fallaAdminInfo?.name }}
     </v-card-title>
     <v-sheet elevation="2">
-        <v-tabs v-model="tab" color="primary">
+        <v-tabs v-model="tab" color="primary" class="bg-ternary">
             <v-tab value="one">Events</v-tab>
             <v-tab value="two">Membres</v-tab>
-            <v-tab value="three">Pagaments</v-tab>
+            <v-tab value="three">Inventari</v-tab>
         </v-tabs>
         </v-sheet>
         <v-divider></v-divider>
@@ -34,7 +34,14 @@
                 <RequestPanel/>
             </v-tabs-window-item>
             <v-tabs-window-item value="three">
-                
+                <v-row rows="12" md="6">
+                    <v-col>
+                        <ItemTable/>
+                    </v-col>
+                    <v-col>
+                        <StoreTable/>
+                    </v-col>
+                </v-row>
             </v-tabs-window-item>
         </v-window>
 
@@ -49,6 +56,8 @@ import EventPanel from './event-panel/EventPanel.vue';
 import UsersPanel from './user-panel/UsersPanel.vue';
 import RequestPanel from './user-panel/RequestPanel.vue';
 import TagPanel from './event-panel/TagPanel.vue';
+import ItemTable from './inventory-panel/items/ItemTable.vue';
+import StoreTable from './inventory-panel/items/StoreTable.vue';
 
 const auth = useAuthStore()
 if(!auth.fallaAdminInfo) {

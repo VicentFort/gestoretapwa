@@ -328,6 +328,63 @@ export const useAuthStore = defineStore("auth", {
         } catch (error) {
           throw error
         }
+      },
+      async createInventoryStore(store) {
+        try {
+          const response = await api.post('/inv/createStore', store).catch(function (error) {
+            if(!error.response.data?.success) {
+              console.error(error.response.data.message)
+              throw error.response.data.message
+            }
+            throw error.message
+          })
+        } catch (error) {
+          throw error
+        } finally {
+          this.fetchFallaAdminInfo()
+        }
+      },
+      async deleteInventoryStore(storeId) {
+        try {
+          const response = await api.delete("/inv/deleteStore",{data: new Number(storeId)} ).catch(function (error) {
+            if(!error.response.data?.success) {
+              console.error(error.response.data.message)
+              throw error.response.data.message
+            } throw error.message
+          })
+        } catch (error) {
+          throw error
+        } finally {
+          this.fetchFallaAdminInfo()
+        }
+      },
+      async createNewInventoryItem(newItem) {
+        try {
+           const response = await api.post('/inv/createItem', newItem).catch(function (error) {
+            if(!error.response.data?.success) {
+              console.error(error.response.data.message)
+              throw error.response.data.message
+            } throw error.message
+           }) 
+        } catch (error) {
+          throw error
+        } finally {
+          this.fetchFallaAdminInfo()
+        }
+      },
+      async deleteInventoryItem(itemId) {
+         try {
+          const response = await api.delete("/inv/deleteItem",{data: new Number(itemId)} ).catch(function (error) {
+            if(!error.response.data?.success) {
+              console.error(error.response.data.message)
+              throw error.response.data.message
+            } throw error.message
+          })
+        } catch (error) {
+          throw error
+        } finally {
+          this.fetchFallaAdminInfo()
+        }
       }
     }
   },

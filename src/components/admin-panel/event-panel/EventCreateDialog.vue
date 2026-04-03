@@ -30,10 +30,11 @@
                             label="Data d'inici"
                             prepend-inner-icon="mdi-calendar"
                             readonly
+                            :rules="[d => !!d || 'Data d\'inici necessària']"
                             variant="outlined"
                             @click="dateMenu = true"
                             ></v-text-field>
-                            <v-dialog v-model="dateMenu" max-width="340 bg-ternary">
+                            <v-dialog v-model="dateMenu" max-width="340">
                                 <v-card>
                                     <v-date-picker
                                         class="text-black"
@@ -43,7 +44,6 @@
                                         @update:model-value="dateMenu = false"
                                     ></v-date-picker>
                                     <v-card-actions>
-                                        <v-spacer></v-spacer>
                                         <v-btn variant="text" class="bg-ternary" @click="dateMenu = false">Tancar</v-btn>
                                     </v-card-actions>
                                 </v-card>
@@ -56,6 +56,7 @@
                             v-model="formattedEndDate"
                             label="Data de fi"
                             prepend-inner-icon="mdi-calendar"
+                            :rules="[d => !!d || 'Data de fi necessària']"
                             readonly
                             variant="outlined"
                             @click="endDateMenu = true"
@@ -70,7 +71,6 @@
                                         @update:model-value="endDateMenu = false"
                                     ></v-date-picker>
                                     <v-card-actions>
-                                        <v-spacer></v-spacer>
                                         <v-btn variant="text" @click="endDateMenu = false">Tancar</v-btn>
                                     </v-card-actions>
                                 </v-card>
@@ -79,12 +79,14 @@
                         <v-col cols="12" md="6">
                             <v-text-field type="time"
                                 v-model="event.startHour"
+                                :rules="[h => !!h || 'Hora d\'inici necessària']"
                                 label="Hora d'inici"
                             />
                         </v-col>
                         <v-col cols="12" md="6">
                             <v-text-field type="time"
                                 v-model="event.endHour"
+                                :rules="[h => !!h || 'Hora de fi necessària']"
                                 label="Hora de fí"
                             />
                         </v-col>
@@ -253,7 +255,7 @@ const formattedDate = computed(() => {
   
   // Extraemos YYYY-MM-DD y HH:mm:ss.SSS
   const [date, timeWithZ] = localISO.split('T')
-  const time = timeWithZ.slice(0, 12) 
+  const time = timeWithZ.slice(0,0) 
   return `${date} ${time}`
 })
 
@@ -264,7 +266,7 @@ const formattedEndDate = computed(() => {
   const localISO = new Date(dateObj.getTime() - offset).toISOString()
   
   const [date, timeWithZ] = localISO.split('T')
-  const time = timeWithZ.slice(0, 12)
+  const time = timeWithZ.slice(0, 0)
   return `${date} ${time}`
 })
 

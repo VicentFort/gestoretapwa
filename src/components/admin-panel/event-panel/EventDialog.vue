@@ -13,6 +13,9 @@
       <v-card-text>
       Data: {{formattedDate}}
       </v-card-text>
+      <v-card-text>
+      Hora: {{ formattedTime }}
+      </v-card-text>
       <v-card-text v-if="event.assists">
       Assistències: {{ event?.assists?.length }}
       </v-card-text>
@@ -31,7 +34,7 @@
       </v-divider>
 
       <v-card-actions>
-        <v-btn class="bg-ternary" variant="text" @click="showEditDialog = true">
+        <v-btn class="bg-ternary" variant="text" @click="showEditDialog = true" :disabled="event.open==false">
           Edita
         </v-btn>
         <v-btn class="bg-ternary" variant="text" @click="confirmDelete">
@@ -106,6 +109,11 @@ const show = computed({
 const confirmDelete = () => {
   showDeleteDialog.value = true
 }
+
+const formattedTime = computed(() => {
+    return `${props.event.startHour.substring(0,2)}:${props.event.startHour.substring(3,5)}`
+})
+
 
 //Para mostrar las fechas formateadas del evento. Si es en el mismo dia muestra solo la fecha inicial, si es de varios muestra las 2.
 const formattedDate = computed(() => {
