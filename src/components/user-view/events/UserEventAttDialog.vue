@@ -22,22 +22,7 @@
         <v-spacer></v-spacer>
         <v-btn color="grey-darken-1" variant="text"  class="bg-ternary" @click="show = false">Tanca</v-btn>
       </v-card-actions>
-      <v-dialog v-model=showErrorDiag width=400px>
-                <v-card>
-                <v-card-title class="text-h5 text-white bg-error">Error</v-card-title>
-                    
-                    <v-card-text class="pa-4">
-                    {{ error }}
-                    </v-card-text>
-                    
-                    <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="error" variant="text" @click="closeError">
-                        Tanca
-                    </v-btn>
-                </v-card-actions>
-            </v-card>
-            </v-dialog>
+      <ErrorDialog :message="error" v-model="showErrorDiag" @closed="showErrorDiag=false"/>
     </v-card>
   </v-dialog>
 </template>
@@ -45,6 +30,7 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
+import ErrorDialog from '@/components/ErrorDialog.vue';
 const auth = useAuthStore()
 const props = defineProps({
     modelValue: Boolean,

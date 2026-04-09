@@ -11,8 +11,24 @@
             style="max-width: 100vw;"
             >
             <template #item.actions="{ item }">
+                <v-dialog v-model="showDisableDialog" width="auto">
+                    <v-container>
+                        <v-card class="bg-primary">
+                            <v-card-title class="bg-ternary text-primary font-weight-bold">
+                                Vols deshabilitar el item: {{ item.name }}
+                            </v-card-title>
+                            <v-card-text class="bg-primary text-primary">
+                                Aquesta acció es irreversible
+                            </v-card-text>
+                            <v-card-options>
+                                <v-btn class="bg-ternary" icon="mdi-cancel" @click="showDisableDialog=false"></v-btn>
+                                <v-btn class="bg-ternary" @click="disableItem(item)">Deshabilita</v-btn>
+                            </v-card-options>
+                        </v-card>
+                    </v-container>
+                </v-dialog>
                 <v-btn
-                icon="mdi-plus"
+                icon="mdi-file-edit"
                 variant="text"
                 color="ternary"
                 @click="selectedItem=item; showEditItem=true"
@@ -22,7 +38,7 @@
                 icon="mdi-delete"
                 variant="text"
                 color="error"
-                @click="deleteItem(item)"
+                @click="showDisableDialog=true"
                 ></v-btn>
             </template>
             <template #item.storeName="{ item }">
@@ -48,6 +64,7 @@
             </v-card-actions>
         </v-card>
     </v-container>
+    <ErrorDialog @closed="showErr=false" :message="error" v-model="showErr"/>
 </template>
 
 <script setup>
@@ -64,8 +81,29 @@ const showEditItem = ref(false)
 
 const selectedItem = ref(null)
 
-const inventoryItems = computed(() => auth.fallaAdminInfo?.inventoryItems || []) 
+const showErr = ref(false)
+const error = ref('')
 
+const inventoryItems = computed(() => auth.fallaAdminInfo?.inventoryItems.filter(item=> {
+    return item.enabled==true
+}) || []) 
+
+const showDisableDialog = ref(false)
+
+const disableItem = async (item) => {
+    try {
+        const updatedItem = {
+            itemId: item.id,
+            enabled: false
+        }
+        await auth.updateInventoryItem(updatedItem)
+        showDisableDialog.value = false
+    } catch(err) {
+        error.value = err
+        showErr.value=true
+    }
+
+}
 
 const headers = [
     

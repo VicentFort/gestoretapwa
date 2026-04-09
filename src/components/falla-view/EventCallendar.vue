@@ -85,25 +85,7 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-        <v-dialog v-model="showErrorDiag" max-width="400">
-            <v-card>
-                <v-card-title class="text-h5 text-white bg-error">Error</v-card-title>
-                    
-                    <v-card-text class="text-primary">
-                    Error al assistir al event
-                    </v-card-text>
-                    <v-card-text class="text-primary">
-                    Probablement ja s'haja registrar l'asistència o s'ha arribat al llímit de persones
-                    </v-card-text>
-                    
-                    <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="error" variant="text" @click="closeError">
-                        Tanca
-                    </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
+        <ErrorDialog :message="error" v-model="showErrorDiag" @closed="showErrorDiag=false"/>
       </v-sheet>
       </v-card>
     </v-col>
@@ -114,6 +96,7 @@
 import { useAuthStore } from '@/stores/auth'
 import { ref, computed } from 'vue'
 import '@mdi/font/css/materialdesignicons.css'
+import ErrorDialog from '@/components/ErrorDialog.vue'
 const auth = useAuthStore()
 const calendar = ref(null)
 

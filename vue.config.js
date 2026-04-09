@@ -6,7 +6,7 @@ module.exports = defineConfig({
 
     }
   },
-  transpileDependencies: true,
+  transpileDependencies:true,
   lintOnSave: false,
   pwa: {
     name:"Gestoreta",

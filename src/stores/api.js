@@ -3,7 +3,7 @@ import { useLoadingStore } from "./loadingStore";
 
 
 const API_IP = "https://gestoretaapp-production.up.railway.app";
-const LOCAL_API_IP = "http://localhost:8080";
+const LOCAL_API_IP = "http://192.168.1.24:8080";
 const GOOGLE_CALLENDAR_API = 'https://www.googleapis.com/auth/calendar';
 const api = axios.create({
   baseURL: LOCAL_API_IP

@@ -29,27 +29,13 @@
             </v-card-actions>
 
         </v-card>
-        <v-dialog v-model="showErrorDiag" max-width="400">
-            <v-card>
-                <v-card-title class="text-h5 text-white bg-error">Error</v-card-title>
-                    
-                    <v-card-text class="pa-4">
-                    {{ error }}
-                    </v-card-text>
-                    
-                    <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="error" variant="text" @click="closeError">
-                        Tanca
-                    </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
+        <ErrorDialog :message="error" v-model="showErrorDiag" @closed="showErrorDiag=false"/>
   </v-dialog>
 </template>
 
 <script setup>
 
+import ErrorDialog from '@/components/ErrorDialog.vue';
 import { useAuthStore } from '@/stores/auth';
 import { computed, reactive, ref } from 'vue';
 const props = defineProps({

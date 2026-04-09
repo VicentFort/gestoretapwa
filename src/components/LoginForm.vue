@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import { useAuthStore } from "@/stores/auth";
+import ErrorDialog from "./ErrorDialog.vue";
 
 const auth = useAuthStore();
 const showErrorDiag = ref(false)
@@ -63,22 +64,7 @@ const closeError = async () => {
     <v-container v-if="auth.token">
     <v-btn @click="handleLogout" class="bg-ternary">Log out</v-btn>
   </v-container>
-    <v-dialog v-model="showErrorDiag" max-width="400">
-            <v-card>
-                <v-card-title class="text-h5 text-white bg-error">Error</v-card-title>
-                    
-                    <v-card-text class="pa-4">
-                    {{ error }}
-                    </v-card-text>
-                    
-                    <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="error" variant="text" @click="closeError">
-                        Tanca
-                    </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
+    <ErrorDialog :message="error" v-model="showErrorDiag" @closed="showErrorDiag=false"/>
 </template>
 
 <style scoped>

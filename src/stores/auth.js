@@ -4,22 +4,7 @@ import { formToJSON } from "axios";
 
 
 
-const itemCategories = [
-	'Pirotècnia',
-	'Menjar',
-	'Oficina',
-	'Arts plàstiques',
-	'Beguda',
-	'Infraestructura',
-	'Electrònica / Informàtica',
-	'Altres'
-]
 
-const movementTypes = [
-  'Entrada',
-	'Eixida',
-	'Préstec'
-]
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({
@@ -38,7 +23,7 @@ export const useAuthStore = defineStore("auth", {
                     'Oficina',
                     'Arts plàstiques',
                     'Beguda',
-                    'Infraestructra',
+                    'Infraestructura',
                     'Electrònica / Informàtica',
                     'Altres'
                   ]
@@ -377,16 +362,18 @@ export const useAuthStore = defineStore("auth", {
           this.fetchFallaAdminInfo()
         }
       },
-      async deleteInventoryStore(storeId) {
+      async updateStore(updatedStore) {
         try {
-          const response = await api.delete("/inv/deleteStore",{data: new Number(storeId)} ).catch(function (error) {
+          const response = await api.put("/inv/updateStore", updatedStore ).catch(function (error) {
             if(!error.response.data?.success) {
               console.error(error.response.data.message)
               throw error.response.data.message
-            } throw error.message
+            } 
+            throw error.message
           })
-        } catch (error) {
-          throw error
+        } catch (err) {
+          console.error(err)
+          throw err
         } finally {
           this.fetchFallaAdminInfo()
         }
@@ -422,6 +409,21 @@ export const useAuthStore = defineStore("auth", {
       async updateInventoryItem(updatedItem) {
         try {
           const response = await api.put("/inv/updateItem", updatedItem).catch(function (error) {
+            if(!error.response.data?.success) {
+              console.error(error.response.data.message)
+              throw error.response.data.message
+            } throw error.message
+          })
+        } catch(err) {
+          console.error(err)
+          throw err
+        } finally {
+          this.fetchFallaAdminInfo()
+        }
+      },
+      async processMovement(movement) {
+        try {
+          const response = await api.post("/inv/processMovement", movement).catch(function (error) {
             if(!error.response.data?.success) {
               console.error(error.response.data.message)
               throw error.response.data.message

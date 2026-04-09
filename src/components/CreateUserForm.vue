@@ -93,22 +93,7 @@
             </v-card>
         </v-form>
     </v-container>
-    <v-dialog v-model=showErrorDiag width=400px>
-                <v-card>
-                <v-card-title class="text-h5 text-white bg-error">Error</v-card-title>
-                    
-                    <v-card-text class="pa-4">
-                    {{ error }}
-                    </v-card-text>
-                    
-                    <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="error" variant="text" @click="closeError" >
-                        Tanca
-                    </v-btn>
-                </v-card-actions>
-            </v-card>
-            </v-dialog>
+    <ErrorDialog @closed="showErrorDiag=false" :message="error" v-model="showErrorDiag"/>
 </template>
 
 <script setup>
