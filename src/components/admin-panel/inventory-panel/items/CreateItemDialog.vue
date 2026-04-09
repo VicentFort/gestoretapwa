@@ -70,16 +70,7 @@ const error = ref('')
 const showErrorDiag = ref(false)
 
 const selectedCategory = ref('')
-const categories = [
-	'Pirotècnia',
-	'Menjar',
-	'Oficina',
-	'Arts plàstiques',
-	'Beguda',
-	'Infraestructura',
-	'Electrònica / Informàtica',
-	'Altres'
-]
+const categories = auth.categories
 const submitForm = async () => {
     try {
         const {valid: formValid} = await form.value.validate()

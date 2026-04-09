@@ -42,6 +42,9 @@
                         <StoreTable/>
                     </v-col>
                 </v-row>
+                <v-row rows="12" md="6">
+                    <MovementTable/>
+                </v-row>
             </v-tabs-window-item>
         </v-window>
 
@@ -58,6 +61,7 @@ import RequestPanel from './user-panel/RequestPanel.vue';
 import TagPanel from './event-panel/TagPanel.vue';
 import ItemTable from './inventory-panel/items/ItemTable.vue';
 import StoreTable from './inventory-panel/items/StoreTable.vue';
+import MovementTable from './inventory-panel/movements/MovementTable.vue';
 
 const auth = useAuthStore()
 if(!auth.fallaAdminInfo) {

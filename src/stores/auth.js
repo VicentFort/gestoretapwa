@@ -3,12 +3,45 @@ import api from "./api";
 import { formToJSON } from "axios";
 
 
+
+const itemCategories = [
+	'Pirotècnia',
+	'Menjar',
+	'Oficina',
+	'Arts plàstiques',
+	'Beguda',
+	'Infraestructura',
+	'Electrònica / Informàtica',
+	'Altres'
+]
+
+const movementTypes = [
+  'Entrada',
+	'Eixida',
+	'Préstec'
+]
+
 export const useAuthStore = defineStore("auth", {
   state: () => ({
     token: sessionStorage.getItem("token") || null,
     userEmail: sessionStorage.getItem("userEmail") || null,
     userInfo: JSON.parse(sessionStorage.getItem("userInfo")) || null,
     fallaAdminInfo: JSON.parse(sessionStorage.getItem("fallaAdminInfo") || null),
+    movementTypes:[
+  'Entrada',
+	'Eixida',
+	'Préstec'
+] ,
+    itemCategories: [
+                    'Pirotècnia',
+                    'Menjar',
+                    'Oficina',
+                    'Arts plàstiques',
+                    'Beguda',
+                    'Infraestructra',
+                    'Electrònica / Informàtica',
+                    'Altres'
+                  ]
   }),
   actions: {
     async login(email, password) {
@@ -166,7 +199,7 @@ export const useAuthStore = defineStore("auth", {
               }
               throw error.message
             })
-            orderJSONStructure(response.data)
+            orderJSONStructure(response.data)     
           this.fallaAdminInfo = response.data
           sessionStorage.setItem('fallaAdminInfo', JSON.stringify(this.fallaAdminInfo))
         } catch(error) {
@@ -382,6 +415,21 @@ export const useAuthStore = defineStore("auth", {
           })
         } catch (error) {
           throw error
+        } finally {
+          this.fetchFallaAdminInfo()
+        }
+      },
+      async updateInventoryItem(updatedItem) {
+        try {
+          const response = await api.put("/inv/updateItem", updatedItem).catch(function (error) {
+            if(!error.response.data?.success) {
+              console.error(error.response.data.message)
+              throw error.response.data.message
+            } throw error.message
+          })
+        } catch(err) {
+          console.error(err)
+          throw err
         } finally {
           this.fetchFallaAdminInfo()
         }
