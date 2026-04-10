@@ -15,7 +15,7 @@ export const useAuthStore = defineStore("auth", {
     movementTypes:[
   'Entrada',
 	'Eixida',
-	'Préstec'
+	'Prèstec'
 ] ,
     itemCategories: [
                     'Pirotècnia',
@@ -424,6 +424,21 @@ export const useAuthStore = defineStore("auth", {
       async processMovement(movement) {
         try {
           const response = await api.post("/inv/processMovement", movement).catch(function (error) {
+            if(!error.response.data?.success) {
+              console.error(error.response.data.message)
+              throw error.response.data.message
+            } throw error.message
+          })
+        } catch(err) {
+          console.error(err)
+          throw err
+        } finally {
+          this.fetchFallaAdminInfo()
+        }
+      },
+      async createContact(contact) {
+        try {
+          const response = api.post("/inv/createContact", contact).catch(function (error) {
             if(!error.response.data?.success) {
               console.error(error.response.data.message)
               throw error.response.data.message

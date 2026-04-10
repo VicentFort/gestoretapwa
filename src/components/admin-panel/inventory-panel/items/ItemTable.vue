@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-card>
+        <v-card flat title="Items">
             <v-data-table-virtual 
             :items="inventoryItems" 
             item-value="id"

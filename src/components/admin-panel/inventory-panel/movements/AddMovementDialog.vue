@@ -29,7 +29,7 @@
                                 <v-select
                                 :items="movementTypes"
                                 v-model="selectedType"
-                                lable="Tipus de moviment">
+                                label="Tipus de moviment">
                                 </v-select>
                             </v-col>
                             <v-col cols="12" md="6">
@@ -39,15 +39,17 @@
                         </v-row>
                         <v-divider/>
                         <v-card-text class="bg-ternary text-primary" v-if="selectedType=='Préstec'">Dades de contacte</v-card-text>
-                        <v-row v-if="selectedType=='Préstec'">
-                            <v-col cols="12" md="6" v-if="selectedType=='Préstec'">
+                        <v-row v-if="selectedType=='Prèstec'">
+                            <v-col cols="12" md="6" v-if="selectedType=='Prèstec'">
                                 <v-select
                                 :items="contacts"
+                                item-title="name"
+                                item-value="id"
                                 v-model="selectedContact"
                                 label="Contacte">
                                 </v-select>
                             </v-col>
-                            <v-col cols="12" md="6" v-if="selectedType=='Préstec'">
+                            <v-col cols="12" md="6" v-if="selectedType=='Prèstec'">
                                 <v-text-field
                                     class="text-black"
                                     v-model="adquistionDate"
@@ -73,7 +75,7 @@
                                     </v-card>
                                 </v-dialog>
                             </v-col>
-                            <v-col cols="12" md="6" v-if="selectedType=='Préstec'">
+                            <v-col cols="12" md="6" v-if="selectedType=='Prèstec'">
                                 <v-text-field
                                     class="text-black"
                                     v-model="idealReturnDate"
@@ -110,9 +112,11 @@
             </v-card>
         </v-form>
     </v-container>
+    <ErrorDialog :message="error" v-model="showErrorDiag" @closed="showErrorDiag=false"></ErrorDialog>
 </template>
 
 <script setup>
+import ErrorDialog from '@/components/ErrorDialog.vue';
 import { useAuthStore } from '@/stores/auth';
 import { ref, computed } from 'vue';
 
@@ -144,6 +148,9 @@ const selectedContact = ref(null)
 const adquistionDate = ref('')
 const idealReturnDate = ref('')
 
+const error = ref('')
+const showErrorDiag = ref(false)
+
 const submitForm = async () => {
     try {
         const {valid: formValid} = await form.value.validate()
@@ -153,12 +160,17 @@ const submitForm = async () => {
             storeId: selectedStore.value,
             amount: amount.value,
             type: selectedType.value,
-            message: message.value
+            message: message.value,
+
+            contactId: selectedContact.value,
+            adquisitionDate: adquistionDate.value,
+            idealReturnDate: idealReturnDate.value
         }
         await auth.processMovement(inventoryMovement)
         emit('closed')
     } catch(err) {
-        console.error(err)
+        showErrorDiag.value = true
+        error.value= err
     }
 }
 

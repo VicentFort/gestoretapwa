@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-card>
+        <v-card flat title="Magatzems">
             <v-data-table-virtual 
             :items="stores"
             :headers="headers"

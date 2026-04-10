@@ -34,17 +34,24 @@
                 <RequestPanel/>
             </v-tabs-window-item>
             <v-tabs-window-item value="three">
-                <v-row rows="12" md="6">
+                <v-row>
                     <v-col>
+                        <MovementTable/>
+                    </v-col>
+                    
+                </v-row>
+                <v-row>
+                    <v-col cols="12" md="6">
                         <ItemTable/>
                     </v-col>
-                    <v-col>
+                    <v-col cols="12" md="6">
                         <StoreTable/>
                     </v-col>
+                    <v-col cols="12" md="6">
+                        <ContactTable/>
+                    </v-col>
                 </v-row>
-                <v-row rows="12" md="6">
-                    <MovementTable/>
-                </v-row>
+                
             </v-tabs-window-item>
         </v-window>
 
@@ -62,6 +69,7 @@ import TagPanel from './event-panel/TagPanel.vue';
 import ItemTable from './inventory-panel/items/ItemTable.vue';
 import StoreTable from './inventory-panel/items/StoreTable.vue';
 import MovementTable from './inventory-panel/movements/MovementTable.vue';
+import ContactTable from './inventory-panel/movements/ContactTable.vue';
 
 const auth = useAuthStore()
 if(!auth.fallaAdminInfo) {

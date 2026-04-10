@@ -60,7 +60,7 @@ const displayedMovements = computed(() => {
   if (showAllMovements.value==true) {
     return inventoryMovements.value
   }
-  return inventoryMovements.value.slice(0, 5)
+  return inventoryMovements.value.slice(0, 100)
 })
 const search=ref('')
 
