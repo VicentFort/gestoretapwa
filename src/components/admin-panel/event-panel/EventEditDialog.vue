@@ -1,171 +1,169 @@
 <template>
-            <v-card class="bg-primary pa-2">
-                <v-card-title class="bg-ternary">Editar event</v-card-title>
-                <v-form ref="form" v-model="valid" @submit.prevent="submitForm">
-                <v-row>
-                    <v-col cols="12">
-                        <v-text-field
-                            v-model="localEvent.title"
-                            :counter="100"
-                            label="Títol"
-                            required
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
-                        <v-textarea
-                            v-model="localEvent.description"
-                            label="Descripció"
-                            rows="3"
-                            required
-                        ></v-textarea>
-                    </v-col>
+        <v-card class="bg-primary pa-2">
+            <v-card-title class="bg-ternary">Editar event</v-card-title>
+            <v-form ref="form" v-model="valid" @submit.prevent="submitForm">
+            <v-row>
+                <v-col cols="12">
+                    <v-text-field
+                        v-model="localEvent.title"
+                        :counter="100"
+                        label="Títol"
+                        required
+                    ></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                    <v-textarea
+                        v-model="localEvent.description"
+                        label="Descripció"
+                        rows="3"
+                        required
+                    ></v-textarea>
+                </v-col>
 
-                    <v-col cols="12" class="justify-center d-flex">
-                        <v-text-field
-                        class="text-black"
-                        v-model="formattedDate"
-                        label="Data d'inici"
-                        prepend-inner-icon="mdi-calendar"
-                        readonly
-                        variant="outlined"
-                        @click="dateMenu = true"
-                        ></v-text-field>
-                        <v-dialog v-model="dateMenu" max-width="340 bg-ternary">
-                            <v-card>
-                                <v-date-picker
-                                    class="text-black"
-                                    v-model="localEvent.date"
-                                    title="Selecciona la data"
-                                    header="Data d'inici de l'event"
-                                    @update:model-value="dateMenu = false"
-                                ></v-date-picker>
-                                <v-card-actions>
-                                    <v-spacer></v-spacer>
-                                    <v-btn variant="text" class="bg-ternary" @click="dateMenu = false">Tancar</v-btn>
-                                </v-card-actions>
-                            </v-card>
-                        </v-dialog>
-                    </v-col>
+                <v-col cols="12" class="justify-center d-flex">
+                    <v-text-field
+                    class="text-black"
+                    v-model="formattedDate"
+                    label="Data d'inici"
+                    prepend-inner-icon="mdi-calendar"
+                    readonly
+                    variant="outlined"
+                    @click="dateMenu = true"
+                    ></v-text-field>
+                    <v-dialog v-model="dateMenu" max-width="340 bg-ternary">
+                        <v-card>
+                            <v-date-picker
+                                class="text-black"
+                                v-model="localEvent.date"
+                                title="Selecciona la data"
+                                header="Data d'inici de l'event"
+                                @update:model-value="dateMenu = false"
+                            ></v-date-picker>
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn variant="text" class="bg-ternary" @click="dateMenu = false">Tancar</v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
+                </v-col>
 
-                    <v-col cols="12" class="justify-center d-flex">
-                        <v-text-field
-                        class="text-black"
-                        v-model="formattedEndDate"
-                        label="Data de fi"
-                        prepend-inner-icon="mdi-calendar"
-                        readonly
-                        variant="outlined"
-                        @click="endDateMenu = true"
-                        ></v-text-field>
-                        <v-dialog v-model="endDateMenu" max-width="340">
-                            <v-card>
-                                <v-date-picker
-                                    class="text-black"
-                                    v-model="localEvent.endDate"
-                                    title="Selecciona la data"
-                                    header="Data de fi de l'event"
-                                    @update:model-value="endDateMenu = false"
-                                ></v-date-picker>
-                                <v-card-actions>
-                                    <v-spacer></v-spacer>
-                                    <v-btn variant="text" @click="endDateMenu = false">Tancar</v-btn>
-                                </v-card-actions>
-                            </v-card>
-                        </v-dialog>
-                    </v-col>
-                    <v-col cols="12" md="6">
-                        <v-text-field type="time"
-                            v-model="localEvent.startHour"
-                            label="Hora d'inici"
-                        />
-                    </v-col>
-                    <v-col cols="12" md="6">
-                        <v-text-field type="time"
-                            v-model="localEvent.endHour"
-                            label="Hora de fí"
-                        />
-                    </v-col>
-                    
-                    <v-col cols="12" md="6">
-                        <v-switch
-                            v-model="localEvent.publicField"
-                            label="Event públic"
-                            color="secondary"
-                        ></v-switch>
-                    </v-col>
-                    
-                    <v-col cols="12" md="6">
-                        <v-switch
-                        v-model="localEvent.checkNeeds"
-                        label="Event amb necessitats alimentàries"
+                <v-col cols="12" class="justify-center d-flex">
+                    <v-text-field
+                    class="text-black"
+                    v-model="formattedEndDate"
+                    label="Data de fi"
+                    prepend-inner-icon="mdi-calendar"
+                    readonly
+                    variant="outlined"
+                    @click="endDateMenu = true"
+                    ></v-text-field>
+                    <v-dialog v-model="endDateMenu" max-width="340">
+                        <v-card>
+                            <v-date-picker
+                                class="text-black"
+                                v-model="localEvent.endDate"
+                                title="Selecciona la data"
+                                header="Data de fi de l'event"
+                                @update:model-value="endDateMenu = false"
+                            ></v-date-picker>
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn variant="text" @click="endDateMenu = false">Tancar</v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
+                </v-col>
+                <v-col cols="12" md="6">
+                    <v-text-field type="time"
+                        v-model="localEvent.startHour"
+                        label="Hora d'inici"
+                    />
+                </v-col>
+                <v-col cols="12" md="6">
+                    <v-text-field type="time"
+                        v-model="localEvent.endHour"
+                        label="Hora de fí"
+                    />
+                </v-col>
+                
+                <v-col cols="12" md="6">
+                    <v-switch
+                        v-model="localEvent.publicField"
+                        label="Event públic"
                         color="secondary"
+                    ></v-switch>
+                </v-col>
+                
+                <v-col cols="12" md="6">
+                    <v-switch
+                    v-model="localEvent.checkNeeds"
+                    label="Event amb necessitats alimentàries"
+                    color="secondary"
+                    >
+                    </v-switch>
+                </v-col>
+
+                <v-col cols="12" md="6">
+                    <v-select
+                        v-model="selectedTag"
+                        :items="tags"
+                        item-title="name"
+                        item-value="id"
+                        label="Selecciona una etiqueta"
+                        persistent-hint
+                        variant="outlined"
+                    ></v-select>
+                </v-col>
+                <v-col cols="12" md="6">
+                    <v-select
+                        v-model="localEvent.attendants"
+                        :items="filterUsers"
+                        item-title="name"
+                        item-value="id"
+                        multiple
+                        return-object
+                        :value-comparator="(a, b) => (a?.id || a) === (b?.id || b)"
+                        label="Usuaris disponibles"
+                        variant="outlined"
+                        chips
+                        closable-chips
                         >
-                        </v-switch>
-                    </v-col>
-
-                    <v-col cols="12" md="6">
-                        <v-select
-                            v-model="selectedTag"
-                            :items="tags"
-                            item-title="name"
-                            item-value="id"
-                            label="Selecciona una etiqueta"
-                            persistent-hint
-                            variant="outlined"
-                        ></v-select>
-                    </v-col>
-                    <v-col cols="12" md="6">
-                        <v-select
-                            v-model="localEvent.attendants"
-                            :items="filterUsers"
-                            item-title="name"
-                            item-value="id"
-                            multiple
-                            return-object
-                            :value-comparator="(a, b) => (a?.id || a) === (b?.id || b)"
-                            label="Usuaris disponibles"
-                            variant="outlined"
-                            chips
-                            closable-chips
-                            >
-                            
-                            <template v-slot:no-data>
-                                <v-list-item class="bg-primary">
-                                <v-list-item-title>
-                                    No hi ha usuaris disponibles per a l'etiqueta "{{ selectedTag?.name }}"
-                                </v-list-item-title>
-                                </v-list-item>
-                            </template>
-                        </v-select>
-                    </v-col>
-                    <v-col cols="12" md="6">
-                        <v-text-field 
-                            v-model.number="localEvent.price"
-                            label="Preu"
-                            type="number"
-                            prefix="€"
-                        ></v-text-field>
-                    </v-col>
                         
-                    <v-col cols="12" md="6">
-                        <v-text-field
-                            v-model.number="localEvent.maxPeople"
-                            label="Aforament"
-                            type="number"
-                        ></v-text-field>
-                    </v-col>
-                </v-row>
-            
-            <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn @click="console.log(localEvent.attendants)">DEBUG</v-btn>
-            <v-btn class="text-white bg-secondary" type="submit" :disabled="!valid">Guarda</v-btn>
-            <v-btn class="text-white bg-secondary" variant="text" @click="emit('closed')">Tanca</v-btn>
-        </v-card-actions>
-        </v-form>
-        </v-card>
-        <ErrorDialog :message="error" v-model="showErrorDiag" @closed="showErrorDiag=false"/>
-
+                        <template v-slot:no-data>
+                            <v-list-item class="bg-primary">
+                            <v-list-item-title>
+                                No hi ha usuaris disponibles per a l'etiqueta "{{ selectedTag?.name }}"
+                            </v-list-item-title>
+                            </v-list-item>
+                        </template>
+                    </v-select>
+                </v-col>
+                <v-col cols="12" md="6">
+                    <v-text-field 
+                        v-model.number="localEvent.price"
+                        label="Preu"
+                        type="number"
+                        prefix="€"
+                    ></v-text-field>
+                </v-col>
+                    
+                <v-col cols="12" md="6">
+                    <v-text-field
+                        v-model.number="localEvent.maxPeople"
+                        label="Aforament"
+                        type="number"
+                    ></v-text-field>
+                </v-col>
+            </v-row>
+        
+        <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn class="text-white bg-secondary" type="submit" :disabled="!valid">Guarda</v-btn>
+        <v-btn class="text-white bg-secondary" variant="text" @click="emit('closed')">Tanca</v-btn>
+    </v-card-actions>
+    </v-form>
+    </v-card>
+    <ErrorDialog :message="error" v-model="showErrorDiag" @closed="showErrorDiag=false"/>
 </template>
 
 <script setup>
@@ -242,6 +240,7 @@ const submitForm = async () => {
         const { valid: isValid } = await form.value.validate()
         if (isValid) {
             const eventUpdate = {
+                eventId: props.event.id,
                 title:localEvent.value.title,
                 publicField:localEvent.value.public,
                 price:localEvent.value.price,
@@ -257,7 +256,7 @@ const submitForm = async () => {
                 attendantIds:localEvent.value.attendants.map(a => a.id)
             }
             console.info(eventUpdate)
-            await auth.updateEvent(eventUpdate, props.event.id)
+            await auth.updateEvent(eventUpdate)
             emit('closed')
         }
     } catch(err) {

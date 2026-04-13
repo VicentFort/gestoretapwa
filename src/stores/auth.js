@@ -282,10 +282,10 @@ export const useAuthStore = defineStore("auth", {
           throw error
         }
       },
-      async updateEvent(eventDto, eventId) {
+      async updateEvent(eventDto) {
         console.info(eventDto.attendantIds)
         try {
-          const response = await api.put('/event/update/'+eventId, eventDto)
+          const response = await api.put('/event/update', eventDto)
           if(response.data.sucess != null || response.data?.success==false) throw response.data.message
         } catch(error) {
           console.error(error)
