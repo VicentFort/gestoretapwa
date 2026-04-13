@@ -7,7 +7,7 @@
                 </v-card-title>
                 <v-card-text class="bg-primary" style="max-height: 70vh; overflow-y: auto;">
                     <v-divider/>
-                    <v-card-text class="bg-ternary text-primary">Dades generals</v-card-text>
+                    <v-card-text class="text-primary bg-ternary">Dades generals</v-card-text>
                         <v-row>
                             <v-col cols="12" md="6">
                                 <v-select label="Magatzem" :items="stores"
@@ -38,7 +38,7 @@
                             </v-col>
                         </v-row>
                         <v-divider/>
-                        <v-card-text class="bg-ternary text-primary" v-if="selectedType=='Préstec'">Dades de contacte</v-card-text>
+                        <v-card-text class="text-primary bg-ternary" v-if="selectedType=='Préstec'">Dades de contacte</v-card-text>
                         <v-row v-if="selectedType=='Prèstec'">
                             <v-col cols="12" md="6" v-if="selectedType=='Prèstec'">
                                 <v-select
@@ -107,7 +107,7 @@
                 
                 <v-card-actions>
                     <v-btn class="bg-ternary" @click="emit('closed')" icon="mdi-cancel"></v-btn>
-                    <v-btn variant="submit" icon="mdi-plus" @click="submitForm"></v-btn>
+                    <v-btn class="bg-ternary" variant="submit" icon="mdi-plus" @click="submitForm"></v-btn>
                 </v-card-actions>
             </v-card>
         </v-form>

@@ -22,8 +22,8 @@
       <v-card-text v-if="event.checkNeeds == true && event.foodNeeds.length>0">
       Necessitats alimentaries del event: {{ event.foodNeeds?.length }}
       </v-card-text>
-      <v-card-text v-if="event.attendantNames.length>0">
-      Encarregats del event: {{ event.attendantNames?.length }}
+      <v-card-text v-if="event.attendants.length>0">
+      Encarregats del event: {{ event.attendants?.length }}
       </v-card-text>
       <v-card-text>
       Creat per: {{ event.createdBy }}
@@ -46,7 +46,7 @@
         </v-btn>
       </v-card-actions>
       <v-dialog v-model="showEditDialog" width="auto">
-        <EventEditDialog v-model="showEditDialog" :event="selectedEvent"/>
+        <EventEditDialog @closed="showEditDialog=false; show=false" :event="selectedEvent"/>
       </v-dialog>
       <v-dialog v-model="showDeleteDialog" max-width="400">
         <v-card>

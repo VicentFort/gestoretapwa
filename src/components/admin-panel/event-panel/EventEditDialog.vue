@@ -1,12 +1,11 @@
 <template>
-    <v-dialog v-model="show" width="500">
             <v-card class="bg-primary pa-2">
                 <v-card-title class="bg-ternary">Editar event</v-card-title>
                 <v-form ref="form" v-model="valid" @submit.prevent="submitForm">
                 <v-row>
                     <v-col cols="12">
                         <v-text-field
-                            v-model="event.title"
+                            v-model="localEvent.title"
                             :counter="100"
                             label="Títol"
                             required
@@ -14,7 +13,7 @@
                     </v-col>
                     <v-col cols="12">
                         <v-textarea
-                            v-model="event.description"
+                            v-model="localEvent.description"
                             label="Descripció"
                             rows="3"
                             required
@@ -35,7 +34,7 @@
                             <v-card>
                                 <v-date-picker
                                     class="text-black"
-                                    v-model="event.date"
+                                    v-model="localEvent.date"
                                     title="Selecciona la data"
                                     header="Data d'inici de l'event"
                                     @update:model-value="dateMenu = false"
@@ -62,7 +61,7 @@
                             <v-card>
                                 <v-date-picker
                                     class="text-black"
-                                    v-model="event.endDate"
+                                    v-model="localEvent.endDate"
                                     title="Selecciona la data"
                                     header="Data de fi de l'event"
                                     @update:model-value="endDateMenu = false"
@@ -76,20 +75,20 @@
                     </v-col>
                     <v-col cols="12" md="6">
                         <v-text-field type="time"
-                            v-model="event.startHour"
+                            v-model="localEvent.startHour"
                             label="Hora d'inici"
                         />
                     </v-col>
                     <v-col cols="12" md="6">
                         <v-text-field type="time"
-                            v-model="event.endHour"
+                            v-model="localEvent.endHour"
                             label="Hora de fí"
                         />
                     </v-col>
                     
                     <v-col cols="12" md="6">
                         <v-switch
-                            v-model="event.publicField"
+                            v-model="localEvent.publicField"
                             label="Event públic"
                             color="secondary"
                         ></v-switch>
@@ -97,7 +96,7 @@
                     
                     <v-col cols="12" md="6">
                         <v-switch
-                        v-model="event.checkNeeds"
+                        v-model="localEvent.checkNeeds"
                         label="Event amb necessitats alimentàries"
                         color="secondary"
                         >
@@ -106,7 +105,7 @@
 
                     <v-col cols="12" md="6">
                         <v-select
-                            v-model="event.tagId"
+                            v-model="selectedTag"
                             :items="tags"
                             item-title="name"
                             item-value="id"
@@ -117,29 +116,23 @@
                     </v-col>
                     <v-col cols="12" md="6">
                         <v-select
-                            v-model="selectedUsers"
+                            v-model="localEvent.attendants"
                             :items="filterUsers"
-                            :hint="!selectedTag ? 'Selecciona una etiqueta primer' : 'Usuaris disponibles'"
-                            persistent-hint
-                            item-title="username"
+                            item-title="name"
                             item-value="id"
-                            label="Usuaris disponibles"
                             multiple
-                            chips
+                            return-object
+                            :value-comparator="(a, b) => (a?.id || a) === (b?.id || b)"
+                            label="Usuaris disponibles"
                             variant="outlined"
-                            class="mt-4 bg-primary"
+                            chips
+                            closable-chips
                             >
-                            <template v-slot:chip="{ props, item }">
-                                <v-chip
-                                class="bg-primary"
-                                v-bind="props"
-                                :text="item.raw.username" 
-                                ></v-chip>
-                            </template>
+                            
                             <template v-slot:no-data>
                                 <v-list-item class="bg-primary">
                                 <v-list-item-title>
-                                    No hi ha usuaris disponibles per a l'etiqueta "{{ selectedTag.name }}"
+                                    No hi ha usuaris disponibles per a l'etiqueta "{{ selectedTag?.name }}"
                                 </v-list-item-title>
                                 </v-list-item>
                             </template>
@@ -147,7 +140,7 @@
                     </v-col>
                     <v-col cols="12" md="6">
                         <v-text-field 
-                            v-model.number="event.price"
+                            v-model.number="localEvent.price"
                             label="Preu"
                             type="number"
                             prefix="€"
@@ -156,7 +149,7 @@
                         
                     <v-col cols="12" md="6">
                         <v-text-field
-                            v-model.number="event.maxPeople"
+                            v-model.number="localEvent.maxPeople"
                             label="Aforament"
                             type="number"
                         ></v-text-field>
@@ -165,57 +158,113 @@
             
             <v-card-actions>
             <v-spacer></v-spacer>
+            <v-btn @click="console.log(localEvent.attendants)">DEBUG</v-btn>
             <v-btn class="text-white bg-secondary" type="submit" :disabled="!valid">Guarda</v-btn>
-            <v-btn class="text-white bg-secondary" variant="text" @click="show = false">Tanca</v-btn>
+            <v-btn class="text-white bg-secondary" variant="text" @click="emit('closed')">Tanca</v-btn>
         </v-card-actions>
         </v-form>
         </v-card>
-    </v-dialog>
+        <ErrorDialog :message="error" v-model="showErrorDiag" @closed="showErrorDiag=false"/>
+
 </template>
 
 <script setup>
 import { useAuthStore } from '@/stores/auth';
 import { computed, ref, watch } from 'vue';
+import ErrorDialog from '@/components/ErrorDialog.vue';
 
 const auth = useAuthStore()
+
 const dateMenu = ref(false)
 const endDateMenu = ref(false)
+
 const valid = ref(false)
 const form = ref(null)
-const selectedTag = ref(null)
+
 const props = defineProps({
     modelView: Boolean,
     event: Object
 })
+
+const localEvent = ref({
+    ...props.event,
+    attendants: Array.isArray(props.event.attendants) 
+        ? props.event.attendants.map(a => ({ id: a.id, name: `${a.name} ${a.surname}`.trim() })) 
+        : []
+})
+watch(() => props.event.id, (newId, oldId) => {
+    // SOLO reseteamos si realmente hemos cambiado de ID de evento
+    if (newId !== oldId) {
+        localEvent.value = {
+            ...props.event,
+            attendants: Array.isArray(props.event.attendants) ? [...props.event.attendants] : []
+        }
+    }
+}, { deep: false })
+
 const users = ref(auth.fallaAdminInfo.users)
 const tags = ref(auth.fallaAdminInfo.tags)
-const selectedUsers = ref([])
+const selectedTag = ref({
+    id:localEvent.value.tagId,
+    name:localEvent.value.tagName
+})
 const filterUsers = computed(() => {
-  if (!selectedTag.value) return []
-  
-  return users.value
-    .filter(u => u.prefs?.some(p => p.tagId == props.event.tagId))
-    .map(u => ({
-      id: u.id,
-      username: u.username || u.name // Fallback por si acaso
-    }))
+    if (!selectedTag.value) return []
+    
+    const currentTagId = typeof selectedTag.value === 'object' 
+        ? selectedTag.value.id 
+        : selectedTag.value
+
+    return users.value
+        .filter(u => u.prefs?.some(p => p.tagId === currentTagId))
+        .map(u => ({
+            id: u.id,
+            name: `${u.name} ${u.surname}`.trim() // Limpiamos espacios
+        }))
 })
-watch(selectedTag, () => {
-  selectedUsers.value = []
+
+watch(selectedTag, (newTag) => {
+    if (newTag !== props.event.tagId) {
+        localEvent.value.attendants = []
+    }
 })
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'closed'])
 const show = computed({
     get: () => props.modelValue,
     set: (value) => emit('update:modelValue', value)
 })
 
+const error = ref('')
+const showErrorDiag = ref(false)
+
 const submitForm = async () => {
-    const { valid: isValid } = await form.value.validate()
-    if (isValid) {
-        console.log(props.event)
-        await auth.updateEvent(props.event, props.event.id)
-        show.value = false
+    try {
+        const { valid: isValid } = await form.value.validate()
+        if (isValid) {
+            const eventUpdate = {
+                title:localEvent.value.title,
+                publicField:localEvent.value.public,
+                price:localEvent.value.price,
+                description:localEvent.value.description,
+                maxPeople:localEvent.value.maxPeople,
+                date:props.event.date,
+                tagId:localEvent.tagId,
+                startHour:localEvent.value.startHour,
+                endHour:localEvent.value.endHour,
+                endDate:localEvent.value.endDate,
+                open:localEvent.value.open,
+                checkNeeds:localEvent.value.checkNeeds,
+                attendantIds:localEvent.value.attendants.map(a => a.id)
+            }
+            console.info(eventUpdate)
+            await auth.updateEvent(eventUpdate, props.event.id)
+            emit('closed')
+        }
+    } catch(err) {
+        error.value=err
+        showErrorDiag.value = true
     }
+    
 }
 
 

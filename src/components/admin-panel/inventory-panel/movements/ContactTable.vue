@@ -10,14 +10,20 @@
             class="bg-ternary elevation-1"
             style="max-width: 100vw;"
             >
+                <template #item.actions="{ item }">
+                    <v-btn icon="mdi-file-edit" color="ternary" variant="text" @click="showUpdateContact=true; selectedContact=item"></v-btn>
+                </template>
             </v-data-table-virtual>
             <v-card-actions>
-                <v-btn variant="text" icon="mdi-plus" @click="showAddContact=true"></v-btn>
+                <v-btn variant="text" icon="mdi-plus"@click="showAddContact=true"></v-btn>
             </v-card-actions>
         </v-card>
     </v-container>
     <v-dialog v-model="showAddContact">
         <AddContact @closed="showAddContact=false"/>
+    </v-dialog>
+    <v-dialog v-model="showUpdateContact">
+        <UpdateContactDialog :contact="selectedContact" @closed="showUpdateContact=false"/>
     </v-dialog>
 </template>
 
@@ -25,12 +31,16 @@
 import { useAuthStore } from '@/stores/auth';
 import { ref, computed } from 'vue';
 import AddContact from './AddContact.vue';
+import UpdateContactDialog from './UpdateContactDialog.vue';
 
 
 const auth = useAuthStore()
 const contacts = computed(() => auth.fallaAdminInfo?.contacts || [])
-console.log(contacts)
+
+const showUpdateContact = ref(false)
 const showAddContact = ref(false)
+const selectedContact = ref(null)
+
 
 const headers = [
     {
@@ -74,6 +84,17 @@ const headers = [
         value:"dniCif",
         align:"center",
         sortable:true,
+        cellProps: {
+            class:"bg-primary"
+        }, 
+        headerProps: {
+            class:"bg-ternary font-weight-bold text-primary"
+        }
+    }, 
+    {
+        title:"Accions",
+        key:"actions",
+        align:"center",
         cellProps: {
             class:"bg-primary"
         }, 

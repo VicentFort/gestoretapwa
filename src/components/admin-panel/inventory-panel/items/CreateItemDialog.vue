@@ -34,7 +34,7 @@
                 </v-row>
             </v-col>
             <v-card-actions>
-                <v-btn class="bg-ternary align-left" icon="mdi-cancel" @click="emit('closed')"></v-btn>
+                <v-btn class="align-left bg-ternary" icon="mdi-cancel" @click="emit('closed')"></v-btn>
 
                 <v-btn class="bg-ternary" type="submit" :disabled="description=='' || name=='' || selectedCategory==''" icon="mdi-plus"></v-btn>
             </v-card-actions>
@@ -70,7 +70,8 @@ const error = ref('')
 const showErrorDiag = ref(false)
 
 const selectedCategory = ref('')
-const categories = auth.categories
+const categories = auth.itemCategories
+
 const submitForm = async () => {
     try {
         const {valid: formValid} = await form.value.validate()

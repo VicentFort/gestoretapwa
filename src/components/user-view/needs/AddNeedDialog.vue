@@ -15,7 +15,7 @@
             <template v-slot:item="{ props, item }">
                 <v-list-item
                     v-bind="props"
-                    :disabled="item.raw.disabled"
+                    :disabled="item.disabled"
                 ></v-list-item>
             </template>
             </v-select>

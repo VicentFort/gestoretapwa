@@ -1,5 +1,4 @@
 <template>
-    <v-dialog v-model="show" width="500">
                 <v-card class="bg-primary pa-2">
                     <v-card-title class="bg-ternary">Afegir event</v-card-title>
                     <v-form ref="form" v-model="valid" @submit.prevent="submitForm">
@@ -127,7 +126,7 @@
                                 :disabled="!selectedTag"
                                 :hint="!selectedTag ? 'Selecciona una etiqueta primer' : 'Usuaris disponibles'"
                                 persistent-hint
-                                item-title="username"
+                                item-title="name"
                                 item-value="id"
                                 label="Usuaris disponibles"
                                 multiple
@@ -139,13 +138,13 @@
                                     <v-chip
                                     class="bg-primary"
                                     v-bind="props"
-                                    :text="item.raw.username" 
+                                    :text="item.name" 
                                     ></v-chip>
                                 </template>
                                 <template v-slot:no-data>
                                     <v-list-item class="bg-primary">
                                     <v-list-item-title>
-                                        No hi ha usuaris disponibles per a l'etiqueta "{{ selectedTag.name }}"
+                                        No hi ha usuaris disponibles per a l'etiqueta "{{ selectedTag?.name }}"
                                     </v-list-item-title>
                                     </v-list-item>
                                 </template>
@@ -172,12 +171,11 @@
                 <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn class="text-white bg-ternary" type="submit" :disabled="!valid">Crear</v-btn>
-                <v-btn class="text-white bg-ternary" variant="text" @click="show = false">Tanca</v-btn>
+                <v-btn class="text-white bg-ternary" variant="text" @click="emit('closed')">Tanca</v-btn>
             </v-card-actions>
             </v-form>
             </v-card>
             
-    </v-dialog>
 </template>
 
 <script setup>
@@ -197,7 +195,7 @@ const filterUsers = computed(() => {
     .filter(u => u.prefs?.some(p => p.tagId == selectedTag.value))
     .map(u => ({
       id: u.id,
-      username: u.username || u.name // Fallback por si acaso
+      name:  u.name // Fallback por si acaso
     }))
 })
 watch(selectedTag, () => {
@@ -227,7 +225,7 @@ const endDateMenu = ref(false)
 const props = defineProps({
     modelValue: Boolean
 })
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'closed'])
 const show = computed({
     get: () => props.modelValue,
     set: (value) => emit('update:modelValue', value)
@@ -240,7 +238,7 @@ const submitForm = async () => {
             if(event.endDate < event.date) { event.endDate = event.date}
             const eventData = await auth.addEvent(event, selectedTag.value, selectedUsers.value)
             await auth.joinEvent(eventData?.id)
-            show.value = false
+            emit('closed')
         } catch(error) {
             console.error(error)
         }

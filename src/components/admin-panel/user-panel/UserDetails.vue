@@ -23,7 +23,7 @@
                 </v-list>
             </v-card>
             <v-card v-if="user?.prefs.length>0" class="bg-primary border-0">
-                <v-card-text class="pa-4">Necessitats: </v-card-text>
+                <v-card-text class="pa-4">Disposicions a events: </v-card-text>
                 <v-list class="bg-primary">
                     <v-list-item
                     v-for="pref in user.prefs"

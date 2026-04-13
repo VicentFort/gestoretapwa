@@ -55,7 +55,7 @@
             </v-list-item>
             <v-divider v-if="auth.token"></v-divider>
             <v-list-item v-if="auth.token" prepend-icon="mdi-refresh">
-              <v-btn icon @click="authStore.fetchUserInfo()">
+              <v-btn icon @click="auth.fetchUserInfo()">
                 <v-icon>mdi-refresh</v-icon>
               </v-btn>
             </v-list-item>

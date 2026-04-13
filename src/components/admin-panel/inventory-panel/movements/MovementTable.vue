@@ -28,10 +28,21 @@
                 <template #item.date="{ item }">
                   {{ item.date ? formattedDate(item.date) : 'Cargando...' }}
                 </template>
+                <template #item.actions="{item}">
+                    <v-btn 
+                    v-if="item.movementType == 'Prèstec'" 
+                    :disabled="item.loan?.state != 'Pendent' "
+                    @click="showReturnDialog=true; selectedLoan=item.loan"
+                    :class="returnButtonStyle(item.loan?.state)"
+                    :icon="returnButtonIcon(item.loan?.state)"
+                    >
+                    </v-btn>
+                </template>
+
             </v-data-table-virtual>
             <v-card-actions>
                 <v-btn 
-                v-if="inventoryMovements.length > 5" 
+                v-if="inventoryMovements.length > 100" 
                 class="justify-center"
                 variant="text" 
                 :icon="showAllMovements ? 'mdi-filter':  'mdi-clock-outline'"
@@ -44,7 +55,10 @@
         </v-card>
     </v-container>
     <v-dialog v-model="showAddMovement" scrollable max-width="600px">
-        <AddMovementDialog @closed="showAddMovement=false"/>
+        <AddMovementDialog @closed="showAddMovement=false" />
+    </v-dialog>
+    <v-dialog v-model="showReturnDialog">
+        <ReturnDialog @closed="showReturnDialog=false" :loan="selectedLoan"/>
     </v-dialog>
 </template>
 
@@ -52,6 +66,8 @@
 import { useAuthStore } from '@/stores/auth';
 import { computed, ref } from 'vue';
 import AddMovementDialog from '@/components/admin-panel/inventory-panel/movements/AddMovementDialog.vue';
+import ReturnDialog from '@/components/admin-panel/inventory-panel/movements/ReturnDialog.vue';
+
 
 const auth = useAuthStore()
 const inventoryMovements = computed(() => auth.fallaAdminInfo?.inventoryMovements || []) 
@@ -62,9 +78,27 @@ const displayedMovements = computed(() => {
   }
   return inventoryMovements.value.slice(0, 100)
 })
-const search=ref('')
+const search = ref('')
+const selectedLoan = ref(null)
+
+const returnButtonStyle = (state) => {
+    switch(state) {
+        case "Tornat": return 'bg-green'
+        case "Atrassat": return 'bg-error'
+        default: return 'bg-ternary'
+    }
+}
+
+const returnButtonIcon = (state) => {
+    switch(state) {
+        case "Tornat": return 'mdi-check-all'
+        case "Atrassat": return 'mdi-clock-alert'
+        default: return 'mdi-keyboard-return'
+    }
+}
 
 const showAddMovement = ref(false)
+const showReturnDialog = ref(false)
 
 const initialSort = [{key: 'date', order:'desc'}]
 
@@ -159,6 +193,17 @@ const headers = [
         title:"Creat per",
         align:"center",
         value:"createdBy",
+        cellProps: {
+            class:"bg-primary"
+        },
+        headerProps: {
+            class:"bg-ternary font-weight-bold"
+        }
+    }, 
+    {
+        title:"Accions",
+        align:"center",
+        key:"actions",
         cellProps: {
             class:"bg-primary"
         },

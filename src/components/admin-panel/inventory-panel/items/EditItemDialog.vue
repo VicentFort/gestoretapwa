@@ -3,7 +3,7 @@
         <v-form @submit.prevent="submitForm" ref="form" v-model="valid">
             <v-card class="bg-primary">
                 <v-card-title class="text-primary font-weight-bold bg-ternary">
-                    Editant el item: {{ localItem.name }}
+                    Editant el item: {{ item.name }}
                 </v-card-title>
                 <v-col>
                     <v-row rows="12" md="6">
@@ -31,7 +31,7 @@
                     </v-row>
                 </v-col>
                 <v-card-actions>
-                    <v-btn class="bg-ternary align-left" icon="mdi-cancel" @click="emit('closed')"></v-btn>
+                    <v-btn class="align-left bg-ternary" icon="mdi-cancel" @click="emit('closed')"></v-btn>
                     <v-btn class="bg-ternary" type="submit" icon="mdi-plus"></v-btn>
                 </v-card-actions>
             </v-card>

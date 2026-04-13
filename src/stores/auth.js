@@ -283,20 +283,9 @@ export const useAuthStore = defineStore("auth", {
         }
       },
       async updateEvent(eventDto, eventId) {
+        console.info(eventDto.attendantIds)
         try {
-          const response = await api.put('/event/update/'+eventId,{
-            "title": eventDto.title,
-              "publicField": eventDto.publicField,
-              "done": eventDto.done,
-              "price": eventDto.price,
-              "description": eventDto.description,
-              "maxPeople": eventDto.maxPeople,
-              "date": eventDto.date ? new Date(eventDto.date).toLocaleDateString('en-CA') : null,
-              "tagId": eventDto.tagId,
-              "startHour": eventDto.startHour,
-              "endHour": eventDto.endHour,
-              "checkNeeds": eventDto.checkNeeds
-          })
+          const response = await api.put('/event/update/'+eventId, eventDto)
           if(response.data.sucess != null || response.data?.success==false) throw response.data.message
         } catch(error) {
           console.error(error)
@@ -439,6 +428,36 @@ export const useAuthStore = defineStore("auth", {
       async createContact(contact) {
         try {
           const response = api.post("/inv/createContact", contact).catch(function (error) {
+            if(!error.response.data?.success) {
+              console.error(error.response.data.message)
+              throw error.response.data.message
+            } throw error.message
+          })
+        } catch(err) {
+          console.error(err)
+          throw err
+        } finally {
+          this.fetchFallaAdminInfo()
+        }
+      },
+      async returnLoan(returnDto) {
+        try {
+          const response = api.post("/inv/returnLoan", returnDto).catch(function (error) {
+            if(!error.response.data?.success) {
+              console.error(error.response.data.message)
+              throw error.response.data.message
+            } throw error.message
+          })
+        } catch(err) {
+          console.error(err)
+          throw err
+        } finally {
+          this.fetchFallaAdminInfo()
+        }
+      },
+      async updateContact(contact) {
+        try {
+          const response = api.put("/inv/updateContact", contact).catch(function (error) {
             if(!error.response.data?.success) {
               console.error(error.response.data.message)
               throw error.response.data.message

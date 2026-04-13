@@ -47,11 +47,8 @@
                     <v-col cols="12" md="6">
                         <StoreTable/>
                     </v-col>
-                    <v-col cols="12" md="6">
-                        <ContactTable/>
-                    </v-col>
                 </v-row>
-                
+                <ContactTable/>
             </v-tabs-window-item>
         </v-window>
 
