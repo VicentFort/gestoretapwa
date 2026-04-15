@@ -118,7 +118,10 @@
 <script setup>
 import ErrorDialog from '@/components/ErrorDialog.vue';
 import { useAuthStore } from '@/stores/auth';
-import { ref, computed } from 'vue';
+import { ref, computed, reactive } from 'vue';
+import RegisterLoanEmail from '../notifications-emails/RegisterLoanEmail.vue';
+import { render } from '@vue-email/render';
+import emailjs from '@emailjs/browser';
 
 
 const auth = useAuthStore()
@@ -139,6 +142,7 @@ const stores = computed(() => auth.fallaAdminInfo?.stores.filter(store => {
 const contacts = computed(() => auth.fallaAdminInfo?.contacts || [])
 const movementTypes = auth.movementTypes
 
+
 const selectedStore = ref('')
 const selectedItem = ref('')
 const amount = ref(1)
@@ -150,6 +154,13 @@ const idealReturnDate = ref('')
 
 const error = ref('')
 const showErrorDiag = ref(false)
+const formData = reactive({
+    user_name:'Vicent Fort',
+    user_email:'vicenteforttronch@gmail.com',
+    message:'XD'
+})
+
+
 
 const submitForm = async () => {
     try {
@@ -166,9 +177,29 @@ const submitForm = async () => {
             adquisitionDate: adquistionDate.value,
             idealReturnDate: idealReturnDate.value
         }
+        
         await auth.processMovement(inventoryMovement)
+        if(inventoryMovement.type=='Prèstec') {
+
+
+                        
+            const serviceId = process.env.VUE_APP_EMAIL_JS_SERVICE_ID
+            const templateId = process.env.VUE_APP_EMAIL_JS_TEMPLATE1_ID
+            const key = process.env.VUE_APP_EMAIL_JS_KEY
+
+            console.log(formData)
+
+            await emailjs.send(
+                serviceId,
+                templateId,
+                formData,
+                key
+            )
+        }
+    
         emit('closed')
     } catch(err) {
+        console.error(err)
         showErrorDiag.value = true
         error.value= err
     }
