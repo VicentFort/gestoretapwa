@@ -42,14 +42,14 @@
             </v-data-table-virtual>
             <v-card-actions>
                 <v-btn 
-                v-if="inventoryMovements.length > 100" 
+                v-if="inventoryMovements.length > 25" 
                 class="justify-center"
                 variant="text" 
                 :icon="showAllMovements ? 'mdi-filter':  'mdi-clock-outline'"
                 color="primary" 
                 @click="showAllMovements = !showAllMovements"
                 />
-                {{ showAllMovements ? 'Mostrant només els primers 100' : `Mostrant tots (${inventoryMovements.length})` }}
+                {{ !showAllMovements ? 'Mostrant només els primers 25' : `Mostrant tots (${inventoryMovements.length})` }}
                 <v-btn variant="text" icon="mdi-plus" @click="showAddMovement=true"></v-btn>
             </v-card-actions>
         </v-card>
@@ -73,10 +73,15 @@ const auth = useAuthStore()
 const inventoryMovements = computed(() => auth.fallaAdminInfo?.inventoryMovements || []) 
 const showAllMovements = ref(false)
 const displayedMovements = computed(() => {
-  if (showAllMovements.value==true) {
-    return inventoryMovements.value
+  const sorted = [...inventoryMovements.value].sort((a, b) => {
+    return new Date(b.date) - new Date(a.date)
+  })
+
+  // 3. Si no queremos mostrar todos, cortamos los 5 ya ordenados
+  if (showAllMovements.value) {
+    return sorted
   }
-  return inventoryMovements.value.slice(0, 100)
+  return sorted.slice(0, 25)
 })
 const search = ref('')
 const selectedLoan = ref(null)
@@ -100,7 +105,7 @@ const returnButtonIcon = (state) => {
 const showAddMovement = ref(false)
 const showReturnDialog = ref(false)
 
-const initialSort = [{key: 'date', order:'desc'}]
+const initialSort = ref([{key: 'date', order:'desc'}])
 
 const formattedDate = (dateString) => {
   if (!dateString) return ''
@@ -121,7 +126,7 @@ const headers = [
     {
         title:"Data del moviment",
         align:"center",
-        value:"date",
+        key:"date",
         sortable:true,
         cellProps: {
             class:"bg-primary"

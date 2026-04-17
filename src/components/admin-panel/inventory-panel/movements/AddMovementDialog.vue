@@ -173,11 +173,13 @@ const submitForm = async () => {
         }
         
         const movementInfo = await auth.processMovement(inventoryMovement)
+        
         if(inventoryMovement.type=='Prèstec') {
             
             const serviceId = process.env.VUE_APP_EMAIL_JS_SERVICE_ID
-            const templateId = process.env.VUE_APP_EMAIL_JS_TEMPLATE1_ID
+            const templateId = process.env.VUE_APP_EMAIL_JS_TEMPLATE_CREATE_LOAN_ID
             const key = process.env.VUE_APP_EMAIL_JS_KEY
+            
 
             const formData = {
                 user_name:selectedContact.value.name,
@@ -191,7 +193,6 @@ const submitForm = async () => {
                 loanId: movementInfo.loan?.id
 
             }
-            console.log(formData.user_email)
             await emailjs.send(
                 serviceId,
                 templateId,
