@@ -418,6 +418,7 @@ export const useAuthStore = defineStore("auth", {
               throw error.response.data.message
             } throw error.message
           })
+          return response.data
         } catch(err) {
           console.error(err)
           throw err

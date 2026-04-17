@@ -44,7 +44,7 @@
                                 <v-select
                                 :items="contacts"
                                 item-title="name"
-                                item-value="id"
+                                return-object
                                 v-model="selectedContact"
                                 label="Contacte">
                                 </v-select>
@@ -119,8 +119,6 @@
 import ErrorDialog from '@/components/ErrorDialog.vue';
 import { useAuthStore } from '@/stores/auth';
 import { ref, computed, reactive } from 'vue';
-import RegisterLoanEmail from '../notifications-emails/RegisterLoanEmail.vue';
-import { render } from '@vue-email/render';
 import emailjs from '@emailjs/browser';
 
 
@@ -154,11 +152,6 @@ const idealReturnDate = ref('')
 
 const error = ref('')
 const showErrorDiag = ref(false)
-const formData = reactive({
-    user_name:'Vicent Fort',
-    user_email:'vicenteforttronch@gmail.com',
-    message:'XD'
-})
 
 
 
@@ -166,6 +159,7 @@ const submitForm = async () => {
     try {
         const {valid: formValid} = await form.value.validate()
         if(!formValid) return
+
         const inventoryMovement = {
             itemId: selectedItem.value,
             storeId: selectedStore.value,
@@ -173,22 +167,31 @@ const submitForm = async () => {
             type: selectedType.value,
             message: message.value,
 
-            contactId: selectedContact.value,
+            contactId: selectedContact.value?.id || null,
             adquisitionDate: adquistionDate.value,
             idealReturnDate: idealReturnDate.value
         }
         
-        await auth.processMovement(inventoryMovement)
+        const movementInfo = await auth.processMovement(inventoryMovement)
         if(inventoryMovement.type=='Prèstec') {
-
-
-                        
+            
             const serviceId = process.env.VUE_APP_EMAIL_JS_SERVICE_ID
             const templateId = process.env.VUE_APP_EMAIL_JS_TEMPLATE1_ID
             const key = process.env.VUE_APP_EMAIL_JS_KEY
 
-            console.log(formData)
+            const formData = {
+                user_name:selectedContact.value.name,
+                user_email:selectedContact.value.email,
+                message: message.value,
+                item: movementInfo.loan?.itemName,
+                amount: movementInfo.amount,
+                fallaName: auth.fallaAdminInfo.name,
+                loanDate: movementInfo.loan?.acquisitionDate,
+                returnDate: movementInfo.loan?.idealReturnDate,
+                loanId: movementInfo.loan?.id
 
+            }
+            console.log(formData.user_email)
             await emailjs.send(
                 serviceId,
                 templateId,
