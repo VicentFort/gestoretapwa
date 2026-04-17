@@ -35,6 +35,7 @@
                             <v-date-picker
                                 class="text-black"
                                 v-model="localEvent.date"
+                                :min="new Date()"
                                 title="Selecciona la data"
                                 header="Data d'inici de l'event"
                                 @update:model-value="dateMenu = false"
@@ -61,6 +62,7 @@
                         <v-card>
                             <v-date-picker
                                 class="text-black"
+                                :min="new Date()"
                                 v-model="localEvent.endDate"
                                 title="Selecciona la data"
                                 header="Data de fi de l'event"

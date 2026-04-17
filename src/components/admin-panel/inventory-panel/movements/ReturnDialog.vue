@@ -99,7 +99,7 @@ const submitForm = async () => {
             amount: loanInfo.amount,
             itemName: loanInfo.itemName,
             fallaName: auth.fallaAdminInfo?.name,
-            returnDate: loanInfo.realReturnDate
+            returnDate: formattedDate(loanInfo.realReturnDate)
         }
         console.log("FORM DATA: ")
         console.log(formData)
@@ -121,4 +121,9 @@ const submitForm = async () => {
     }
 }
 
+const formattedDate = (dateString) => {
+  if (!dateString) return ''
+  const date = new Date(dateString)
+  return date.toLocaleString('es-ES') // Simplificado para el ejemplo
+}
 </script>

@@ -6,7 +6,7 @@
                 <v-col cols="12" class="justify-center d-flex">
                     <v-text-field
                     class="text-black"
-                    v-model="date"
+                    v-model="formattedDate"
                     label="Inicien abans de:"
                     prepend-inner-icon="mdi-calendar"
                     readonly
@@ -39,7 +39,7 @@
                 <v-col cols="12" class="justify-center d-flex">
                     <v-text-field
                     class="text-black"
-                    v-model="endDate"
+                    v-model="formattedEndDate"
                     label="Acaben abans de:"
                     prepend-inner-icon="mdi-calendar"
                     readonly
@@ -122,6 +122,7 @@ const endDate = ref('')
 const tag = ref(null)
 const maxPrice = ref(null)
 
+
 const submitForm = () => {
     let filtered = auth.userInfo.events?.filter(event => {
         const meetsMaxPrice = (maxPrice.value !== null && maxPrice.value !== '') 
@@ -158,5 +159,28 @@ const emptyFields = () => {
 
 
 
+const formattedDate = computed(() => {
+  if (!date?.value) return ''
+  const dateObj = new Date(date?.value)
+  const offset = dateObj.getTimezoneOffset() * 60000
+  const localISO = new Date(dateObj.getTime() - offset).toISOString()
+  
+  // Extraemos YYYY-MM-DD y HH:mm:ss.SSS
+  const [fDate, timeWithZ] = localISO.split('T')
+  const time = timeWithZ.slice(0,0) 
+  return `${fDate} ${time}`
+})
+
+const formattedEndDate = computed(() => {
+  if (!endDate?.value) return ''
+  const dateObj = new Date(endDate?.value)
+  const offset = dateObj.getTimezoneOffset() * 60000
+  const localISO = new Date(dateObj.getTime() - offset).toISOString()
+  
+  // Extraemos YYYY-MM-DD y HH:mm:ss.SSS
+  const [fDate, timeWithZ] = localISO.split('T')
+  const time = timeWithZ.slice(0,0) 
+  return `${fDate} ${time}`
+})
 
 </script>

@@ -55,7 +55,7 @@ const openCreateEvent = () => {
                 <EventDialog v-model="isDetailsOpen" :event="selectedEvent"/>
             </v-dialog>
             <v-dialog v-model="isCreateOpen" width="auto">
-                <EventCreateDialog v-model="isCreateOpen"/>
+                <EventCreateDialog v-model="isCreateOpen" @closed="isCreateOpen=false"/>
             </v-dialog>
             <v-card-actions class="justify-center">
                 <v-row>

@@ -52,7 +52,7 @@
                             <v-col cols="12" md="6" v-if="selectedType=='Prèstec'">
                                 <v-text-field
                                     class="text-black"
-                                    v-model="adquistionDate"
+                                    v-model="formattedAdquisitionDate"
                                     label="Data de préstec"
                                     prepend-inner-icon="mdi-calendar"
                                     :rules="[d => !!d || 'Data de préstec necessària']"
@@ -64,6 +64,7 @@
                                     <v-card>
                                         <v-date-picker
                                             class="text-black"
+                                            :min="new Date()"
                                             v-model="adquistionDate"
                                             title="Selecciona la data"
                                             header="Data de préstec"
@@ -78,7 +79,7 @@
                             <v-col cols="12" md="6" v-if="selectedType=='Prèstec'">
                                 <v-text-field
                                     class="text-black"
-                                    v-model="idealReturnDate"
+                                    v-model="formattedIdealReturnDate"
                                     label="Data de retorn"
                                     prepend-inner-icon="mdi-calendar"
                                     :rules="[d => !!d || 'Data de retorn necessària']"
@@ -90,6 +91,7 @@
                                     <v-card>
                                         <v-date-picker
                                             class="text-black"
+                                            :min="new Date()"
                                             v-model="idealReturnDate"
                                             title="Selecciona la data"
                                             header="Data de retorn"
@@ -107,7 +109,7 @@
                 
                 <v-card-actions>
                     <v-btn class="bg-ternary" @click="emit('closed')" icon="mdi-cancel"></v-btn>
-                    <v-btn class="bg-ternary" variant="submit" icon="mdi-plus" @click="submitForm"></v-btn>
+                    <v-btn class="bg-ternary" variant="submit" icon="mdi-plus" @click="submitForm" :disabled="selectedStore==null || selectedItem==null || selectedType==null || amount==null || message=='' || (selectedType=='Prèstec' && (selectedContact==null || adquistionDate=='' || idealReturnDate == ''))"></v-btn>
                 </v-card-actions>
             </v-card>
         </v-form>
@@ -153,7 +155,28 @@ const idealReturnDate = ref('')
 const error = ref('')
 const showErrorDiag = ref(false)
 
+const formattedAdquisitionDate = computed(() => {
+  if (!adquistionDate.value) return ''
+  const dateObj = new Date(adquistionDate.value)
+  const offset = dateObj.getTimezoneOffset() * 60000
+  const localISO = new Date(dateObj.getTime() - offset).toISOString()
+  
+  const [date, timeWithZ] = localISO.split('T')
+  const time = timeWithZ.slice(0, 0)
+  return `${date} ${time}`
+})
 
+
+const formattedIdealReturnDate = computed(() => {
+  if (!idealReturnDate.value) return ''
+  const dateObj = new Date(idealReturnDate.value)
+  const offset = dateObj.getTimezoneOffset() * 60000
+  const localISO = new Date(dateObj.getTime() - offset).toISOString()
+  
+  const [date, timeWithZ] = localISO.split('T')
+  const time = timeWithZ.slice(0, 0)
+  return `${date} ${time}`
+})
 
 const submitForm = async () => {
     try {
@@ -188,8 +211,8 @@ const submitForm = async () => {
                 item: movementInfo.loan?.itemName,
                 amount: movementInfo.amount,
                 fallaName: auth.fallaAdminInfo.name,
-                loanDate: movementInfo.loan?.acquisitionDate,
-                returnDate: movementInfo.loan?.idealReturnDate,
+                loanDate:  formattedDate(movementInfo.loan?.acquisitionDate),
+                returnDate: formattedDate(movementInfo.loan?.idealReturnDate),
                 loanId: movementInfo.loan?.id
 
             }
@@ -208,5 +231,9 @@ const submitForm = async () => {
         error.value= err
     }
 }
-
+const formattedDate = (dateString) => {
+  if (!dateString) return ''
+  const date = new Date(dateString)
+  return date.toLocaleString('es-ES') // Simplificado para el ejemplo
+}
 </script>

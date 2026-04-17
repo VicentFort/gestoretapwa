@@ -37,6 +37,7 @@
                                 <v-card>
                                     <v-date-picker
                                         class="text-black"
+                                        :min="new Date()"
                                         v-model="event.date"
                                         title="Selecciona la data"
                                         header="Data d'inici de l'event"
@@ -64,6 +65,7 @@
                                 <v-card>
                                     <v-date-picker
                                         class="text-black"
+                                        :min="new Date()"
                                         v-model="event.endDate"
                                         title="Selecciona la data"
                                         header="Data de fi de l'event"
@@ -201,7 +203,6 @@ const filterUsers = computed(() => {
 watch(selectedTag, () => {
   selectedUsers.value = []
 })
-
 const valid = ref(false)
 const form = ref(null)
 const event = reactive({
