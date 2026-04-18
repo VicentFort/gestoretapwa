@@ -14,12 +14,10 @@ const mobile = useDisplay()
 </script>
 
 <template>
-    <v-container>
-        <v-col justify="center">
+        <v-col justify="center" v-if="auth.token && auth.userInfo">
             <v-row rows="12" md="6">
-                <v-container v-if="auth.token && auth.userInfo">
+                <v-container>
                     <UserInfo/>
-                    
                     <v-sheet elevation="2" rounder="lg" :class="mobile ?'pa-1' : 'pa-5'">
                         <v-tabs v-model="tab" color="primary" :direction="mobile ? 'horizontal' : 'vertical'">
                             <v-tab value="one" :class="mobile ?'pa-1': 'pa-5'">Els meus events</v-tab>
@@ -48,16 +46,14 @@ const mobile = useDisplay()
                         </v-window-item>
                     </v-window>
                 </v-container>
-            <LoginForm />  
+            <v-container v-if="auth.token">
+                <v-btn @click="handleLogout" class="bg-ternary">Log out</v-btn>
+            </v-container> 
         </v-row>
-        </v-col>
+    </v-col> 
+    <v-container v-if="!auth.token">
+        <LoginForm/>
     </v-container>
-
-    
-
-    
-    
-    
 </template>
 
 <style scoped>

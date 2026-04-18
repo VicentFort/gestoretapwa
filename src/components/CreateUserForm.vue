@@ -1,6 +1,5 @@
 <template>
-    <v-container class="bg-ternary">
-        <v-form @submit.prevent="submitForm" ref="form" v-model="valid">
+        <v-form @submit.prevent="submitForm" ref="form" v-model="valid" width="auto">
             <v-card class="bg-primary pa-5">
                 <v-card-title class="bg-ternary">Crear usuari</v-card-title>
                 <v-row>
@@ -92,7 +91,6 @@
                 </v-card-actions>
             </v-card>
         </v-form>
-    </v-container>
     <ErrorDialog @closed="showErrorDiag=false" :message="error" v-model="showErrorDiag"/>
 </template>
 
