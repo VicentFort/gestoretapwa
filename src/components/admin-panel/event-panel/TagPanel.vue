@@ -10,7 +10,7 @@ const isCreateOpen = ref(false)
 const selectedTag = ref(null);
 
 const orderedTags = computed(() => {
-    let base = [...(auth.fallaAdminInfo.tags) || []]
+    let base = [...(auth.fallaAdminInfo?.tags) || []]
      return base.sort((a, b) => {
         const nameA = a.name || '';
         const nameB = b.name || '';
@@ -34,7 +34,7 @@ const openCreateTag = () => {
             <v-card-title class='bg-ternary'>
                 Llistat d'etiquetes d'events
             </v-card-title>
-            <v-list class="bg-primary text-primary">
+            <v-list class="text-primary bg-primary">
                 <v-list-item 
                     v-for="tag in orderedTags" 
                     :key="tag.id"

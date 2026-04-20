@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-card flat title="Items">
+        <v-card title="Items">
             <v-data-table-virtual 
             :items="inventoryItems" 
             item-value="id"
@@ -10,47 +10,31 @@
             class="bg-ternary elevation-1"
             style="max-width: 100vw;"
             >
-            <template #item.actions="{ item }">
-                <v-dialog v-model="showDisableDialog" width="auto">
-                    <v-container>
-                        <v-card class="bg-primary">
-                            <v-card-title class="bg-ternary text-primary font-weight-bold">
-                                Vols deshabilitar el item: {{ item.name }}
-                            </v-card-title>
-                            <v-card-text class="bg-primary text-primary">
-                                Aquesta acció es irreversible
-                            </v-card-text>
-                            <v-card-options>
-                                <v-btn class="bg-ternary" icon="mdi-cancel" @click="showDisableDialog=false"></v-btn>
-                                <v-btn class="bg-ternary" @click="disableItem(item)">Deshabilita</v-btn>
-                            </v-card-options>
-                        </v-card>
-                    </v-container>
-                </v-dialog>
-                <v-btn
-                icon="mdi-file-edit"
-                variant="text"
-                color="ternary"
-                @click="selectedItem=item; showEditItem=true"
-                >
-                </v-btn>
-                <v-btn
-                icon="mdi-delete"
-                variant="text"
-                color="error"
-                @click="showDisableDialog=true"
-                ></v-btn>
-            </template>
-            <template #item.storeName="{ item }">
-                <div v-for="(stock, index) in item.stocks" :key="index" class="bg-primary">
-                    {{ stock.storeName }}
-                </div>
-            </template>
-            <template #item.amount="{ item }">
-                <div v-for="(stock, index) in item.stocks" :key="index" class="py-1 bg-primary">
-                    <v-chip size="small">{{ stock.amount }}</v-chip>
-                </div>
-            </template>
+                <template #item.actions="{ item }">
+                    <v-btn
+                    icon="mdi-file-edit"
+                    variant="text"
+                    color="ternary"
+                    @click="selectedItem=item; showEditItem=true"
+                    >
+                    </v-btn>
+                </template>
+                <template #item.storeName="{ item }">
+                    <div v-for="(stock, index) in item.stocks" :key="index" class="bg-primary">
+                        {{ stock.storeName }}
+                    </div>
+                </template>
+                <template #item.amount="{ item }">
+                    <div v-for="(stock, index) in item.stocks" :key="index" class="py-1 bg-primary">
+                        <v-chip size="small">{{ stock.amount }}</v-chip>
+                    </div>
+                </template>
+                <template #item.category="{item}">
+                    <v-icon
+                    color="ternary"
+                    :icon="returnCategoryIcon(item.category)"
+                    />
+                </template>
             </v-data-table-virtual>
             <v-divider></v-divider>
             <v-dialog v-model="showCreateItem" width="auto">
@@ -88,21 +72,19 @@ const inventoryItems = computed(() => auth.fallaAdminInfo?.inventoryItems.filter
     return item.enabled==true
 }) || []) 
 
-const showDisableDialog = ref(false)
 
-const disableItem = async (item) => {
-    try {
-        const updatedItem = {
-            itemId: item.id,
-            enabled: false
-        }
-        await auth.updateInventoryItem(updatedItem)
-        showDisableDialog.value = false
-    } catch(err) {
-        error.value = err
-        showErr.value=true
+const returnCategoryIcon = (category) => {
+    console.log(category)
+    switch(category){
+        case 'Pirotècnia': return 'mdi-firework'
+        case 'Menjar': return 'mdi-food-drumstick'
+        case 'Oficiona': return 'mdi-chair-rolling'
+        case 'Arts plàstiques': return 'mdi-palette'
+        case 'Beguda': return 'mdi-beer'
+        case 'Infraestructura': return 'mdi-domain'
+        case 'Electrònica / Informàtica': return 'mdi-chip'
+        default: return 'mdi-note'
     }
-
 }
 
 const headers = [
@@ -112,87 +94,79 @@ const headers = [
         align:"center", 
         value: "name",
          cellProps: {
-            class:"bg-primary"
+            class:"bg-primary",
+            width:"10%"
         },
         headerProps: {
             class:"bg-ternary font-weight-bold"
         }
+     },
+     {
+        title:"Accions",
+        key:"actions",
+        sortable:false,
+        align:"end",
+        cellProps: {
+            class:"bg-primary",
+            width:"10%"
+        },
+        headerProps: {
+            class: "bg-ternary font-weight-bold"
+        }
+    },
+     {
+        title:"Stocks",
+        align:"center",
+        sortable:false,
+        children: [
+        { 
+            title: "Magatzem", 
+            sortable:false,
+            key: "storeName", 
+            align: "center",
+            cellProps: { class: "bg-primary", width:"10%" }, 
+            headerProps: { class: "bg-quaternary font-weight-bold" }
+        },
+        { 
+            title: "Quantitat", 
+            key: "amount", 
+            align: "center",
+            sortable:false,
+            cellProps: { class: "bg-primary", width:"10%" }, 
+            headerProps: { class: "bg-quaternary font-weight-bold" }
+        },
+        ],
+        headerProps: {
+            class:"bg-ternary font-weight-bold"
+        }
+     },
+        {  
+        title: "Categoría", 
+        align:"center",
+        value: "category",
+        cellProps: {
+            class:"bg-primary",
+            width:"10%"
+        },
+        headerProps: {
+            class:"bg-ternary font-weight-bold"
+        }
+
      },
      {
         title: "Descripció", 
         align:"center",  
         value:"description",
          cellProps: {
-            class:"bg-primary"
+            class:"bg-primary",
+            width:"20%"
         },
         headerProps: {
             class:"bg-ternary font-weight-bold"
         }
-     },
-      {  
-        title: "Categoría", 
-        align:"center",
-        value: "category",
-        cellProps: {
-            class:"bg-primary"
-        },
-        headerProps: {
-            class:"bg-ternary font-weight-bold"
-        }
-
-     },
-     {
-        title:"Stocks",
-        align:"center",
-        children: [
-            {title:"Magatzem", key:"storeName"},
-            {title:"Quantitat", key:"amount"}
-        ],
-        children: [
-        { 
-            title: "Magatzem", 
-            key: "storeName", 
-            align: "center",
-            cellProps: { class: "bg-primary" }, 
-            headerProps: { class: "bg-ternary font-weight-bold" }
-        },
-        { 
-            title: "Quantitat", 
-            key: "amount", 
-            align: "center",
-            cellProps: { class: "bg-primary" }, 
-            headerProps: { class: "bg-ternary font-weight-bold" }
-        },
-        ],
-        headerProps: {
-            class:"bg-ternary font-weight-bold"
-        }
-     },
-    {
-        title:"Elimina",
-        key:"actions",
-        sortable:false,
-        align:"end",
-        cellProps: {
-            class:"bg-primary"
-        },
-        headerProps: {
-            class: "bg-ternary font-weight-bold"
-        }
-    }
+     }
+    
 
 ]
-
-const deleteItem = async (item) => {
-    if(confirm(`Estàs segur que vols eliminar el item "${item.name}"?`)) {
-        try {
-            await auth.deleteInventoryItem(item.id)
-        } catch(err) {
-            console.error(err)
-        } finally {
-        }
-    }
-}
-
 </script>
 

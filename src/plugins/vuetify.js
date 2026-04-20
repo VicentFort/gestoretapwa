@@ -27,7 +27,7 @@ export default createVuetify({
           primary: '#F5F5F5',
           secondary: '#87CEEB',
           ternary: '#FF7F50',
-          surface: '#FF7F50'
+          surface: '#f9c3a5'
 
         },
         variables: {
@@ -42,6 +42,7 @@ export default createVuetify({
           secondary: '#7fa1af',
           primary: '#F5F5F5',
           ternary: '#FF7F50',
+          quaternary: '#ea9262',
           surface: '#FF7F50',
           error: '#F28B82'
 

@@ -41,7 +41,7 @@
 
 <script setup>
 import { useAuthStore } from '@/stores/auth';
-import { ref, watch } from 'vue';
+import { ref, watch, defineEmits } from 'vue';
 
 const auth = useAuthStore()
 
@@ -84,3 +84,36 @@ const submitForm = async () => {
 
 
 </script>
+
+<style scoped>
+@media (max-width: 600px) {
+  :deep(thead) { display: none; }
+
+  .responsive-tr {
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    border-bottom: 8px solid #eeeeee;
+    height: auto !important;
+    background-color: white;
+    margin-bottom: 8px;
+  }
+
+  .responsive-td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: none !important;
+    padding: 8px 0 !important;
+    min-height: 40px;
+  }
+
+  .responsive-td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    color: #757575;
+  }
+}
+</style>
