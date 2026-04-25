@@ -1,60 +1,66 @@
 import { defineStore } from "pinia";
 import api from "./api";
-import { formToJSON } from "axios";
-
-
-
-
-
 export const useAuthStore = defineStore("auth", {
   state: () => ({
     token: sessionStorage.getItem("token") || null,
     userEmail: sessionStorage.getItem("userEmail") || null,
     userInfo: JSON.parse(sessionStorage.getItem("userInfo")) || null,
     fallaAdminInfo: JSON.parse(sessionStorage.getItem("fallaAdminInfo") || null),
-    movementTypes:[
-  'Entrada',
-	'Eixida',
-	'Prèstec'
-] ,
+    movementTypes: [
+      'Entrada',
+      'Eixida',
+      'Prèstec'
+    ],
+    loanStates: [
+      "Pendent",
+      "Tornat",
+      "Atrassat"
+    ],
     itemCategories: [
-                    'Pirotècnia',
-                    'Menjar',
-                    'Oficina',
-                    'Arts plàstiques',
-                    'Beguda',
-                    'Infraestructura',
-                    'Electrònica / Informàtica',
-                    'Altres'
-                  ]
+      'Pirotècnia',
+      'Menjar',
+      'Oficina',
+      'Arts plàstiques',
+      'Beguda',
+      'Infraestructura',
+      'Electrònica / Informàtica',
+      'Altres'
+    ]
   }),
   actions: {
+    //SECCIÓN USUARIOS
+
+    /*
+    * Llama al endpoint de login del backend
+    */
     async login(email, password) {
       try {
         const response = await api.post("/auth/login", {
           email,
           password,
-        }).catch(function (error) {
-              if(!error.response.data?.success) {
-                console.error(error.response.data.message)
-                throw error.response.data.message
-              }
-              throw error.message
-            })
+        }).catch(handleApiError)
         this.token = response.data; // El string del JWT
         this.userEmail = email;
-
         sessionStorage.setItem("token", this.token);
         sessionStorage.setItem("userEmail", this.userEmail);
-
-        // Configura axios para enviar el token en futuras peticiones
         await this.fetchUserInfo()
-        
-
       } catch (error) {
         throw error
       }
     },
+    /*
+    * Crea un usuario en la bd a partir del parámetro de entrada.
+    */
+    async createUser(user) {
+      try {
+        const response = await api.post('/user/create', user).catch(handleApiError)
+      } catch (error) {
+        throw error
+      }
+    },
+    /*
+    * Elimina la info del usuario guardada en el sessionStorage y quita los headers de autorización
+    */
     logout() {
       this.token = null;
       this.userEmail = null;
@@ -68,416 +74,393 @@ export const useAuthStore = defineStore("auth", {
 
       delete api.defaults.headers.common["Authorization"];
     },
+    /*
+    * Actualiza el usuario dados ciertos parámetro de entrada.
+    */
     async updateUser(uName, uSurname, uBday, uShowBday, uNickname) {
       try {
-          const response = await api.put('/user/update', {
-              name: uName,
-              surname: uSurname,
-              birthday: uBday,
-              showBday: uShowBday,
-              nickname: uNickname
-          }).catch(function (error) {
-              if(!error.response.data?.success) {
-                throw error.response.data.message
-              }
-              throw error.message
-            })
-          if(response.data.success != null && !response.data.success) {
-            throw response.data?.message
-          }
-          this.userInfo = response.data
-          sessionStorage.setItem("userInfo", JSON.stringify(this.userInfo));
+        const response = await api.put('/user/update', {
+          name: uName,
+          surname: uSurname,
+          birthday: uBday,
+          showBday: uShowBday,
+          nickname: uNickname
+        }).catch(handleApiError)
+      } catch (error) {
+        throw error
+      } finally {
+        this.fetchUserInfo()
+        this.fetchFallaAdminInfo()
+      }
+    },
+    /*
+    * Añade una necesidad alimentaria a un usuario dada un tipo
+    */
+    async addFoodNeed(needType) {
+      try {
+        const response = await api.post('/user/addFoodNeed?description', {
+          desc: needType
+        }).catch(handleApiError);
+        this.fetchUserInfo()
 
-      } catch(error) {
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    /*
+    * Elimina una necesidad alimentaria a un usuario dada su id.
+    */
+    async deleteNeed(needId) {
+      try {
+        const response = await api.delete("/user/deleteNeed?needId=" + needId + '').catch(handleApiError)
+        await this.fetchUserInfo()
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    /*
+    * Elimina disposiciones de asistencia de un usuario dada una lista con ids.
+    */
+    async deletePref(prefId) {
+      try {
+        const response = await api.delete('/user/removeAttPrefs', { data: [prefId] }).catch(handleApiError)
+      } catch (error) {
+        console.error(error)
+      } finally {
+        await this.fetchUserInfo()
+      }
+    },
+    /*
+    * Añada una disposición de asistencia de un usuario dado un id de etiqueta de evento.
+    */
+    async addAttPref(tagId) {
+
+      try {
+        const response = await api.post('/user/addAttPrefs', new Number(tagId)).catch(handleApiError)
+      } catch (error) {
+        console.error(error)
+        throw error
+      } finally {
+        await this.fetchUserInfo()
+      }
+    },
+    /*
+    * Obtiene la información del usuario y la guarda en el sessionStorage de "userInfo".
+    * Entre esta información está la información suya, la de su falla, y otras cosas como disposiciones o necesidades alimentarias.
+    */
+    async fetchUserInfo() {
+      try {
+        const responseInfo = await api.get("/user/getUserInfo").catch(handleApiError);
+        orderJSONStructure(responseInfo.data)
+        this.userInfo = responseInfo.data;
+
+        sessionStorage.setItem("userInfo", JSON.stringify(this.userInfo));
+
+        if (this.userInfo.adminAccess == true) {
+          await this.fetchFallaAdminInfo()
+        }
+
+      } catch (error) {
+        console.error(error)
+      }
+    },
+
+    //SECCIÓN FALLA
+
+    /*
+    * Obtiene la información de administración de la falla.
+    * Entre esta información está, la lista de usuarios, eventos, todo lo relacionado con inventario, etc...
+    */
+    async fetchFallaAdminInfo() {
+      try {
+        const response = await api.get('/falla/info').catch(handleApiError)
+        orderJSONStructure(response.data)
+        this.fallaAdminInfo = response.data
+        sessionStorage.setItem('fallaAdminInfo', JSON.stringify(this.fallaAdminInfo))
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    /*
+    * Actualiza los permisos de administrador de un usuario.
+    */
+    async editAdminAccess(userId, adminAccess) {
+      try {
+        const response = await api.post('/falla/editAdminAccess/' + userId, new Boolean(adminAccess)).catch(handleApiError)
+      } catch (error) {
+        console.error(error)
+        throw error
+      } finally {
+        this.fetchFallaAdminInfo()
+        this.fetchUserInfo()
+      }
+    },
+    /*
+    * Añade una etiqueta de eventos para una falla.
+    */
+    async addTag(name) {
+      try {
+        const response = await api.post('/falla/addEventTag', name).catch(handleApiError)
+        this.fetchFallaAdminInfo()
+        this.fetchUserInfo()
+      } catch (error) {
+        console.error(error)
+        throw error
+      } finally {
+
+      }
+    },
+    /*
+    * Elimina una etiqueta de eventos para una falla.
+    */
+    async deleteTag(id) {
+      try {
+        const response = await api.delete('/falla/deleteEventTag', {
+          data: new Number(id)
+        }).catch(handleApiError)
+        this.fetchFallaAdminInfo()
+        this.fetchUserInfo()
+      } catch (error) {
+        console.error(error)
         throw error
       }
     },
-    async addFoodNeed(description) {
+
+    //SECCIÓN EVENTOS
+
+    /*
+    * Postea / añade un evento en la base de datos
+    */
+    async addEvent(event, tag, users) {
       try {
-          const response = await api.post('/user/addFoodNeed?description', {
-            desc: description
-          });        
-          this.fetchUserInfo()
-          
-        } catch(error) {
-          console.error(error)
-        }
-      },
-      async deleteNeed(needId) {
-        try {
-          const response = await api.delete("/user/deleteNeed?needId="+needId+'').catch(function (error) {
-              if(!error.response.data?.success) {
-                console.error(error.response.data.message)
-                throw error.response.data.message
-              }
-              throw error.message
-            })
-          await this.fetchUserInfo()
-        } catch(error) {
-          console.error(error)
-        }
-      },
-      async fetchUserInfo() {
-        try {
-          const responseInfo = await api.get("/user/getUserInfo").catch(function (error) {
-              if(!error.response.data?.success) {
-                console.error(error.response.data.message)
-                throw error.response.data.message
-              }
-              throw error.message
-            });
-          
-            orderJSONStructure(responseInfo.data)
-          this.userInfo = responseInfo.data;
+        const response = await api.post('/event/create', {
+          title: event.title,
+          publicField: event.publicField,
+          done: false,
+          price: event.price,
+          description: event.description,
+          maxPeople: event.maxPeople,
+          date: formatToYYYYMMDD(formatToBackend(event.date)),
+          fallaId: this.fallaAdminInfo.fallaId,
+          tagId: tag,
+          startHour: event.startHour,
+          endHour: event.endHour,
+          attendants: users,
+          createdBy: event.createdBy,
+          open: event.open,
+          createdAt: event.createdAt,
+          endDate: formatToYYYYMMDD(formatToBackend(event.endDate)),
+          checkNeeds: event.checkNeeds
+        }).catch(handleApiError)
+        return response.data;
+      } catch (error) {
+        throw error
+      } finally {
+        await this.fetchFallaAdminInfo()
+        await this.fetchUserInfo()
+      }
+    },
+
+    //SECCIÓN EVENTOS
+
+    /*
+    * Elimina un evento dada su id.
+    */
+    async deleteEvent(eventId) {
+      try {
+        const response = await api.delete('/event/delete/' + eventId).catch(handleApiError)
+      } catch (error) {
+        console.error(error)
+      } finally {
+        await this.fetchFallaAdminInfo()
+      }
+    },
+    /*
+    * Actualiza un evento dadas ciertas variables.
+    */
+    async updateEvent(eventDto) {
+      console.info(eventDto.attendantIds)
+      try {
+        const response = await api.put('/event/update', eventDto).catch(handleApiError)
+      } catch (error) {
+        console.error(error)
+        throw error
+      } finally {
+        await this.fetchFallaAdminInfo()
+        await this.fetchUserInfo()
+      }
+    },
+    /*
+    * Añade una persona a un evento / Añade una asistencia a un evento.
+    */
+    async joinEvent(eventId) {
+      try {
+        const response = await api.post('/event/join/' + eventId).catch(handleApiError)
+      } catch (error) {
+        throw error
+      } finally {
+        this.fetchFallaAdminInfo()
+        this.fetchUserInfo()
+      }
+    },
+    /*
+    * Elimina una asistencia a un evento.
+    */
+    async deleteAssist(eventId) {
+      try {
+        const response = await api.delete('/event/leave/' + eventId).catch(handleApiError)
+      } catch (error) {
+        throw error
+      } finally {
+        this.fetchFallaAdminInfo()
+        this.fetchUserInfo()
+      }
+    },
     
-          sessionStorage.setItem("userInfo", JSON.stringify(this.userInfo));
 
-          if(this.userInfo.adminAccess==true) {
-            await this.fetchFallaAdminInfo()
-          }
+    //SECCIÓN DE INVENTARIO
 
-        } catch (error) {
-          console.error(error)
-        }
-      },
-      async addEvent(event, tag, users) {
-        try {
-          const response = await api.post('/event/create', {
-            title: event.title,
-            publicField: event.publicField,
-            done: false,
-            price: event.price,
-            description: event.description,
-            maxPeople: event.maxPeople,
-            date:formatToYYYYMMDD(formatToBackend(event.date)),
-            fallaId: this.fallaAdminInfo.fallaId,
-            tagId: tag,
-            startHour: event.startHour,
-            endHour: event.endHour,
-            attendants: users,
-            createdBy: event.createdBy,
-            open: event.open,
-            createdAt: event.createdAt,
-            endDate: formatToYYYYMMDD(formatToBackend(event.endDate)),
-            checkNeeds: event.checkNeeds
-          }).catch(function (error) {
-              if(!error.response.data?.success) {
-                console.error(error.response.data.message)
-                throw error.response.data.message
-              }
-              throw error.message
-            })
-            return response.data;
-        } catch(error) {
-          throw error
-        } finally{
-          await this.fetchFallaAdminInfo()
-          await this.fetchUserInfo()
-        }
-      },
-      async fetchFallaAdminInfo() {
-        try {
-          const response = await api.get('/falla/info').catch(function (error) {
-              if(!error.response.data?.success) {
-                console.error(error.response.data.message)
-                throw error.response.data.message
-              }
-              throw error.message
-            })
-            orderJSONStructure(response.data)     
-          this.fallaAdminInfo = response.data
-          sessionStorage.setItem('fallaAdminInfo', JSON.stringify(this.fallaAdminInfo))
-        } catch(error) {
-          console.error(error)
-        }
-      },
-      async deleteEvent(eventId) {
-          try {
-            const response = await api.delete('/event/delete/'+eventId).catch(function (error) {
-              if(!error.response.data?.success) {
-                console.error(error.response.data.message)
-                throw error.response.data.message
-              }
-              throw error.message
-            })
-          } catch(error) {
-            console.error(error)
-          } finally {
-            await this.fetchFallaAdminInfo()
-          }
-      },
-      async deletePref(prefId) {
-          try {
-            const response = await api.delete('/user/removeAttPrefs',{data:[prefId]}).catch(function (error) {
-              if(!error.response.data?.success) {
-                console.error(error.response.data.message)
-                throw error.response.data.message
-              }
-              throw error.message
-            })
-          } catch(error) {
-            console.error(error)
-          } finally {
-            await this.fetchUserInfo()
-          }
-      },
-      async addAttPref(tagId) {
-
-         try {
-            const response = await api.post('/user/addAttPrefs', new Number(tagId)).catch(function (error) {
-              if(!error.response.data?.success) {
-                console.error(error.response.data.message)
-                throw error.response.data.message
-              }
-              throw error.message
-            })
-          } catch(error) {
-            console.error(error)
-            throw error
-          } finally {
-            await this.fetchUserInfo()
-          }
-      },
-      async editAdminAccess(userId, adminAccess) {
-        try {
-          const response = await api.post('/falla/editAdminAccess/'+userId, new Boolean(adminAccess)).catch(function (error) {
-              if(!error.response.data?.success) {
-                console.error(error.response.data.message)
-                throw error.response.data.message
-              }
-              throw error.message
-            })
-          
-        } catch(error) {
-          console.error(error)
-          throw error
-        } finally {
-          this.fetchFallaAdminInfo()
-          this.fetchUserInfo()
-        }
-      },
-      async addTag(name) {
-        try {
-          const response = await api.post('/falla/addEventTag',name)
-          if(response.data.sucess != null || response.data?.success==false) throw response.data.message
-          this.fetchFallaAdminInfo()
-          this.fetchUserInfo()
-        } catch(error) {
-          console.error(error)
-          throw error
-        } finally {
-
-        }
-      },
-      async deleteTag(id) {
-        try {
-          const response = await api.delete('/falla/deleteEventTag',{
-            data: new Number(id)
-          })
-          if(response.data.sucess != null || response.data?.success==false) throw response.data.message
-          this.fetchFallaAdminInfo()
-          this.fetchUserInfo()
-        } catch(error) {
-          console.error(error)
-          throw error
-        }
-      },
-      async updateEvent(eventDto) {
-        console.info(eventDto.attendantIds)
-        try {
-          const response = await api.put('/event/update', eventDto)
-          if(response.data.sucess != null || response.data?.success==false) throw response.data.message
-        } catch(error) {
-          console.error(error)
-          throw error
-        } finally {
-          await this.fetchFallaAdminInfo()
-          await this.fetchUserInfo()
-        }
-      },
-      async joinEvent(eventId) {
-        try {
-          const response = await api.post('/event/join/'+eventId)
-          if(response.data.sucess != null || response.data?.success==false) throw response.data.message
-  
-        } catch(error) {
-          throw error
-        } finally {
-          this.fetchFallaAdminInfo()
-          this.fetchUserInfo()
-        }
-      },
-      async deleteAssist(eventId) {
-         try {
-          const response = await api.delete('/event/leave/'+eventId).catch(function (error) {
-              if(!error.response.data?.success) {
-                console.error(error.response.data.message)
-                throw error.response.data.message
-              }
-              throw error.message
-            })
-        } catch(error) {
-          throw error
-        } finally {
-          this.fetchFallaAdminInfo()
-          this.fetchUserInfo()
-        }
-      },
-      async createUser(user) {
-        try {
-          const response = await api.post('/user/create', user).catch(function (error) {
-              if(!error.response.data?.success) {
-                console.error(error.response.data.message)
-                throw error.response.data.message
-              }
-              throw error.message
-          })
-        } catch (error) {
-          throw error
-        }
-      },
-      async createInventoryStore(store) {
-        try {
-          const response = await api.post('/inv/createStore', store).catch(function (error) {
-            if(!error.response.data?.success) {
-              console.error(error.response.data.message)
-              throw error.response.data.message
-            }
-            throw error.message
-          })
-        } catch (error) {
-          throw error
-        } finally {
-          this.fetchFallaAdminInfo()
-        }
-      },
-      async updateStore(updatedStore) {
-        try {
-          const response = await api.put("/inv/updateStore", updatedStore ).catch(function (error) {
-            if(!error.response.data?.success) {
-              console.error(error.response.data.message)
-              throw error.response.data.message
-            } 
-            throw error.message
-          })
-        } catch (err) {
-          console.error(err)
-          throw err
-        } finally {
-          this.fetchFallaAdminInfo()
-        }
-      },
-      async createNewInventoryItem(newItem) {
-        try {
-           const response = await api.post('/inv/createItem', newItem).catch(function (error) {
-            if(!error.response.data?.success) {
-              console.error(error.response.data.message)
-              throw error.response.data.message
-            } throw error.message
-           }) 
-        } catch (error) {
-          throw error
-        } finally {
-          this.fetchFallaAdminInfo()
-        }
-      },
-      async deleteInventoryItem(itemId) {
-         try {
-          const response = await api.delete("/inv/deleteItem",{data: new Number(itemId)} ).catch(function (error) {
-            if(!error.response.data?.success) {
-              console.error(error.response.data.message)
-              throw error.response.data.message
-            } throw error.message
-          })
-        } catch (error) {
-          throw error
-        } finally {
-          this.fetchFallaAdminInfo()
-        }
-      },
-      async updateInventoryItem(updatedItem) {
-        try {
-          const response = await api.put("/inv/updateItem", updatedItem).catch(function (error) {
-            if(!error.response.data?.success) {
-              console.error(error.response.data.message)
-              throw error.response.data.message
-            } throw error.message
-          })
-        } catch(err) {
-          console.error(err)
-          throw err
-        } finally {
-          this.fetchFallaAdminInfo()
-        }
-      },
-      async processMovement(movement) {
-        try {
-          const response = await api.post("/inv/processMovement", movement).catch(function (error) {
-            if(!error.response.data?.success) {
-              console.error(error.response.data.message)
-              throw error.response.data.message
-            } throw error.message
-          })
-          return response.data
-        } catch(err) {
-          console.error(err)
-          throw err
-        } finally {
-          this.fetchFallaAdminInfo()
-        }
-      },
-      async createContact(contact) {
-        try {
-          const response = api.post("/inv/createContact", contact).catch(function (error) {
-            if(!error.response.data?.success) {
-              console.error(error.response.data.message)
-              throw error.response.data.message
-            } throw error.message
-          })
-        } catch(err) {
-          console.error(err)
-          throw err
-        } finally {
-          this.fetchFallaAdminInfo()
-        }
-      },
-      async returnLoan(returnDto) {
-        try {
-          const response = api.post("/inv/returnLoan", returnDto).catch(function (error) {
-            if(!error.response.data?.success) {
-              console.error(error.response.data.message)
-              throw error.response.data.message
-            } throw error.message
-          })
-          console.log(response)
-          return response
-        } catch(err) {
-          console.error(err)
-          throw err
-        } finally {
-          this.fetchFallaAdminInfo()
-        }
-      },
-      async updateContact(contact) {
-        try {
-          const response = api.put("/inv/updateContact", contact).catch(function (error) {
-            if(!error.response.data?.success) {
-              console.error(error.response.data.message)
-              throw error.response.data.message
-            } throw error.message
-          })
-        } catch(err) {
-          console.error(err)
-          throw err
-        } finally {
-          this.fetchFallaAdminInfo()
-        }
+    /*
+    * Crea un almacén de inventario en la base de datos.
+    */
+    async createInventoryStore(store) {
+      try {
+        const response = await api.post('/inv/createStore', store).catch(handleApiError)
+      } catch (error) {
+        throw error
+      } finally {
+        this.fetchFallaAdminInfo()
+      }
+    },
+    /*
+    * Actualiza un almacén de inventario.
+    */
+    async updateStore(updatedStore) {
+      try {
+        const response = await api.put("/inv/updateStore", updatedStore).catch(handleApiError)
+      } catch (err) {
+        console.error(err)
+        throw err
+      } finally {
+        this.fetchFallaAdminInfo()
+      }
+    },
+    /*
+    * Crea un ítem de inventario.
+    */
+    async createNewInventoryItem(newItem) {
+      try {
+        const response = await api.post('/inv/createItem', newItem).catch(handleApiError)
+      } catch (error) {
+        throw error
+      } finally {
+        this.fetchFallaAdminInfo()
+      }
+    },
+    /*
+    * Actualiza un ítem de inventario.
+    */
+    async updateInventoryItem(updatedItem) {
+      try {
+        const response = await api.put("/inv/updateItem", updatedItem).catch(handleApiError)
+      } catch (err) {
+        console.error(err)
+        throw err
+      } finally {
+        this.fetchFallaAdminInfo()
+      }
+    },
+    /*
+    * Procesa un movimiento en la base de datos.
+    */
+    async processMovement(movement) {
+      try {
+        const response = await api.post("/inv/processMovement", movement).catch(handleApiError)
+        return response.data
+      } catch (err) {
+        console.error(err)
+        throw err
+      } finally {
+        this.fetchFallaAdminInfo()
+      }
+    },
+    /*
+    * Crea un contacto para préstamos en la base de datos.
+    */
+    async createContact(contact) {
+      try {
+        const response = api.post("/inv/createContact", contact).catch(handleApiError)
+      } catch (err) {
+        console.error(err)
+        throw err
+      } finally {
+        this.fetchFallaAdminInfo()
+      }
+    },
+    /*
+    * Procesa el retorno de un préstamo de inventario.
+    */
+    async returnLoan(returnDto) {
+      try {
+        const response = api.post("/inv/returnLoan", returnDto).catch(handleApiError)
+        console.log(response)
+        return response
+      } catch (err) {
+        console.error(err)
+        throw err
+      } finally {
+        this.fetchFallaAdminInfo()
+      }
+    },
+    /*
+    * Actualiza un contacto de préstamo de inventario.
+    */
+    async updateContact(contact) {
+      try {
+        const response = api.put("/inv/updateContact", contact).catch(handleApiError)
+      } catch (err) {
+        console.error(err)
+        throw err
+      } finally {
+        this.fetchFallaAdminInfo()
       }
     }
-  },
+  }
+},
 );
 
 
+/*
+* Función que envia emails al contacto de todos los loans que estén atrasados
+* y que no tenga notificaiones de retraso
+* loan.state == 'Atrassat' && loan.hasDelayedNotification == true
+*/
+const sendDelayedEmails = async (loans) => {
+  loans.forEach(loan => {
+    if (loan.state == 'Atrassat' && loan.hasDelayedNotifications == false) {
+      const serviceId = process.env.VUE_APP_EMAIL_JS_SERVICE_ID
+      const key = process.env.VUE_APP_EMAIL_JS_KEY
+    }
+  })
+
+}
+
+/*
+* Función que hace de listener cuando la api de Axios recibe un error.
+* este es tratado dependiendo de las posibles formas en que venga la respuesta de error.
+*/
+const handleApiError = (error) => {
+  if (!error.response.data?.success) {
+              console.error(error.response.data.message)
+              throw error.response.data.message
+            }
+  throw error.message
+}
+
+
+/*
+* Funciones de formateo de fechas para que las entienda el backend.
+*/
 const formatToBackend = (date) => {
   if (!date) return null
   const d = new Date(date)
@@ -494,6 +477,7 @@ const formatToYYYYMMDD = (date) => {
   const day = String(d.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
 };
+
 
 /**
  * Ordena recursivamente todos los arrays de un JSON sin importar su estructura interna.
