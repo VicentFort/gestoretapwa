@@ -11,6 +11,10 @@ import UserPrefsInfo from './needs/UserPrefsInfo.vue';
 const auth = useAuthStore()
 const tab = ref('one')
 const mobile = useDisplay()
+
+const handleLogout = async () => {
+  auth.logout();
+};
 </script>
 
 <template>
