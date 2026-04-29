@@ -8,6 +8,7 @@
             class="bg-ternary elevation-1"
             style="max-width: 100vw;"
             :loading="isLoading"
+            :sort-by="initialSort"
             loading-text="Carregant dades..."
             >
             <template #item.actions="{ item }">
@@ -54,6 +55,8 @@ const showCreateStore = ref(false)
 
 const showErr = ref(false)
 const error = ref('')
+
+const initialSort = ref([{key:'location', sort:'desc'}])
 
 const headers = [
     {

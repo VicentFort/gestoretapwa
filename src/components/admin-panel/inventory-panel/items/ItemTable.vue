@@ -4,7 +4,8 @@
             <v-data-table-virtual 
             :items="inventoryItems" 
             item-value="id"
-            hide-default-footer="true" 
+            hide-default-footer="true"
+            :sort-by="initialSort" 
             :headers="headers"
             :density="compact"
             class="bg-ternary elevation-1"
@@ -87,11 +88,14 @@ const returnCategoryIcon = (category) => {
     }
 }
 
+const initialSort = ref([{key: 'category', sort:'desc'}])
+
 const headers = [
     
      {
         title: "Nom", 
         align:"center", 
+        sortable:true,
         value: "name",
          cellProps: {
             class:"bg-primary",
@@ -142,6 +146,7 @@ const headers = [
      },
         {  
         title: "Categoría", 
+        sortable:true,
         align:"center",
         value: "category",
         cellProps: {
