@@ -141,7 +141,7 @@ const submitForm = async () => {
             showBday: showBday.value,
             email: email.value,
             password: password.value,
-            adminAccess: false,
+            adminAccess: 'Representatiu',
             creationDate: new Date()
         }
         await auth.createUser(user)

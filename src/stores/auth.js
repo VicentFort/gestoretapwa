@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import api from "./api";
+import { isManager } from "./checkAccessType";
 export const useAuthStore = defineStore("auth", {
   state: () => ({
     token: sessionStorage.getItem("token") || null,
@@ -156,7 +157,7 @@ export const useAuthStore = defineStore("auth", {
 
         sessionStorage.setItem("userInfo", JSON.stringify(this.userInfo));
 
-        if (this.userInfo.adminAccess == true) {
+        if (isManager(auth.userInfo?.adminAccess)) {
           await this.fetchFallaAdminInfo()
         }
 

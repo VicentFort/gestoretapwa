@@ -1,4 +1,4 @@
-<template v-if="auth.userInfo?.adminAccess && auth.fallaAdminInfo">
+<template v-if="isManager(auth.userInfo?.adminAccess) && auth.fallaAdminInfo">
     <MainPanel/>
 </template>
 
