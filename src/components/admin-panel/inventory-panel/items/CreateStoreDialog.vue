@@ -40,9 +40,11 @@
             </v-card>
         </v-dialog>
     </v-container>
+    <ErrorDialog @closed="showErrorDiag = false" :message="error" v-model="showErrorDiag"/>
 </template>
 
 <script setup>
+import ErrorDialog from '@/components/ErrorDialog.vue';
 import { useAuthStore } from '@/stores/auth';
 import { ref } from 'vue';
 

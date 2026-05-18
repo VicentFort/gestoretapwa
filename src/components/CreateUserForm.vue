@@ -69,6 +69,7 @@
                             <v-date-picker
                                 class="text-black"
                                 v-model="birthday"
+                                picker-date="initialPickerDate"
                                 title="Selecciona la data"
                                 header="Aniversari"
                                 @update:model-value="menu = false"
@@ -89,14 +90,16 @@
                 <v-card-actions>
                     <v-btn type="submit" class="bg-ternary" :disabled="name=='' || surname=='' || email == '' || password=='' || !email.includes('@') || email.endsWith('@')">Crear usuari</v-btn>
                 </v-card-actions>
+
             </v-card>
         </v-form>
-    <ErrorDialog @closed="showErrorDiag=false" :message="error" v-model="showErrorDiag"/>
+        <ErrorDialog @closed="showErrorDiag=false" :message="error" v-model="showErrorDiag"/>
 </template>
 
 <script setup>
 import router from '@/router';
 import { useAuthStore } from '@/stores/auth';
+import ErrorDialog from './ErrorDialog.vue';
 import { ref, computed } from 'vue';
 
 const error = ref('')
@@ -106,6 +109,9 @@ const closeError = () => {
     error.value = ''
     showErrorDiag.value = false
 }
+const targetYear = new Date().getFullYear - 18;
+const initialPickerDate = ref(`${targetYear}-01`);
+
 const formattedDate = computed(() => {
         if (!birthday.value) return ''
         

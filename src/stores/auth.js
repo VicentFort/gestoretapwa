@@ -451,11 +451,8 @@ const sendDelayedEmails = async (loans) => {
 * este es tratado dependiendo de las posibles formas en que venga la respuesta de error.
 */
 const handleApiError = (error) => {
-  if (!error.response.data?.success) {
-              console.error(error.response.data.message)
-              throw error.response.data.message
-            }
-  throw error.message
+  console.error(error)
+  throw error.response.data
 }
 
 
