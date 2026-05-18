@@ -26,7 +26,7 @@
         <v-btn to="/" variant="text">Falla</v-btn>
         <v-btn to="/user" variant="text">Usuari</v-btn>
         <v-btn 
-          v-if="auth.userInfo?.accessType == 'Gestor' || auth.userInfo?.accessType == 'Superusuari'" 
+          v-if="isManager(auth.userInfo?.adminAccess)" 
           to="/adminPanel" 
           variant="text" 
           color="primary"
@@ -50,7 +50,7 @@
           <v-list>
             <v-list-item to="/">Falla</v-list-item>
             <v-list-item to="/user">Usuari</v-list-item>
-            <v-list-item v-if="auth.userInfo?.accessType == 'Gestor' || auth.userInfo?.accessType == 'Superusuari'" to="/adminPanel">
+            <v-list-item v-if="isManager(auth.userInfo?.adminAccess)" to="/adminPanel">
               Administrar Falla
             </v-list-item>
             <v-divider v-if="auth.token"></v-divider>
@@ -75,6 +75,7 @@
 import { onMounted, ref } from 'vue';
 import { useAuthStore } from './stores/auth';
 import { useLoadingStore } from './stores/loadingStore';
+import { isManager } from './stores/checkAccessType';
 
 const loadingStore = useLoadingStore()
 const auth = useAuthStore()
@@ -86,6 +87,8 @@ onMounted(async () => {
     await auth.fetchUserInfo()
   }
 })
+
+
 
 </script>
 <style lang="css">

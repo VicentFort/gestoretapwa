@@ -22,7 +22,6 @@
 import { computed } from 'vue'
 
 
-
 const props = defineProps({
     message: String,
     modelValue: Boolean
@@ -37,5 +36,5 @@ const internalValue = computed({
     if (!value) emit('closed') 
   }
 })
-
+console.log("CUADRO DE ERROR: " + props.message)
 </script>

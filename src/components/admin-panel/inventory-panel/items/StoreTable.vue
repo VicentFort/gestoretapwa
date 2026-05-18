@@ -42,7 +42,7 @@ import { useAuthStore } from '@/stores/auth';
 import CreateStoreDialog from '@/components/admin-panel/inventory-panel/items/CreateStoreDialog.vue';
 import { ref, computed } from 'vue';
 import EditStoreDialog from '@/components/admin-panel/inventory-panel/items/EditStoreDialog.vue';
-
+import ErrorDialog from '@/components/ErrorDialog.vue';
 
 const auth = useAuthStore()
 const showEditStore = ref(false)

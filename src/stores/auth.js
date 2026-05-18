@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import api from "./api";
+import { isManager } from "./checkAccessType";
 export const useAuthStore = defineStore("auth", {
   state: () => ({
     token: sessionStorage.getItem("token") || null,
@@ -162,7 +163,7 @@ export const useAuthStore = defineStore("auth", {
 
         sessionStorage.setItem("userInfo", JSON.stringify(this.userInfo));
 
-        if (this.userInfo?.accessType == 'Gestor' || this.userInfo?.accessType == 'Superusuari') {
+        if (isManager(auth.userInfo?.adminAccess)) {
           await this.fetchFallaAdminInfo()
         }
 
@@ -457,7 +458,8 @@ const sendDelayedEmails = async (loans) => {
 * este es tratado dependiendo de las posibles formas en que venga la respuesta de error.
 */
 const handleApiError = (error) => {
-  throw error
+  console.error(error)
+  throw error.response.data
 }
 
 

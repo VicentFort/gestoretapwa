@@ -57,6 +57,7 @@ import { useAuthStore } from '@/stores/auth';
 import { ref, computed } from 'vue';
 import CreateItemDialog from '@/components/admin-panel/inventory-panel/items/CreateItemDialog.vue';
 import EditItemDialog from '@/components/admin-panel/inventory-panel/items/EditItemDialog.vue';
+import ErrorDialog from '@/components/ErrorDialog.vue';
 
 
 const auth = useAuthStore()
