@@ -25,6 +25,12 @@ export const useAuthStore = defineStore("auth", {
       'Infraestructura',
       'Electrònica / Informàtica',
       'Altres'
+    ],
+    accessTypes: [
+      'Sense càrrec',
+      'Representatiu',
+      'Gestor',
+      'Superusuari'
     ]
   }),
   actions: {
@@ -156,7 +162,7 @@ export const useAuthStore = defineStore("auth", {
 
         sessionStorage.setItem("userInfo", JSON.stringify(this.userInfo));
 
-        if (this.userInfo.adminAccess == true) {
+        if (this.userInfo?.accessType == 'Gestor' || this.userInfo?.accessType == 'Superusuari') {
           await this.fetchFallaAdminInfo()
         }
 
@@ -184,9 +190,10 @@ export const useAuthStore = defineStore("auth", {
     /*
     * Actualiza los permisos de administrador de un usuario.
     */
-    async editAdminAccess(userId, adminAccess) {
+    async editAccessType(accessRequest) {
       try {
-        const response = await api.post('/falla/editAdminAccess/' + userId, new Boolean(adminAccess)).catch(handleApiError)
+        console.log(accessRequest)
+        const response = await api.post('/falla/editAccessType', accessRequest).catch(handleApiError)
       } catch (error) {
         console.error(error)
         throw error
@@ -450,11 +457,7 @@ const sendDelayedEmails = async (loans) => {
 * este es tratado dependiendo de las posibles formas en que venga la respuesta de error.
 */
 const handleApiError = (error) => {
-  if (!error.response.data?.success) {
-              console.error(error.response.data.message)
-              throw error.response.data.message
-            }
-  throw error.message
+  throw error
 }
 
 

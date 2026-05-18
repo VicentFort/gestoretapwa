@@ -26,7 +26,7 @@
         <v-btn to="/" variant="text">Falla</v-btn>
         <v-btn to="/user" variant="text">Usuari</v-btn>
         <v-btn 
-          v-if="auth.userInfo?.adminAccess" 
+          v-if="auth.userInfo?.accessType == 'Gestor' || auth.userInfo?.accessType == 'Superusuari'" 
           to="/adminPanel" 
           variant="text" 
           color="primary"
@@ -50,7 +50,7 @@
           <v-list>
             <v-list-item to="/">Falla</v-list-item>
             <v-list-item to="/user">Usuari</v-list-item>
-            <v-list-item v-if="auth.userInfo?.adminAccess" to="/adminPanel">
+            <v-list-item v-if="auth.userInfo?.accessType == 'Gestor' || auth.userInfo?.accessType == 'Superusuari'" to="/adminPanel">
               Administrar Falla
             </v-list-item>
             <v-divider v-if="auth.token"></v-divider>

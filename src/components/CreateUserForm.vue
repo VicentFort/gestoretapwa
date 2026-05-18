@@ -127,7 +127,7 @@ const nickname = ref('')
 const fallaId = ref(1)
 const birthday = ref(new Date())
 const showBday = ref(false)
-const adminAccess = ref(false)
+const accessType = ref(false)
 const submitForm = async () => {
     try {
         const { valid: formValid } = await form.value.validate()
@@ -141,7 +141,7 @@ const submitForm = async () => {
             showBday: showBday.value,
             email: email.value,
             password: password.value,
-            adminAccess: false,
+            accessType: false,
             creationDate: new Date()
         }
         await auth.createUser(user)

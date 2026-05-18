@@ -1,4 +1,4 @@
-<template v-if="auth.userInfo?.adminAccess && auth.fallaAdminInfo">
+<template v-if="(auth.userInfo?.accessType == 'Gestor' || auth.userInfo?.accessType == 'Superusuari')">
     <MainPanel/>
 </template>
 
