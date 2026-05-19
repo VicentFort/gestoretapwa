@@ -36,5 +36,4 @@ const internalValue = computed({
     if (!value) emit('closed') 
   }
 })
-console.log("CUADRO DE ERROR: " + props.message)
 </script>

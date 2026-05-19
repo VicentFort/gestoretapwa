@@ -163,12 +163,13 @@ export const useAuthStore = defineStore("auth", {
 
         sessionStorage.setItem("userInfo", JSON.stringify(this.userInfo));
 
-        if (isManager(auth.userInfo?.adminAccess)) {
+        if (isManager(this.userInfo?.accessType)) {
           await this.fetchFallaAdminInfo()
         }
 
       } catch (error) {
         console.error(error)
+        throw error
       }
     },
 
