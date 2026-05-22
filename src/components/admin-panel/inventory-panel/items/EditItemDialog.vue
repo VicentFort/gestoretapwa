@@ -41,11 +41,12 @@
 
 <script setup>
 import { useAuthStore } from '@/stores/auth';
+import { itemCategories } from '@/stores/backendEnums';
 import { ref, watch, defineEmits } from 'vue';
 
 const auth = useAuthStore()
 
-const categories = auth.itemCategories
+const categories = itemCategories
 
 const valid = ref(false)
 const form = ref(null)

@@ -2,21 +2,30 @@
 import { useAuthStore } from '@/stores/auth';
 import { computed, ref } from 'vue';
 import { useDisplay } from 'vuetify/lib/composables/display';
+import ErrorDialog from '@/components/ErrorDialog.vue';
 const auth = useAuthStore()
 const props = defineProps({
     modelValue: Boolean,
-    need: Object
+    need: String
 })
 const emit = defineEmits(['update:modelValue'])
 const show = computed({
     get: () => props.modelValue,
     set: (value) => emit('update:modelValue', value)
 })
+const error = ref('')
+const showErrorDiag = ref(false)
 const mobile = useDisplay()
-
+console.log('NEED: ' + props.need)
 const deleteNeed = async () => {
-    await auth.deleteNeed(props.need?.foodNeedId)
-    show.value = false
+    try {
+        await auth.deleteNeed(props.need)
+        show.value = false
+    } catch(err) {
+        error.value = err;
+        showErrorDiag.value = true;
+    }
+    
 
 }
 
@@ -33,6 +42,7 @@ const titleSize = computed(() => {
 const exit = () => {
     show.value = false
 }
+
 </script>
 <template>
     <v-dialog v-model="show" width="600">
@@ -56,6 +66,7 @@ const exit = () => {
         </v-row>
     
   </v-dialog>
+  <ErrorDialog @closed="showErrorDiag=false" :message="error" v-model="showErrorDiag"/>
 </template>
 
 <style scoped>

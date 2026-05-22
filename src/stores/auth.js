@@ -105,9 +105,7 @@ export const useAuthStore = defineStore("auth", {
     */
     async addFoodNeed(needType) {
       try {
-        const response = await api.post('/user/addFoodNeed?description', {
-          desc: needType
-        }).catch(handleApiError);
+        const response = await api.post('/user/addFoodNeed', new String(needType)).catch(handleApiError);
         this.fetchUserInfo()
 
       } catch (error) {
@@ -117,12 +115,13 @@ export const useAuthStore = defineStore("auth", {
     /*
     * Elimina una necesidad alimentaria a un usuario dada su id.
     */
-    async deleteNeed(needId) {
+    async deleteNeed(need) {
       try {
-        const response = await api.delete("/user/deleteNeed?needId=" + needId + '').catch(handleApiError)
+        const response = await api.delete("/user/deleteNeed", new String(need)).catch(handleApiError)
         await this.fetchUserInfo()
       } catch (error) {
         console.error(error)
+        throw error
       }
     },
     /*

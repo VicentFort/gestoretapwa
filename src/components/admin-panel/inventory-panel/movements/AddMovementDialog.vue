@@ -122,6 +122,7 @@ import ErrorDialog from '@/components/ErrorDialog.vue';
 import { useAuthStore } from '@/stores/auth';
 import { ref, computed, reactive } from 'vue';
 import emailjs from '@emailjs/browser';
+import { movementTypes } from '@/stores/backendEnums';
 
 
 const auth = useAuthStore()
@@ -140,7 +141,6 @@ const stores = computed(() => auth.fallaAdminInfo?.stores.filter(store => {
     return store.enabled==true
 }) || []) 
 const contacts = computed(() => auth.fallaAdminInfo?.contacts || [])
-const movementTypes = auth.movementTypes
 
 
 const selectedStore = ref('')

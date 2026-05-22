@@ -56,6 +56,7 @@
 <script setup>
 import ErrorDialog from '@/components/ErrorDialog.vue';
 import { useAuthStore } from '@/stores/auth';
+import { itemCategories } from '@/stores/backendEnums';
 import { ref, defineEmits } from 'vue';
 
 const auth = useAuthStore()
@@ -72,7 +73,7 @@ const error = ref('')
 const showErrorDiag = ref(false)
 
 const selectedCategory = ref('')
-const categories = auth.itemCategories
+const categories = itemCategories
 
 const submitForm = async () => {
     try {
