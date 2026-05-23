@@ -23,7 +23,7 @@
                 <v-col cols="12" class="justify-center d-flex">
                     <v-text-field
                     class="text-black"
-                    v-model="formattedDate"
+                    v-model="formattedStartDate"
                     label="Data d'inici"
                     prepend-inner-icon="mdi-calendar"
                     readonly
@@ -172,6 +172,7 @@
 import { useAuthStore } from '@/stores/auth';
 import { computed, ref, watch } from 'vue';
 import ErrorDialog from '@/components/ErrorDialog.vue';
+import { useDateFormatter } from '@/stores/util';
 
 const auth = useAuthStore()
 
@@ -268,26 +269,8 @@ const submitForm = async () => {
     
 }
 
+const { formattedDate: formattedStartDate} = useDateFormatter(() => props.event.date)
+const { formattedDate: formattedEndDate} = useDateFormatter(() => props.event.endDate)
 
-const formattedDate = computed(() => {
-  if (!props.event.date) return ''
-  const dateObj = new Date(props.event.date)
-  const offset = dateObj.getTimezoneOffset() * 60000
-  const localISO = new Date(dateObj.getTime() - offset).toISOString()
-  
-  // Extraemos YYYY-MM-DD y HH:mm:ss.SSS
-  const [date] = localISO.split('T')
-  return `${date}`
-})
-
-const formattedEndDate = computed(() => {
-  if (!props.event.endDate) return ''
-  const dateObj = new Date(props.event.endDate)
-  const offset = dateObj.getTimezoneOffset() * 60000
-  const localISO = new Date(dateObj.getTime() - offset).toISOString()
-  
-  const [date] = localISO.split('T')
-  return `${date}`
-})
 
 </script>

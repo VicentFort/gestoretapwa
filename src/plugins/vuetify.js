@@ -26,7 +26,7 @@ export default createVuetify({
           background: '#87CEEB',
           primary: '#F5F5F5',
           secondary: '#87CEEB',
-          ternary: '#FF7F50',
+          ternary: 'rgb(var(--v-theme-ternary))',
           surface: '#f9c3a5'
 
         },
@@ -38,12 +38,12 @@ export default createVuetify({
       light: {
         dark:false,
         colors: {
-          background: '#7fa1af',
-          secondary: '#7fa1af',
+          background: '#6facc6',
+          secondary: '#6facc6',
           primary: '#F5F5F5',
-          ternary: '#FF7F50',
-          quaternary: '#ea9262',
-          surface: '#FF7F50',
+          ternary: '#f0825a',
+          quaternary: '#ed6636',
+          surface: '#f0825a',
           error: '#F28B82'
 
           

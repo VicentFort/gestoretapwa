@@ -25,7 +25,7 @@
                         <v-col cols="12" class="justify-center d-flex">
                             <v-text-field
                             class="text-black"
-                            v-model="formattedDate"
+                            :model-value="formattedStartDate"
                             label="Data d'inici"
                             prepend-inner-icon="mdi-calendar"
                             readonly
@@ -182,7 +182,8 @@
 
 <script setup>
 import { useAuthStore } from '@/stores/auth';
-import { computed, reactive, ref, watch } from 'vue';
+import { useDateFormatter } from '@/stores/util';
+import { computed, reactive, ref, toRef, watch } from 'vue';
 
 
 const auth = useAuthStore()
@@ -205,22 +206,7 @@ watch(selectedTag, () => {
 })
 const valid = ref(false)
 const form = ref(null)
-const event = reactive({
-  title: '',
-  publicField: true,
-  description: '',
-  price: 0,
-  maxPeople: 0,
-  date: null,
-  fallaId: auth.fallaAdminInfo.fallaId,
-  startHour: '',
-  endHour: '',
-  endDate: null,
-  open: true,
-  createdAt: new Date(),
-  createdBy: auth.userInfo.name + ' ' + auth.userInfo.surname,
-  checkNeeds: false
-})
+
 const dateMenu = ref(false)
 const endDateMenu = ref(false)
 const props = defineProps({
@@ -246,28 +232,25 @@ const submitForm = async () => {
         
     }
 }
-const formattedDate = computed(() => {
-  if (!event.date) return ''
-  const dateObj = new Date(event.date)
-  const offset = dateObj.getTimezoneOffset() * 60000
-  const localISO = new Date(dateObj.getTime() - offset).toISOString()
-  
-  // Extraemos YYYY-MM-DD y HH:mm:ss.SSS
-  const [date, timeWithZ] = localISO.split('T')
-  const time = timeWithZ.slice(0,0) 
-  return `${date} ${time}`
-})
 
-const formattedEndDate = computed(() => {
-  if (!event.endDate) return ''
-  const dateObj = new Date(event.endDate)
-  const offset = dateObj.getTimezoneOffset() * 60000
-  const localISO = new Date(dateObj.getTime() - offset).toISOString()
-  
-  const [date, timeWithZ] = localISO.split('T')
-  const time = timeWithZ.slice(0, 0)
-  return `${date} ${time}`
+const event = reactive({
+  title: '',
+  publicField: true,
+  description: '',
+  price: 0,
+  maxPeople: 0,
+  date: new Date(),
+  fallaId: auth.fallaAdminInfo.fallaId,
+  startHour: '',
+  endHour: '',
+  endDate: new Date(),
+  createdAt: new Date(),
+  createdBy: auth.userInfo.name + ' ' + auth.userInfo.surname,
+  checkNeeds: false,
 })
+const {formattedDate: formattedStartDate} = useDateFormatter(() => event.date)
+
+const {formattedDate: formattedEndDate} = useDateFormatter(() => event.endDate)
 
 </script>
 

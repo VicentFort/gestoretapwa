@@ -5,16 +5,13 @@
       {{  event.title }}
       </v-card-title>
       <v-card-text class="pa-4">
-      {{ event.description }}
+      Descripció: {{ event.description }}
       </v-card-text>
       <v-card-text>
       Etiqueta: {{ event.tagName }}
       </v-card-text>
       <v-card-text>
-      Data: {{formattedDate}}
-      </v-card-text>
-      <v-card-text>
-      Hora: {{ formattedTime }}
+      Data: {{formattedDate}} | {{ formattedTime }}
       </v-card-text>
       <v-card-text v-if="event.assists">
       Assistències: {{ event?.assists?.length }}
@@ -117,19 +114,27 @@ const formattedTime = computed(() => {
 
 //Para mostrar las fechas formateadas del evento. Si es en el mismo dia muestra solo la fecha inicial, si es de varios muestra las 2.
 const formattedDate = computed(() => {
-    if(props.event.date == props.event.endDate) return `${new Date(props.event.date).toLocaleDateString('ca-ES',{
-      day:'2-digit',
-      month:'2-digit',
-      year:'2-digit'
-    })}`
+    if(props.event.date == props.event.endDate) {
+      return `${new Date(props.event.date).toLocaleDateString('ca-ES',{
+        day:'2-digit',
+        month:'2-digit',
+        year:'2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      })}`
+    } 
     return `${new Date(props.event.date).toLocaleDateString('ca-ES',{
       day:'2-digit',
       month:'2-digit',
-      year:'2-digit'
+      year:'2-digit',
+      hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
     })} fins a: ${new Date(props.event.endDate).toLocaleDateString('ca-ES',{
       day:'2-digit',
       month:'2-digit',
-      year:'2-digit'
+      year:'2-digit',
     })}` 
 })
 

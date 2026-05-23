@@ -193,7 +193,6 @@ export const useAuthStore = defineStore("auth", {
     */
     async editAccessType(accessRequest) {
       try {
-        console.log(accessRequest)
         const response = await api.post('/falla/editAccessType', accessRequest).catch(handleApiError)
       } catch (error) {
         console.error(error)
@@ -244,7 +243,6 @@ export const useAuthStore = defineStore("auth", {
         const response = await api.post('/event/create', {
           title: event.title,
           publicField: event.publicField,
-          done: false,
           price: event.price,
           description: event.description,
           maxPeople: event.maxPeople,
@@ -255,10 +253,11 @@ export const useAuthStore = defineStore("auth", {
           endHour: event.endHour,
           attendants: users,
           createdBy: event.createdBy,
-          open: event.open,
+          open: true,
           createdAt: event.createdAt,
           endDate: formatToYYYYMMDD(formatToBackend(event.endDate)),
-          checkNeeds: event.checkNeeds
+          checkNeeds: event.checkNeeds,
+          active: true
         }).catch(handleApiError)
         return response.data;
       } catch (error) {
@@ -397,7 +396,7 @@ export const useAuthStore = defineStore("auth", {
     */
     async createContact(contact) {
       try {
-        const response = api.post("/inv/createContact", contact).catch(handleApiError)
+        const response = await api.post("/inv/createContact", contact).catch(handleApiError)
       } catch (err) {
         console.error(err)
         throw err
@@ -410,8 +409,7 @@ export const useAuthStore = defineStore("auth", {
     */
     async returnLoan(returnDto) {
       try {
-        const response = api.post("/inv/returnLoan", returnDto).catch(handleApiError)
-        console.log(response)
+        const response = await api.post("/inv/returnLoan", returnDto).catch(handleApiError)
         return response
       } catch (err) {
         console.error(err)
@@ -425,14 +423,44 @@ export const useAuthStore = defineStore("auth", {
     */
     async updateContact(contact) {
       try {
-        const response = api.put("/inv/updateContact", contact).catch(handleApiError)
+        const response = await api.put("/inv/updateContact", contact).catch(handleApiError)
       } catch (err) {
         console.error(err)
         throw err
       } finally {
         this.fetchFallaAdminInfo()
       }
-    }
+    },
+    async sellCoupon(coupon) {
+      try {
+        const response = await api.post("/payment/sellCoupon", coupon).catch(handleApiError)
+      } catch (err) {
+        console.error(err)
+        throw err
+      } finally {
+        this.fetchFallaAdminInfo()
+      }
+    },
+    async exchangeCoupon(coupon) {
+      try {
+        const response = await api.post("/payment/exchangeCoupon", coupon).catch(handleApiError)
+      } catch (err) {
+        console.error(err)
+        throw err
+      } finally {
+        this.fetchFallaAdminInfo()
+      }
+    },
+    async feePayment(request) {
+      try {
+        const response = await api.post("/payment/feePayment", request).catch(handleApiError)
+      } catch (err) {
+        console.error(err)
+        throw (err)
+      } finally {
+        this.fetchFallaAdminInfo()
+      }
+    },
   }
 },
 );
@@ -459,7 +487,12 @@ const sendDelayedEmails = async (loans) => {
 */
 const handleApiError = (error) => {
   console.error(error)
+  if(error.message != null)
+
+    throw error.message
+  
   throw error.response.data
+
 }
 
 

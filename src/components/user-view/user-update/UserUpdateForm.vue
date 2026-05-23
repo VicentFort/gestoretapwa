@@ -84,7 +84,7 @@ import { ref, computed } from 'vue';
 
 <style>
 .v-card{
-    border-color: #FF7F50;
+    border-color: rgb(var(--v-theme-ternary));
     border-width: 10px;
     border-style: solid;
 }

@@ -76,7 +76,6 @@ const inventoryItems = computed(() => auth.fallaAdminInfo?.inventoryItems.filter
 
 
 const returnCategoryIcon = (category) => {
-    console.log(category)
     switch(category){
         case 'Pirotècnia': return 'mdi-firework'
         case 'Menjar': return 'mdi-food-drumstick'

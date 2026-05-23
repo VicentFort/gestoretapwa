@@ -12,6 +12,7 @@
                 <v-tab value="two">Membres</v-tab>
                 <v-tab value="three">Inventari</v-tab>
                 <v-tab value="four">Moviments</v-tab>
+                <v-tab value="five">Pagaments</v-tab>
             </v-tabs>
         </v-sheet>
         <v-divider></v-divider>
@@ -39,6 +40,9 @@
                 <MovementTable/>
                 <ContactTable/>
             </v-tabs-window-item>
+            <v-tabs-window-item value="five">
+                <PaymentPanel/>
+            </v-tabs-window-item>
         </v-window>
     </v-container>
 
@@ -55,6 +59,7 @@ import ItemTable from './inventory-panel/items/ItemTable.vue';
 import StoreTable from './inventory-panel/items/StoreTable.vue';
 import MovementTable from './inventory-panel/movements/MovementTable.vue';
 import ContactTable from './inventory-panel/movements/ContactTable.vue';
+import PaymentPanel from './payment-panel/PaymentPanel.vue';
 import { useDisplay } from 'vuetify/lib/composables/display';
 
 const auth = useAuthStore()

@@ -81,7 +81,7 @@ const showEvent = (event) => {
                                 :key="event.id"
                                 :title="event.title"
                                 @click="showEvent(event)"
-                                :class="event.open == true ? 'item-open' : 'item-closed'"
+                                :class="event.open == true ?'item-open' : 'item-closed'"
                             >
                             </v-list-item>
                         </v-list>
@@ -107,14 +107,14 @@ const showEvent = (event) => {
                                 :key="event.id"
                                 :title="event.title"
                                 @click="showAttEvent(event)"
-                                :class="event.open ? 'item-open' : 'item-closed'"
+                                :class="event.open ?'item-open' : 'item-closed'"
                             >
                             </v-list-item>
                         </v-list>
                         <v-card-actions>
                             <v-btn 
                             :icon="showAllAttEvents ? 'mdi-filter' : 'mdi-clock-outline'" 
-                            :class="showAllAttEvents ? 'bg-secondary' : 'bg-ternary'"
+                            :class="showAllAttEvents ?'bg-secondary' : 'bg-ternary'"
                             @click="toggleAttEvents"
                             ></v-btn>
                             <span class="ml-2 text-caption">
@@ -138,7 +138,7 @@ const showEvent = (event) => {
 
 <style>
 .v-card{
-    border-color: #FF7F50;
+    border-color: rgb(var(--v-theme-ternary));
     border-width: 10px;
     border-style: solid;
 }

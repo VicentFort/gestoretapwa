@@ -141,7 +141,7 @@ const formattedEvents = computed(() => {
       start: startDateTime,
       end: endDateTime,
       timed: !!(event.startHour && event.endHour),
-      color: event.done ? 'green' : 'secondary',
+      color: event.active ? 'green' : 'secondary',
     }
   })
 })
@@ -207,7 +207,7 @@ const joinEvent = async () => {
 
 <style>
 .sheet-container{
-    border-color: #FF7F50;
+    border-color: rgb(var(--v-theme-ternary));
     border-width: 10px;
     border-style: solid;
 }

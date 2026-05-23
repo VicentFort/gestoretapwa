@@ -16,9 +16,9 @@ const orderedEvents = computed(() => {
     let base = events.value ? [...events.value] : [...(auth.fallaAdminInfo?.events) || []]
 
     if(!showClosed.value) {
-        base = base.filter(e => e.open == true)
+        base = base.filter(e => e.active == true)
     }
-    return base.sort((a,b) => (b.open ? 1 : 0) - (a.open ? 1 : 0))
+    return base.sort((a,b) => (b.active ? 1 : 0) - (a.active ? 1 : 0))
 })
 
 const openDetails = (event) => {
@@ -44,7 +44,7 @@ const openCreateEvent = () => {
                     :title="event.title"
                     link 
                     @click="openDetails(event)"
-                    :class="event.open == true ? 'item-open' : 'item-closed'"
+                    :class="event.active == true ?'item-open' : 'item-closed'"
                 >
             </v-list-item>
             </v-list>
@@ -62,7 +62,7 @@ const openCreateEvent = () => {
                     <v-col cols="12" md="6">
                         <v-btn 
                         :icon="showClosed ? 'mdi-filter' : 'mdi-clock-outline'" 
-                        :class="showClosed ? 'bg-secondary' : 'bg-ternary'"
+                        :class="showClosed ?'bg-secondary' : 'bg-ternary'"
                         @click="toggleClosedEvents"
                         ></v-btn>
                         <span class="ml-2 text-caption">
@@ -82,7 +82,7 @@ const openCreateEvent = () => {
 
 <style>
 .v-card{
-    border-color: #FF7F50;
+    border-color: rgb(var(--v-theme-ternary));
     border-width: 10px;
     border-style: solid;
 }
