@@ -35,7 +35,7 @@ const attEventsProcesados = computed(() => {
 
     if (!showAllAttEvents.value) {
         // Modo inicial: Solo los que están abiertos
-        return originalEvents.filter(event => event.open === true);
+        return originalEvents.filter(event => event.active === true);
     } else {
         // Modo "Mostrar todos": Ordenados (open: true arriba)
         return [...originalEvents].sort((a, b) => {
@@ -81,7 +81,7 @@ const showEvent = (event) => {
                                 :key="event.id"
                                 :title="event.title"
                                 @click="showEvent(event)"
-                                :class="event.open == true ?'item-open' : 'item-closed'"
+                                :class="event.active == true ?'item-open' : 'item-closed'"
                             >
                             </v-list-item>
                         </v-list>
@@ -107,7 +107,7 @@ const showEvent = (event) => {
                                 :key="event.id"
                                 :title="event.title"
                                 @click="showAttEvent(event)"
-                                :class="event.open ?'item-open' : 'item-closed'"
+                                :class="event.active ?'item-open' : 'item-closed'"
                             >
                             </v-list-item>
                         </v-list>

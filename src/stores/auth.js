@@ -461,6 +461,25 @@ export const useAuthStore = defineStore("auth", {
         this.fetchFallaAdminInfo()
       }
     },
+    async eventPayment(request) {
+      try {
+       const response = await api.post("/payment/eventPayment", request).catch(handleApiError)
+      } catch (err) {
+        console.error(err)
+        throw (err)
+      } finally {
+        this.fetchFallaAdminInfo()
+      }
+    },
+    async editCoupon(coupon) {
+      try {
+        const response = await api.put("/payment/editCoupon", coupon).catch(handleApiError)
+      } catch(err) {
+        throw (err)
+      } finally {
+        this.fetchFallaAdminInfo()
+      }
+    }
   }
 },
 );
@@ -489,7 +508,7 @@ const handleApiError = (error) => {
   console.error(error)
   if(error.message != null)
 
-    throw error.message
+    throw error.response.data
   
   throw error.response.data
 

@@ -1,6 +1,6 @@
 <template>
     <v-dialog v-model="show" width="500">
-    <v-card v-if="event"  class="bg-primary" >
+    <v-card v-if="event"  :class="event.active ?'event-dialog-open' : 'event-dialog-closed'" >
       <v-card-title class="bg-secondary">
         Títol: {{ event?.title }}
       </v-card-title>
@@ -9,15 +9,14 @@
       <v-card-text class="pa-4">Data: {{ formattedDate }}</v-card-text>
       <v-card-text class="pa-4">Hora: {{ formattedTime }} </v-card-text>
       <v-card-text class="pa-4">Etiqueta: {{ event?.tagName }}</v-card-text>
-      <v-card-text class="pa-4">Estat: {{ formattedOpen }}</v-card-text>
 
       <v-divider></v-divider>
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="grey-darken-1" class="bg-ternary" variant="text" :disabled="!event.open" @click="joinEvent">Assistir</v-btn>
+        <v-btn color="primary" class="bg-ternary" variant="text" :disabled="!event.active" @click="joinEvent">Assistir</v-btn>
         <v-spacer></v-spacer>
-        <v-btn color="grey-darken-1" class="bg-ternary"  variant="text" @click="show = false">Tanca</v-btn>
+        <v-btn color="primary" class="bg-ternary"  variant="text" @click="show = false">Tanca</v-btn>
       </v-card-actions>
       <v-dialog v-model="showAssistSuccess" max-width="400">
             <v-card>
@@ -93,7 +92,7 @@ const formattedTime = computed(() => {
 })
 
 const formattedOpen = computed(() => {
-    return props.event.open ? 'Obert' : 'Tancat'
+    return props.event.active ? 'Obert' : 'Tancat'
 })
 </script>
 

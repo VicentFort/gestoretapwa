@@ -254,7 +254,7 @@ const submitForm = async () => {
                 startHour:localEvent.value.startHour,
                 endHour:localEvent.value.endHour,
                 endDate:localEvent.value.endDate,
-                open:localEvent.value.open,
+                active:localEvent.value.active,
                 checkNeeds:localEvent.value.checkNeeds,
                 attendantIds:localEvent.value.attendants.map(a => a.id)
             }

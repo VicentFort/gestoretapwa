@@ -35,7 +35,7 @@ const openCreateEvent = () => {
     <v-container>
         <v-card class="bg-primary event-list" >
             <v-card-title class='bg-ternary'>
-                Llistat d'events
+                Llistat d'esdeveniments
             </v-card-title>
             <v-list class="bg-primary">
                 <v-list-item 
@@ -62,7 +62,7 @@ const openCreateEvent = () => {
                     <v-col cols="12" md="6">
                         <v-btn 
                         :icon="showClosed ? 'mdi-filter' : 'mdi-clock-outline'" 
-                        :class="showClosed ?'bg-secondary' : 'bg-ternary'"
+                        :class="'bg-ternary'"
                         @click="toggleClosedEvents"
                         ></v-btn>
                         <span class="ml-2 text-caption">
@@ -70,7 +70,7 @@ const openCreateEvent = () => {
                         </span>
                     </v-col>
                     <v-col cols="12" md="6">
-                        <v-btn class="justify-center bg-ternary" type="text" @click='openCreateEvent'>Crear Event</v-btn> 
+                        <v-btn icon="mdi-plus" class="justify-center bg-ternary" type="text" @click='openCreateEvent'/> 
 
                     </v-col>
                 </v-row>

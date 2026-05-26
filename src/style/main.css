@@ -6,11 +6,7 @@
   text-align: center;
 }
 
-.v-card{
-    border-color: rgb(var(--v-theme-ternary));
-    border-width: 10px;
-    border-style: solid;
-}
+
 
 .v-application .v-list-item {
     width: 300px;
@@ -26,13 +22,18 @@
 }
 
 #app .event-list .v-list-item.item-open {
-  background-color: rgb(var(--v-theme-ternary)) !important;
-  border-color: rgb(var(--v-theme-ternary)) !important;
+  background-color: rgb(var(--v-theme-secondary)) !important;
+  border-color: rgb(var(--v-theme-secondary)) !important;
+  color: white !important;
+  
 }
+
+
 
 #app .event-list .v-list-item.item-closed {
   background-color: rgb(var(--v-theme-error)) !important;
   border-color: rgb(var(--v-theme-error)) !important;
+  color: white !important;
 }
 
 /* Si quieres que el texto se lea bien (blanco o negro según fondo) */
@@ -40,6 +41,33 @@
     color: rgb(var(--v-theme-primary)) !important; 
 }
 
+.event-dialog-open {
+  border-color: rgb(var(--v-theme-secondary)) !important;
+  background-color: rgb(var(--v-theme-primary)) !important;
+  color: black !important
+}
+
+.event-dialog-closed {
+  border-color: rgb(var(--v-theme-error)) !important;
+  background-color: rgb(var(--v-theme-primary)) !important;
+    color: black !important
+
+}
+
+.empty-border {
+  border-color: white !important;
+
+}
+
+.event-dialog-open .v-card-title {
+  background-color: rgb(var(--v-theme-secondary));
+}
+.event-dialog-closed .v-card-title {
+  background-color: rgb(var(--v-theme-error));
+}
+.confirm-delete-dialog {
+  border-color: rgb(var(--v-theme-error)) !important;
+}
 @media (max-width: 600px) {
       .v-application .v-list-item {
         width: 150px !important; /* Se encoge en pantallas grandes */

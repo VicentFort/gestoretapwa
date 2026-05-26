@@ -42,6 +42,7 @@
             </v-tabs-window-item>
             <v-tabs-window-item value="five">
                 <PaymentPanel/>
+                <CouponTable/>
             </v-tabs-window-item>
         </v-window>
     </v-container>
@@ -61,6 +62,7 @@ import MovementTable from './inventory-panel/movements/MovementTable.vue';
 import ContactTable from './inventory-panel/movements/ContactTable.vue';
 import PaymentPanel from './payment-panel/PaymentPanel.vue';
 import { useDisplay } from 'vuetify/lib/composables/display';
+import CouponTable from './payment-panel/CouponTable.vue';
 
 const auth = useAuthStore()
 if(!auth.fallaAdminInfo) {

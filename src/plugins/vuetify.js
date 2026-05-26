@@ -41,10 +41,11 @@ export default createVuetify({
           background: '#6facc6',
           secondary: '#6facc6',
           primary: '#F5F5F5',
-          ternary: '#f0825a',
-          quaternary: '#ed6636',
-          surface: '#f0825a',
-          error: '#F28B82'
+          ternary: '#e27b55',
+          quaternary: '#e27b55',
+          surface: '#e27b55',
+          error: '#9e3026',
+          transaction: '#74df84'
 
           
         }

@@ -1,43 +1,33 @@
 <template>
     <v-dialog v-model="show" width="500">
         <v-card v-if="user"  class="bg-primary">
-            <v-card-title class="text-h5 text-black bg-ternary">Nom i cognoms: {{ user.name }} {{ user.surname }}</v-card-title>
-            <v-card-text class="pa-4">Aniversari: {{ user.birthday }}</v-card-text>
-            <v-card-text class="pa-4" v-if="user.nickname">Malnom: {{ user.nickname }}</v-card-text>
-            <v-card-text class="pa-4">Faller desde: {{ user.joinDate }}</v-card-text>
-            <v-select v-if="auth.userInfo.accessType=='Superusuari'"
-            :items="accessTypes"
-            v-model="accessType"
-            title="Modificar el permís d'accés">
-            </v-select>
-            <v-card v-if="user?.foodNeeds.length>0" class="bg-primary border-0">
-                <v-card-text class="pa-4">Necessitats: </v-card-text>
-                <v-list class="bg-primary">
-                    <v-list-item
-                    v-for="need in user.foodNeeds"
-                    :key="need.foodNeedId"
-                    :title= "'-'+need.description"
-                    />
-                </v-list>
-            </v-card>
-            <v-card v-if="user?.prefs.length>0" class="bg-primary border-0">
-                <v-card-text class="pa-4">Disposicions a events: </v-card-text>
-                <v-list class="bg-primary">
-                    <v-list-item
-                    v-for="pref in user.prefs"
-                    :key="pref.prefId"
-                    :title= "'-'+pref.tagName"
-                    />
-                </v-list>
-            </v-card>
-            <v-divider></v-divider>
-
+            <v-card-title class="text-h5 text-black bg-ternary">{{ user.name }} {{ user.surname }}</v-card-title>
+            <v-card-text class="font-weight-bold">Malnom: {{ showNick }}</v-card-text>
+            <v-card-text class="font-weight-bold">Preferències alimentàries </v-card-text>
+            <v-list v-if="user.foodNeeds.length > 0" class="bg-primary">
+                <v-list-item
+                v-for="need in user.foodNeeds"
+                :title= "'-'+need"
+                />
+            </v-list>
+            <v-card-text v-else class="font-weight-bold">
+                Ninguna
+            </v-card-text>
+            <v-card-text class="font-weight-bold">Disposicions a events: </v-card-text>
+            <v-list class="bg-primary"  v-if="user.prefs != null && user.prefs.length > 0">
+                <v-list-item
+                v-for="pref in user.prefs"
+                :key="pref.prefId"
+                :title= "'-'+pref.tagName"
+                />
+            </v-list>
+            <v-card-text v-else class="font-weight-bold">
+                Ninguna
+            </v-card-text>
         <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn class="bg-secondary" variant="text" @click="show = false">
-            Tanca
-            </v-btn>
-            <v-btn class="bg-secondary" variant="text" @click="editAccessType">Guarda canvis</v-btn>
+            <v-btn icon="mdi-cancel" class="bg-ternary" variant="text" @click="show = false"/>
+            <v-btn icon="mdi-check" class="bg-ternary" variant="text" @click="editAccessType"/>
         </v-card-actions>
         </v-card>
         <ErrorDialog :message="error" v-model="showErrorDiag" @closed="showErrorDiag=false"/>
@@ -64,18 +54,8 @@ const show = computed({
     get: () => props.modelValue,
     set: (value) => emit('update:modelValue', value)
 })
-const editAccessType = async () => {
-    try {
-        const accessRequest = {
-            accessType: accessType.value,
-            userId: props.user.id
-        }
-        await auth.editAccessType(accessRequest)
-    } catch(err) {
-        error.value=err
-        showErrorDiag.value = true
-    }
-
+const showNick = () => {
+    return props.user.nickname !== null ? props.user.nickname : '-'
 }
 
 </script>

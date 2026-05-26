@@ -7,7 +7,7 @@
             </v-card-title>
             <v-col>
                 <v-row rows="12" md="6">
-                    <v-select :items="paymentTypes" :item-props="paymentProps" label="Tipus de pagament" v-model="selectedType"/>
+                    <v-select :items="otherPaymentTypes" :item-props="paymentProps" label="Tipus de pagament" v-model="selectedType"/>
                 </v-row>
             </v-col>
             <v-col>
@@ -47,7 +47,7 @@
             </v-col>
             <v-card-actions>
                 <v-btn @click="emit('closed')" icon="mdi-cancel" color="ternary"/>
-                <v-btn @click="submitForm" icon="mdi-plus" color="ternary"/>
+                <v-btn @click="submitForm" icon="mdi-plus" color="ternary" :disabled="!checkFields"/>
             </v-card-actions>  
             </v-card>
         </v-form>
@@ -60,7 +60,7 @@
 <script setup>
 import ErrorDialog from '@/components/ErrorDialog.vue';
 import { useAuthStore } from '@/stores/auth';
-import { paymentTypes } from '@/stores/backendEnums';
+import { otherPaymentTypes } from '@/stores/backendEnums';
 import { computed, ref } from 'vue';
 
 
@@ -68,6 +68,7 @@ const auth = useAuthStore()
 const coupons = ref(auth.fallaAdminInfo?.coupons)
 const stores = ref(auth.fallaAdminInfo?.stores)
 const users = ref(auth.fallaAdminInfo?.users)
+
 
 const valid = ref(false)
 const form = ref(null)
@@ -104,6 +105,7 @@ const submitForm = async () => {
                 await auth.feePayment(request);
                 break;
         }
+        await auth.fetchFallaAdminInfo()
         emit('closed')
     } catch(err) {
         error.value = err
@@ -120,7 +122,27 @@ const formattedAmountLabel = computed(() => {
     if(selectedType.value.id == 2) return 'Quantitat de tiquets a bescanviar'
 })
 
-
+const checkFields = computed(() => {
+    if(!selectedType.value) return false
+    switch(selectedType.value.id) {
+        case 1:
+            if(!coupon.value) return false
+            if(!couponAmount.value) return false
+            if(!userEmail.value) return false
+            return true
+        case 2: 
+            if(!coupon.value) return false
+            if(!couponAmount.value) return false
+            if(!userEmail.value) return false
+            if(!selectedStore.value) return false
+            return true
+        case 3:
+            if(!feeUser.value) return false
+            if(!feeAmount.value) return false
+            return true
+        default: return true
+    }
+})
 
 const getMaxStock = computed(() => {
     if (!selectedType.value) return 1;

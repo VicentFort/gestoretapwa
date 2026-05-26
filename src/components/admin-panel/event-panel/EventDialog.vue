@@ -1,7 +1,7 @@
 <template>
     <v-dialog v-model="show" width="500">
-    <v-card v-if="event" class="bg-primary">
-      <v-card-title class="text-h5 bg-secondary">
+    <v-card v-if="event" :class="event.active ?'event-dialog-open' : 'event-dialog-closed','text-black'">
+      <v-card-title>
       {{  event.title }}
       </v-card-title>
       <v-card-text class="pa-4">
@@ -14,46 +14,42 @@
       Data: {{formattedDate}} | {{ formattedTime }}
       </v-card-text>
       <v-card-text v-if="event.assists">
-      Assistències: {{ event?.assists?.length }}
+      Assistències: {{ event?.assists?.length }} | Pagades: {{ getPaidAssists }}
       </v-card-text>
       <v-card-text v-if="event.checkNeeds == true && event.foodNeeds.length>0">
-      Necessitats alimentaries del event: {{ event.foodNeeds?.length }}
+      Necessitats alimentaries de l'esdeveniment: {{ event.foodNeeds?.length }}
       </v-card-text>
       <v-card-text v-if="event.attendants.length>0">
-      Encarregats del event: {{ event.attendants?.length }}
+      Encarregats de l'esdeveniment: {{ event.attendants?.length }}
       </v-card-text>
       <v-card-text>
       Creat per: {{ event.createdBy }}
       </v-card-text>
 
-      <v-divider>
-
-      </v-divider>
+      <v-divider/>
 
       <v-card-actions>
-        <v-btn class="bg-ternary" variant="text" @click="showEditDialog = true" :disabled="event.open==false">
-          Edita
-        </v-btn>
-        <v-btn class="bg-ternary" variant="text" @click="confirmDelete">
-          Elimina
-        </v-btn>
+        <v-btn class="bg-transaction" variant="text" @click="payEvent" icon="mdi-currency-eur" :disabled="event.active==false || event.price <= 0 || checkUnpaidAssists"/>
+        <v-btn class="bg-ternary" variant="text" @click="showEditDialog = true" icon="mdi-arrow-u-down-left" :disabled="event.active==false"/>
+        <v-btn class="bg-error" variant="text" @click="confirmDelete" icon="mdi-delete" :disabled="event.active==false"/>
         <v-spacer></v-spacer>
-        <v-btn class="bg-ternary" variant="text" @click="show = false">
-          Tanca
-        </v-btn>
+        <v-btn class="bg-ternary" variant="text" @click="show = false" icon="mdi-cancel"/>
       </v-card-actions>
+      <v-dialog v-model="showPayDialog" widht="auto">
+        <EventPaymentDialog :event="event" @closed="showPayDialog=false; emit('update:modelValue')"/>
+      </v-dialog>
       <v-dialog v-model="showEditDialog" width="auto">
         <EventEditDialog @closed="showEditDialog=false; show=false" :event="selectedEvent"/>
       </v-dialog>
       <v-dialog v-model="showDeleteDialog" max-width="400">
-        <v-card>
+        <v-card class="bg-primary confirm-delete-dialog" >
           <v-card-title class="text-h5 text-white bg-error">¿Vols eliminar el event?</v-card-title>
           
           <v-card-text class="pa-4">
-            Estàs a punt d'eliminar el event: 
+            Estàs a punt d'eliminar l'esdeveniment: 
             <strong>{{ event?.title }}</strong>.
             <br><br>
-            <span class="text-caption text-grey">Esta acció no es pot desfer.</span>
+            <span class="text-caption text-error">Esta acció no es pot desfer.</span>
           </v-card-text>
 
           <v-divider></v-divider>
@@ -86,8 +82,10 @@
 import { useAuthStore } from '@/stores/auth';
 import EventEditDialog from '@/components/admin-panel/event-panel/EventEditDialog.vue'
 import { computed, ref } from 'vue';
+import EventPaymentDialog from './EventPaymentDialog.vue';
 const showDeleteDialog = ref(false)
 const showEditDialog = ref(false)
+const showPayDialog = ref(false)
 const loading = ref(false)
 const auth = useAuthStore()
 const props = defineProps({
@@ -101,6 +99,9 @@ const show = computed({
     set: (value) => emit('update:modelValue', value)
 })
 
+const payEvent = (ev) => {
+  showPayDialog.value = true
+}
 
 
 const confirmDelete = () => {
@@ -111,6 +112,16 @@ const formattedTime = computed(() => {
     return `${props.event.startHour.substring(0,2)}:${props.event.startHour.substring(3,5)}`
 })
 
+const checkUnpaidAssists = computed(() => {
+  const paidAssists = props.event.assists.filter( a => a.paid != true)
+  if(paidAssists.length > 0) return false
+  return true
+})
+
+const getPaidAssists = computed(() => {
+  const paidAssists = props.event.assists.filter( a => a.paid == true)
+  return paidAssists.length
+})
 
 //Para mostrar las fechas formateadas del evento. Si es en el mismo dia muestra solo la fecha inicial, si es de varios muestra las 2.
 const formattedDate = computed(() => {
@@ -143,12 +154,8 @@ const executeDelete = async () => {
   loading.value = true
   try {
     await auth.deleteEvent(props.event.id)
-    
-    // Si tiene éxito:
     showDeleteDialog.value = false
     show.value = false
-    // Aquí podrías emitir un evento para refrescar la lista de eventos
-    // emit('refresh') 
   } catch (error) {
     console.error("Error al borrar:", error)
   } finally {
@@ -158,3 +165,9 @@ const executeDelete = async () => {
 
 }
 </script>
+
+<style>
+
+
+
+</style>

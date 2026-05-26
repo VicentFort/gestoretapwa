@@ -7,14 +7,10 @@
 
       <v-divider></v-divider>
 
-      <v-card-actions class="align-center justify-center">
-        <v-btn class="bg-ternary text-primary" variant="text" @click="confirmDelete">
-          Elimina
-        </v-btn>
+      <v-card-actions class="justify-center align-center">
+        <v-btn icon="mdi-tag-minus" class="text-primary bg-ternary" variant="text" @click="confirmDelete"/>
         <v-spacer></v-spacer>
-        <v-btn class="bg-ternary text-primary" variant="text" @click="show = false">
-          Tanca
-        </v-btn>
+        <v-btn icon="mdi-cancel" class="text-primary bg-ternary" variant="text" @click="show = false"/>
       </v-card-actions>
       <v-dialog v-model="showDeleteDialog" max-width="400">
         <v-card>

@@ -18,7 +18,7 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="grey-darken-1" variant="text" class="bg-ternary" @click="assistEvent" :disabled="event.open==false">Assistir</v-btn>
+        <v-btn color="grey-darken-1" variant="text" class="bg-ternary" @click="assistEvent" :disabled="event.active==false">Assistir</v-btn>
         <v-spacer></v-spacer>
         <v-btn color="grey-darken-1" variant="text"  class="bg-ternary" @click="show = false">Tanca</v-btn>
       </v-card-actions>
@@ -83,7 +83,7 @@ const formattedTime = computed(() => {
 })
 
 const formattedOpen = computed(() => {
-    return props.event.open ? 'Obert' : 'Tancat'
+    return props.event.active ? 'Obert' : 'Tancat'
 })
 </script>
 

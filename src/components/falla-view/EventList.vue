@@ -9,14 +9,14 @@
                         :key="event.id"
                         :title="event.title"
                         @click="showEvent(event)"
-                        :class="event.open == true  ? 'item-open' : 'item-closed'"
+                        :class="event.active == true ?'item-open' : 'item-closed'"
                     >
                 </v-list-item>
                 </v-list>
                 <v-card-actions>
                     <v-btn 
                     :icon="showClosed ? 'mdi-filter' : 'mdi-clock-outline'" 
-                    :class="showClosed ? 'bg-secondary' : 'bg-ternary'"
+                    class="bg-ternary"
                     @click="toggleClosed"
                     ></v-btn>
                     <span class="ml-2 text-caption">
@@ -48,11 +48,11 @@ const eventsToShow = computed(() => {
 
     // 2. Filtramos por estado abierto SOLO si el usuario no ha activado el "ojo"
     if (!showClosed.value) {
-        base = base.filter(e => e.open === true);
+        base = base.filter(e => e.active === true);
     }
 
     // 3. Ordenamos: Abiertos arriba, cerrados abajo
-    return base.sort((a, b) => (b.open ? 1 : 0) - (a.open ? 1 : 0));
+    return base.sort((a, b) => (b.active ? 1 : 0) - (a.active ? 1 : 0));
 })
 const isDialogOpen = ref(false);
 const selectedEvent = ref(null);
