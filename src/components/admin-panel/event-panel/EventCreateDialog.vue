@@ -168,6 +168,16 @@
                                 type="number"
                             ></v-text-field>
                         </v-col>
+                        <v-col cols="12" md="6">
+                            <v-file-input
+                            v-model="selectedFile"
+                            label="Selecciona imatge per a l'esdeveniment"
+                            accept="image/jpeg, image/png"
+                            prepend-icon="mdi-camera"
+                            variant="filled"
+                            :show-size="1024"
+                            ></v-file-input>
+                        </v-col>
                     </v-row>
                 
                 <v-card-actions>
@@ -182,7 +192,7 @@
 
 <script setup>
 import { useAuthStore } from '@/stores/auth';
-import { useDateFormatter } from '@/stores/util';
+import { fileToBase64, useDateFormatter } from '@/stores/util';
 import { computed, reactive, ref, toRef, watch } from 'vue';
 
 
@@ -190,6 +200,7 @@ const auth = useAuthStore()
 const users = ref(auth.fallaAdminInfo.users)
 const tags = ref(auth.fallaAdminInfo.tags)
 const selectedTag = ref(null)
+const selectedFile = ref(null)
 const selectedUsers = ref([])
 const filterUsers = computed(() => {
   if (!selectedTag.value) return []
@@ -223,6 +234,9 @@ const submitForm = async () => {
     if (isValid) {
         try {
             if(event.endDate < event.date) { event.endDate = event.date}
+            if(selectedFile.value) {
+                event.eventImage = await fileToBase64(selectedFile.value)
+            }
             const eventData = await auth.addEvent(event, selectedTag.value, selectedUsers.value)
             await auth.joinEvent(eventData?.id)
             emit('closed')
@@ -247,6 +261,7 @@ const event = reactive({
   createdAt: new Date(),
   createdBy: auth.userInfo.name + ' ' + auth.userInfo.surname,
   checkNeeds: false,
+  eventImage: null,
 })
 const {formattedDate: formattedStartDate} = useDateFormatter(() => event.date)
 

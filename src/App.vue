@@ -37,7 +37,7 @@
           v-if="auth.token" 
 
           @click="reloadAll" 
-          color="grey"
+          color="success"
           icon="mdi-refresh"
         ></v-btn>
       </div>
@@ -54,7 +54,7 @@
               Administrar Falla
             </v-list-item>
             <v-divider v-if="auth.token"></v-divider>
-            <v-list-item v-if="auth.token" prepend-icon="mdi-refresh">
+            <v-list-item v-if="auth.token">
               <v-btn icon @click="auth.fetchUserInfo()">
                 <v-icon>mdi-refresh</v-icon>
               </v-btn>

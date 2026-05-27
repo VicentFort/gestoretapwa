@@ -74,7 +74,7 @@ const paymentTypes = [
 	{id: 5, value: 'Pagament de loteria', name: 'Pagament de loteria'},
 	{id: 6, value: 'Pagament de subvenció', name: 'Pagament de subvenció'},
 	{id: 7, value: 'Pagament de recompensa per premi', name: 'Pagament de recompensa per premi'},
-  	{id: 8, value: 'Pagament d.event', name: 'Pagament d\'esdeveniment'},
+  	{id: 8, value: 'Pagament d.esdeveniment', name: 'Pagament d\'esdeveniment'},
 	{id: 9, value: 'Gasto de manteniment', name: 'Gasto de manteniment'},
 	{id: 10, value: 'Gasto de lloguer', name: 'Gasto de lloguer'},
 	{id: 11, value: 'Gasto administratiu', name: 'Gasto administratiu'},

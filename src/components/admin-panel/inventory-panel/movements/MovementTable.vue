@@ -1,6 +1,7 @@
 <template>
   <v-container>
     <v-card flat title="Moviments d'inventari">
+      
       <template v-slot:text>
         <v-text-field
           v-model="search"
@@ -12,7 +13,23 @@
           class="bg-primary"
         />
       </template>
-
+      <v-card-actions>
+        <v-btn 
+          v-if="inventoryMovements.length > 25" 
+          variant="text" 
+          :icon="showAllMovements ? 'mdi-filter': 'mdi-clock-outline'"
+          color="primary" 
+          @click="showAllMovements = !showAllMovements"
+        />
+        <span class="text-caption">
+            {{ !showAllMovements 
+                ? `Mostrant només els primers ${xs ? 5 : 25}` 
+                : `Mostrant tots (${inventoryMovements.length})` 
+            }}
+        </span>
+        <v-spacer />
+        <v-btn variant="text" icon="mdi-plus" @click="showAddMovement=true"></v-btn>
+      </v-card-actions>
       <v-data-table-virtual
         :items="displayedMovements"
         item-value="id"
@@ -21,6 +38,7 @@
         :density="compact"
         :search="search"
         :sort-by="initialSort"
+        no-data-text="Sense moviment d'inventari"
         class="bg-primary elevation-1 responsive-table"
         style="max-width: 100vw;"
       >
@@ -31,7 +49,7 @@
             </td>
             
             <td class="responsive-td" data-label="Tipus">
-              <div class="d-flex justify-end align-center">
+              <div class="justify-end align-center d-flex">
                 
                 <template v-if="item.movementType === 'Prèstec'">
                   <v-btn 
@@ -66,23 +84,7 @@
 
       </v-data-table-virtual>
 
-      <v-card-actions>
-        <v-btn 
-          v-if="inventoryMovements.length > 25" 
-          variant="text" 
-          :icon="showAllMovements ? 'mdi-filter': 'mdi-clock-outline'"
-          color="primary" 
-          @click="showAllMovements = !showAllMovements"
-        />
-        <span class="text-caption">
-            {{ !showAllMovements 
-                ? `Mostrant només els primers ${xs ? 5 : 25}` 
-                : `Mostrant tots (${inventoryMovements.length})` 
-            }}
-        </span>
-        <v-spacer />
-        <v-btn variant="text" icon="mdi-plus" @click="showAddMovement=true"></v-btn>
-      </v-card-actions>
+      
     </v-card>
 
     <v-dialog v-model="showAddMovement" scrollable max-width="600px">

@@ -1,6 +1,7 @@
 <template>
         <v-card class="bg-primary pa-2">
-            <v-card-title class="bg-ternary">Editar event</v-card-title>
+            
+            <v-card-title class="bg-ternary">Editar esdeveniment</v-card-title>
             <v-form ref="form" v-model="valid" @submit.prevent="submitForm">
             <v-row>
                 <v-col cols="12">
@@ -156,6 +157,18 @@
                         type="number"
                     ></v-text-field>
                 </v-col>
+                <v-col cols="12" md="6">
+                    <v-col cols="12" md="6">
+                            <v-file-input
+                            v-model="selectedFile"
+                            label="Selecciona la nova imatge de perfil"
+                            accept="image/jpeg, image/png"
+                            prepend-icon="mdi-camera"
+                            variant="filled"
+                            :show-size="1024"
+                            ></v-file-input>
+                        </v-col>
+                </v-col>
             </v-row>
         
         <v-card-actions>
@@ -172,7 +185,8 @@
 import { useAuthStore } from '@/stores/auth';
 import { computed, ref, watch } from 'vue';
 import ErrorDialog from '@/components/ErrorDialog.vue';
-import { useDateFormatter } from '@/stores/util';
+import { fileToBase64, useDateFormatter } from '@/stores/util';
+import { locale } from 'core-js';
 
 const auth = useAuthStore()
 
@@ -186,7 +200,7 @@ const props = defineProps({
     modelView: Boolean,
     event: Object
 })
-
+const selectedFile = ref(null)
 const localEvent = ref({
     ...props.event,
     attendants: Array.isArray(props.event.attendants) 
@@ -224,6 +238,8 @@ const filterUsers = computed(() => {
         }))
 })
 
+
+
 watch(selectedTag, (newTag) => {
     if (newTag !== props.event.tagId) {
         localEvent.value.attendants = []
@@ -241,6 +257,14 @@ const showErrorDiag = ref(false)
 const submitForm = async () => {
     try {
         const { valid: isValid } = await form.value.validate()
+        let img = null
+        if(selectedFile.value) {
+            img = await fileToBase64(selectedFile.value)
+        }
+        let send = null
+        if(img) {
+            send = img[1]
+        }
         if (isValid) {
             const eventUpdate = {
                 eventId: props.event.id,
@@ -256,9 +280,9 @@ const submitForm = async () => {
                 endDate:localEvent.value.endDate,
                 active:localEvent.value.active,
                 checkNeeds:localEvent.value.checkNeeds,
-                attendantIds:localEvent.value.attendants.map(a => a.id)
+                attendantIds:localEvent.value.attendants.map(a => a.id),
+                image: send
             }
-            console.info(eventUpdate)
             await auth.updateEvent(eventUpdate)
             emit('closed')
         }
@@ -271,6 +295,15 @@ const submitForm = async () => {
 
 const { formattedDate: formattedStartDate} = useDateFormatter(() => props.event.date)
 const { formattedDate: formattedEndDate} = useDateFormatter(() => props.event.endDate)
-
+const eventImageUrl = computed(() => {
+  if (props.event?.image) {
+    if (props.event.image.startsWith('data:')) {
+      return props.event.image
+    }
+    // Si el backend te devuelve los bytes limpios en Base64, le pones el prefijo tú
+    return `data:image/jpeg;base64,${props.event.image}`
+  }
+  return null 
+})
 
 </script>

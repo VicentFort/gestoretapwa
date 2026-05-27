@@ -2,7 +2,7 @@
     <v-dialog v-model="show" width="500">
         <v-card v-if="user"  class="bg-primary">
             <v-card-title class="text-h5 text-black bg-ternary">{{ user.name }} {{ user.surname }}</v-card-title>
-            <v-card-text class="font-weight-bold">Malnom: {{ showNick }}</v-card-text>
+            <v-card-text class="font-weight-bold">Malnom: {{ showNick() }}</v-card-text>
             <v-card-text class="font-weight-bold">Preferències alimentàries </v-card-text>
             <v-list v-if="user.foodNeeds.length > 0" class="bg-primary">
                 <v-list-item
@@ -27,7 +27,6 @@
         <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn icon="mdi-cancel" class="bg-ternary" variant="text" @click="show = false"/>
-            <v-btn icon="mdi-check" class="bg-ternary" variant="text" @click="editAccessType"/>
         </v-card-actions>
         </v-card>
         <ErrorDialog :message="error" v-model="showErrorDiag" @closed="showErrorDiag=false"/>

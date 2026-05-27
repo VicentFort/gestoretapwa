@@ -3,7 +3,7 @@
     <v-col>
       <v-card>
       <v-sheet height="64" class="bg-ternary sheet-container">
-        <v-text v-if="calendar" class="text-primary text-body-2 text-sm-h6"> Calendari d'events</v-text>
+        <v-text v-if="calendar" class="text-primary text-body-2 text-sm-h6"> Calendari d'esdeveniments</v-text>
         <v-toolbar flat class="bg-ternary" density="comfortable">
 
             <v-spacer></v-spacer>
@@ -49,7 +49,7 @@
         offset-y
         :close-on-content-click="false"
         >
-          <v-card min-width="300px" flat class="bg-primary">
+          <v-card min-width="300px" flat :class="selectedEvent.active ?'event-dialog-open' : 'event-dialog-closed'">
             <v-card-title class="bg-ternary">{{ selectedEvent.title }}</v-card-title>
             <v-card-text>
               <div class="mb-2 text-subtitle-1">
@@ -64,18 +64,14 @@
               <div><strong>Fí:</strong> {{ selectedEvent.endHour }}</div>
             </v-card-text>
             <v-card-actions>
-              <v-btn variant="text" color="black" class="bg-ternary" @click="joinEvent">
-                Assistir
-              </v-btn>
-              <v-btn variant="text" color="black"  class="bg-ternary" @click="selectedOpen = false">
-                Tanca
-              </v-btn>
+              <v-btn variant="text" color="black" class="bg-ternary" @click="joinEvent" icon="mdi-plus"/>
+              <v-btn variant="text" color="black"  class="bg-ternary" @click="selectedOpen = false" icon="mdi-cancel"/>
             </v-card-actions>
           </v-card>
         </v-menu>
         <v-dialog v-model="showAssistSuccess" max-width="400">
             <v-card>
-                <v-card-title class="text-h5 text-white bg-secondary">Assistència guardada al event</v-card-title>
+                <v-card-title class="text-h5 text-white bg-secondary">Assistència guardada al esdeveniment</v-card-title>
                 <v-card-title>{{ selectedEvent.title }}</v-card-title>
                 <v-card-actions>
                     <v-spacer></v-spacer>
@@ -141,7 +137,7 @@ const formattedEvents = computed(() => {
       start: startDateTime,
       end: endDateTime,
       timed: !!(event.startHour && event.endHour),
-      color: event.active ? 'green' : 'secondary',
+      color: event.active ? 'secondary' : 'error',
     }
   })
 })

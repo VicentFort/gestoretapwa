@@ -1,6 +1,14 @@
 <template>
     <v-dialog v-model="show" width="500" >
-    <v-card v-if="event" class="bg-primary">
+    <v-card v-if="event" :class="event.active ?'event-dialog-open' :'event-dialog-closed'">
+      <v-img
+        v-if="eventImageUrl"
+        :src="eventImageUrl"
+        height="100"
+        cover
+        class="align-end text-white"
+      >
+      </v-img>
       <v-card-title class="bg-secondary">
         Títol: {{ event?.title }}
       </v-card-title>
@@ -17,9 +25,9 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="grey-darken-1" class="bg-ternary" variant="text" @click="deleteAssist" :disabled="event.active==false">No assistir</v-btn>
+        <v-btn color="primary" class="bg-ternary" variant="text" @click="deleteAssist" :disabled="event.active==false">No assistir</v-btn>
         <v-spacer></v-spacer>
-        <v-btn color="grey-darken-1" class="bg-ternary" variant="text" @click="show = false">Tanca</v-btn>
+        <v-btn color="primary" class="bg-ternary" variant="text" @click="show = false">Tanca</v-btn>
       </v-card-actions>
       <ErrorDialog :message="error" v-model="showErrorDiag" @closed="showErrorDiag=false"/>
     </v-card>
@@ -58,6 +66,17 @@ const deleteAssist = async () => {
     showErrorDiag.value = true   
   }
 }
+
+const eventImageUrl = computed(() => {
+  if (props.event?.image) {
+    if (props.event.image.startsWith('data:')) {
+      return props.event.image
+    }
+    // Si el backend te devuelve los bytes limpios en Base64, le pones el prefijo tú
+    return `data:image/jpeg;base64,${props.event.image}`
+  }
+  return null 
+})
 
 //Para mostrar las fechas formateadas del evento. Si es en el mismo dia muestra solo la fecha inicial, si es de varios muestra las 2.
 const formattedDate = computed(() => {

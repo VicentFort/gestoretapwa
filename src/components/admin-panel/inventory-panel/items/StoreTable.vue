@@ -5,20 +5,30 @@
             :items="stores"
             :headers="headers"
             hide-default-footer
-            class="bg-ternary elevation-1"
+            class="bg-primary elevation-1"
             style="max-width: 100vw;"
             :loading="isLoading"
             :sort-by="initialSort"
             loading-text="Carregant dades..."
+            no-data-text="Sense magatzems"
             >
-            <template #item.actions="{ item }">
-                <v-btn
-                icon="mdi-file-edit"
-                variant="text"
-                color="ternary"
-                @click="selectedStore=item; showEditStore=true"
-                />
-                
+            <template #item="{item}">
+                <tr class="responsive-tr">
+                    <td class="responsive-td" data-label="Nom">
+                        {{ item.name }}
+                    </td>
+                    <td class="responsive-td" data-label="Ubicació">
+                        {{ item.location }}
+                    </td>
+                    <td class="responsive-td" data-label="Accions">
+                        <v-btn
+                        icon="mdi-file-edit"
+                        variant="text"
+                        color="ternary"
+                        @click="selectedStore=item; showEditStore=true"
+                        />
+                    </td>
+                </tr>
             </template>
             </v-data-table-virtual>
             <v-divider></v-divider>
@@ -95,3 +105,37 @@ const headers = [
     }
 ]
 </script>
+
+<style scoped>
+
+@media (max-width: 600px) {
+  :deep(thead) { display: none; }
+
+  .responsive-tr {
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    border-bottom: 8px solid #eeeeee;
+    height: auto !important;
+    background-color: white;
+    margin-bottom: 8px;
+  }
+
+  .responsive-td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center !important;
+    border: none !important;
+    padding: 8px 0 !important;
+    min-height: 40px;
+  }
+
+  .responsive-td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    color: #757575;
+  }
+}
+</style>

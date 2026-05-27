@@ -34,6 +34,8 @@
             :items="paymentsToShow"
             item-value="id"
             hide-default-footer
+            class="bg-primary"
+            no-data-text="Sense pagaments"
             :sort-by="initialSort"
             :headers="headers"
             :key="paymentsToShow.length"
@@ -49,23 +51,49 @@
             <template #item.date="{ item }">
                 {{ formattedDateTime(item.date) }}
             </template>
+            <template #item="{ item }">
+                <tr class="responsive-tr">
+                    <td class="responsive-td" data-label="Data">
+                    {{ item.date ? formattedDate(item.date) : 'Cargando...' }}
+                    </td>
+                    
+                    <td class="responsive-td" data-label="Tipus">
+                    <div class="justify-end align-center d-flex">
+                        <v-icon 
+                        :icon="getPTypeIcon(item.type)" 
+                        color="success"
+                        />                 
+                    </div>
+                    </td>
+                    <td class="responsive-td" data-label="Accions">
+                        <v-btn
+                            icon="mdi-information"
+                            variant="text"
+                            color="ternary"
+                            @click="showPaymentInfo(item)"
+                        />
+                    </td>
+                    <td class="responsive-td" data-label="Import total">{{ item.displayPrice }}</td>
+                    <td class="responsive-td" data-label="Gestor">{{ item.manager }}</td>
+                </tr>
+            </template>
         </v-data-table-virtual>
         <v-divider/>
         
     </v-card>
-    <v-dialog v-model="showInfoDialog" width="auto">
+    <v-dialog v-model="showInfoDialog" min-width="200px">
         <PaymentDetails :payment="selectedPayment" @closed="showInfoDialog=false; selectedPayment=null"/>
     </v-dialog>
-    <v-dialog v-model="showRegisterPaymentDialog" width="auto">
+    <v-dialog v-model="showRegisterPaymentDialog" min-width="200px" grow>
         <RegisterPaymentDialog @closed="showRegisterPaymentDialog=false; filteredPayments=null"/>
     </v-dialog>
-    <v-dialog v-model="showSellCouponDialog" width="auto">
+    <v-dialog v-model="showSellCouponDialog" min-width="200px" grow>
         <SellCouponDialog @closed="showSellCouponDialog=false; filteredPayments=null""/>
     </v-dialog>
-    <v-dialog v-model="showExchangeCouponDialog" width="auto">
+    <v-dialog v-model="showExchangeCouponDialog" min-width="200px">
         <ExchangeCouponDialog @closed="showExchangeCouponDialog=false; filteredPayments=null""/>
     </v-dialog>
-    <v-dialog v-model="showFilterDialog" width="auto">
+    <v-dialog v-model="showFilterDialog" min-width="200px">
         <FilterPaymentsDialog @update-filter="handleFilter" @closed="showFilterDialog=false" />
     </v-dialog>
 </template>
@@ -79,10 +107,26 @@ import RegisterPaymentDialog from './RegisterPaymentDialog.vue';
 import SellCouponDialog from './SellCouponDialog.vue';
 import ExchangeCouponDialog from './ExchangeCouponDialog.vue';
 import FilterPaymentsDialog from './FilterPaymentsDialog.vue';
+import { paymentTypes } from '@/stores/backendEnums';
+import { useDisplay } from 'vuetify';
 
 const auth = useAuthStore()
 const initialSort = ref([{key:'date', order:'desc'}])
 
+
+
+const formattedDate = (dateString) => {
+  if (!dateString) return ''
+  const date = new Date(dateString)
+  return date.toLocaleString('es-ES') // Simplificado para el ejemplo
+}
+
+const getPTypeIcon = (type) => {
+    if(type == paymentTypes[1].value) return 'mdi-currency-eur'
+    if(type == paymentTypes[2].value) return 'mdi-cash'
+    if(type == paymentTypes[3].value) return 'mdi-credit-card-clock'
+    return 'mdi-credit-card'
+}
 
 const filteredPayments = ref(null)
 const paymentsToShow = computed(() => {
@@ -148,6 +192,18 @@ const headers = [
         }
     },
     {
+        title: "Accions",
+        align: "center",
+        key:"actions",
+        sortable:true,
+        cellProps: {
+            class:"bg-primary"
+        },
+        headerProps: {
+            class:"bg-ternary font-weight-bold"
+        }
+    },
+    {
         title: "Import total",
         align:"center",
         key:"displayPrice",
@@ -171,18 +227,41 @@ const headers = [
             class:"bg-ternary font-weight-bold"
         }
     },
-    {
-        title: "Accions",
-        align: "center",
-        key:"actions",
-        sortable:true,
-        cellProps: {
-            class:"bg-primary"
-        },
-        headerProps: {
-            class:"bg-ternary font-weight-bold"
-        }
-    }
+    
 ]
 
 </script>
+
+<style scoped>
+@media (max-width: 600px) {
+  :deep(thead) { display: none; }
+
+  .responsive-tr {
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    border-bottom: 8px solid #eeeeee;
+    height: auto !important;
+    background-color: white;
+    margin-bottom: 8px;
+  }
+
+  .responsive-td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: none !important;
+    padding: 8px 0 !important;
+    min-height: 40px;
+  }
+
+  .responsive-td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    color: #757575;
+  }
+}
+
+</style>

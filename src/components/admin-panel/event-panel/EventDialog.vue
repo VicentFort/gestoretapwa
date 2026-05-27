@@ -1,6 +1,14 @@
 <template>
     <v-dialog v-model="show" width="500">
     <v-card v-if="event" :class="event.active ?'event-dialog-open' : 'event-dialog-closed','text-black'">
+      <v-img
+        v-if="eventImageUrl"
+        :src="eventImageUrl"
+        height="100"
+        cover
+        class="align-end text-white"
+      >
+        </v-img>
       <v-card-title>
       {{  event.title }}
       </v-card-title>
@@ -25,7 +33,12 @@
       <v-card-text>
       Creat per: {{ event.createdBy }}
       </v-card-text>
-
+      <v-card-text v-if="event.price > 0">
+      Preu: {{ event.price }}€
+      </v-card-text>
+      <v-card-text v-if="event.totalRevenue">
+      Recaudació total: {{ event.totalRevenue }}€
+      </v-card-text>
       <v-divider/>
 
       <v-card-actions>
@@ -164,6 +177,17 @@ const executeDelete = async () => {
   }
 
 }
+
+const eventImageUrl = computed(() => {
+  if (props.event?.image) {
+    if (props.event.image.startsWith('data:')) {
+      return props.event.image
+    }
+    // Si el backend te devuelve los bytes limpios en Base64, le pones el prefijo tú
+    return `data:image/jpeg;base64,${props.event.image}`
+  }
+  return null 
+})
 </script>
 
 <style>

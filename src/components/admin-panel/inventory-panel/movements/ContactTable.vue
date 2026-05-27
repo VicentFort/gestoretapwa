@@ -7,7 +7,8 @@
             hide-default-footer="true" 
             :headers="headers"
             :density="compact"
-            class="bg-ternary elevation-1"
+            class="bg-primary elevation-1"
+            no-data-text="Sense contactes"
             style="max-width: 100vw;"
             >
                 <template #item.actions="{ item }">

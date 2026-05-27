@@ -14,10 +14,21 @@ import { ref, computed } from 'vue';
     const uBirthday = ref(auth.userInfo?.birthday || new Date())
     const uShowBday = ref(auth.userInfo?.showBday || '')
     const uNickname = ref(auth.userInfo?.nickname || '')
+    const selectedFile = ref(null)
+    const previewUrl = ref(null)
+    const isUploading = ref(false)
+
     const sendUpdateForm = async () => {
         try {
             await auth.updateUser(uName.value, uSurname.value, uBirthday.value, uShowBday.value, uNickname.value)
+            if(selectedFile.value !== null) {
+                const formData = new FormData()
+                formData.append('pfpImage', selectedFile.value)
+                await auth.uploadPfpImage(formData)
+            }
+            
             showSuccessDiag.value = true
+            
         } catch(err) {
             error.value = err
             showErrorDiag.value = true
@@ -37,6 +48,14 @@ import { ref, computed } from 'vue';
             year: 'numeric'
         })
     })
+
+    const onFileChange = (file) => {
+        if (!file) {
+            previewUrl.value = null
+            return
+        }
+        previewUrl.value = URL.createObjectURL(file)
+    }
 </script>
 
 <template>
@@ -60,6 +79,27 @@ import { ref, computed } from 'vue';
                         label="Aniversari públic"
                         v-model="uShowBday"
                         />
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col cols="12" md="6">
+                        <v-file-input
+                            v-model="selectedFile"
+                            label="Selecciona la nova imatge de perfil"
+                            accept="image/jpeg, image/png"
+                            prepend-icon="mdi-camera"
+                            variant="filled"
+                            :show-size="1024"
+                            @update:model-value="onFileChange"
+                        ></v-file-input>
+                        <v-expand-transition>
+                            <div v-if="previewUrl" class="my-4 text-center">
+                            <p class="text-caption text-grey">Vista prèvia:</p>
+                            <v-avatar size="120">
+                                <v-img :src="previewUrl" cover></v-img>
+                            </v-avatar>
+                            </div>
+                        </v-expand-transition>
                     </v-col>
                 </v-row>
                 <v-card-options>

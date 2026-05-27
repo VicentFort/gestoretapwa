@@ -1,6 +1,6 @@
 <template>
     <v-dialog v-model="show" width="500" >
-    <v-card v-if="event" class="bg-primary">
+    <v-card v-if="event" :class="event.active ?'event-dialog-open' :'event-dialog-closed'">
       <v-card-title class="bg-ternary">
         Títol: {{ event?.title }}
       </v-card-title>
@@ -18,11 +18,11 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="grey-darken-1" variant="text" class="bg-ternary" @click="assistEvent" :disabled="event.active==false">Assistir</v-btn>
+        <v-btn color="primary" variant="text" class="bg-ternary" @click="assistEvent" :disabled="event.active==false || !event.assist" icon="mdi-plus"/>
         <v-spacer></v-spacer>
-        <v-btn color="grey-darken-1" variant="text"  class="bg-ternary" @click="show = false">Tanca</v-btn>
+        <v-btn color="primary" variant="text"  class="bg-ternary" @click="show = false" icon="mdi-cancel"/>
       </v-card-actions>
-      <ErrorDialog :message="error" v-model="showErrorDiag" @closed="showErrorDiag=false"/>
+      <ErrorDialog :message="error" v-model="showErrorDiag" @closed="closeError"/>
     </v-card>
   </v-dialog>
 </template>

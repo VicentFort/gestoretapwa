@@ -23,11 +23,11 @@ const eventsToShow = computed(() => {
 
     // 2. Filtramos por estado abierto SOLO si el usuario no ha activado el "ojo"
     if (!shouldShowClosed.value) {
-        base = base.filter(e => e.open === true);
+        base = base.filter(e => e.active === true);
     }
 
     // 3. Ordenamos: Abiertos arriba, cerrados abajo
-    return base.sort((a, b) => (b.open ? 1 : 0) - (a.open ? 1 : 0));
+    return base.sort((a, b) => (b.active ? 1 : 0) - (a.active ? 1 : 0));
 });
 
 const attEventsProcesados = computed(() => {
@@ -37,9 +37,8 @@ const attEventsProcesados = computed(() => {
         // Modo inicial: Solo los que están abiertos
         return originalEvents.filter(event => event.active === true);
     } else {
-        // Modo "Mostrar todos": Ordenados (open: true arriba)
         return [...originalEvents].sort((a, b) => {
-            return (b.open === true ? 1 : 0) - (a.open === true ? 1 : 0);
+            return (b.active === true ? 1 : 0) - (a.active === true ? 1 : 0);
         });
     }
 });

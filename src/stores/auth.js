@@ -1,11 +1,13 @@
 import { defineStore } from "pinia";
 import api from "./api";
 import { isManager } from "./checkAccessType";
+import { fileToBase64 } from "./util";
 export const useAuthStore = defineStore("auth", {
   state: () => ({
     token: sessionStorage.getItem("token") || null,
     userEmail: sessionStorage.getItem("userEmail") || null,
     userInfo: JSON.parse(sessionStorage.getItem("userInfo")) || null,
+    userPfp: sessionStorage.getItem("userPfp") || null,
     fallaAdminInfo: JSON.parse(sessionStorage.getItem("fallaAdminInfo") || null),
     movementTypes: [
       'Entrada',
@@ -73,6 +75,7 @@ export const useAuthStore = defineStore("auth", {
       this.userEmail = null;
       this.userInfo = null;
       this.fallaAdminInfo = null;
+      this.userPfp = null
 
       sessionStorage.removeItem("token");
       sessionStorage.removeItem("userEmail");
@@ -161,7 +164,7 @@ export const useAuthStore = defineStore("auth", {
         this.userInfo = responseInfo.data;
 
         sessionStorage.setItem("userInfo", JSON.stringify(this.userInfo));
-
+        await this.getPfpImage()
         if (isManager(this.userInfo?.accessType)) {
           await this.fetchFallaAdminInfo()
         }
@@ -169,6 +172,16 @@ export const useAuthStore = defineStore("auth", {
       } catch (error) {
         console.error(error)
         throw error
+      }
+    },
+    async readNotification(notificationId) {
+      try {
+        await api.post('/user/readNotification', notificationId).catch(handleApiError)
+      } catch(err) {
+        console.error(err)
+        throw err
+      } finally {
+        await this.fetchUserInfo()
       }
     },
 
@@ -240,6 +253,10 @@ export const useAuthStore = defineStore("auth", {
     */
     async addEvent(event, tag, users) {
       try {
+        let img = null
+        if(event.eventImage !== null) {
+          img = event.eventImage[1]
+        }
         const response = await api.post('/event/create', {
           title: event.title,
           publicField: event.publicField,
@@ -257,7 +274,8 @@ export const useAuthStore = defineStore("auth", {
           createdAt: event.createdAt,
           endDate: formatToYYYYMMDD(formatToBackend(event.endDate)),
           checkNeeds: event.checkNeeds,
-          active: true
+          active: true,
+          eventImage: img
         }).catch(handleApiError)
         return response.data;
       } catch (error) {
@@ -286,7 +304,6 @@ export const useAuthStore = defineStore("auth", {
     * Actualiza un evento dadas ciertas variables.
     */
     async updateEvent(eventDto) {
-      console.info(eventDto.attendantIds)
       try {
         const response = await api.put('/event/update', eventDto).catch(handleApiError)
       } catch (error) {
@@ -478,6 +495,29 @@ export const useAuthStore = defineStore("auth", {
         throw (err)
       } finally {
         this.fetchFallaAdminInfo()
+      }
+    },
+    async getPfpImage() {
+      try {
+        const response = await api.get("/user/downloadPfp", {responseType: 'blob'}).catch(handleApiError)
+        const reader = new FileReader()
+        reader.readAsDataURL(response.data)
+        reader.onloadend = () => {
+          const base64String = reader.result
+          this.userPfp = base64String
+          sessionStorage.setItem('userPfp', base64String)
+        }
+        sessionStorage.setItem("userPfp", response.data)
+      } catch(err) {
+        throw err
+      }
+    },
+    async uploadPfpImage(imageData) {
+      try {
+        const response = await api.post('/user/changePfp', imageData, {headers: {'Content-Type': 'multipart/form-data'}}).catch(handleApiError)
+        this.getPfpImage()
+      } catch(err) {
+        throw err
       }
     }
   }

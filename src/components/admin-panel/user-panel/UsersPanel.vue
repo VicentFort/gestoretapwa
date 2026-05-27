@@ -1,18 +1,50 @@
 <template>
     <v-container>
-        <v-card class="bg-primary">
-            <v-card-title class='bg-ternary'>
-                Llistat de membres
-            </v-card-title>
-            
+        <v-card flat title="Llistat de mebres">
+            <v-btn
+            icon="mdi-filter"
+            color="secondary"
+            @click="isFilterDiagOpen=true"
+            class="ms-2"
+            />
+            <v-btn
+            class="ms-2"
+            icon="mdi-filter-remove"
+            color="secondary"
+            @click="users = null"
+            :disabled="!users"
+            />
             <v-data-table-virtual
             :items="orderedUsers"
             :headers="headers"
+            class="bg-primary"
             hide-default-footer
+            no-data-text="No s'han trobat membres"
             >
-                <template #item.actions="{item}">
-                    <v-btn icon="mdi-plus" variant="text" color="ternary" @click="openUserDetails(item)"/>
-                    <v-btn icon="mdi-police-badge" variant="text" color="ternary" @click="editUserCharge(item)" :disabled="!isSuperUser(auth.userInfo.accessType)"/>
+                <template #item="{item}">
+                    <tr class="responsive-tr">
+                        <td class="responsive-td" data-label="Nom">
+                            {{ item.name }} {{ item.surname }}
+                        </td>
+                        <td class="responsive-td" data-label="Accions">
+                            <div class="justify-center align-center d-flex">
+                                <v-btn icon="mdi-plus" variant="text" color="ternary" @click="openUserDetails(item)"/>
+                                <v-btn icon="mdi-police-badge" variant="text" color="ternary" @click="editUserCharge(item)" :disabled="!isSuperUser(auth.userInfo.accessType)"/>
+                            </div>
+                        </td>
+                        <td class="responsive-td" data-label="Faller des de">
+                            {{ item.joinDate }}
+                        </td>
+                        <td class="responsive-td" data-label="Aniversari">
+                            {{ item.birthday }}
+                        </td>
+                        <td class="responsive-td" data-label="Càrrec">
+                            <v-icon
+                            :icon="getChargeIcon(item.accessType)"
+                            color="ternary"
+                            />
+                        </td>
+                    </tr>
                 </template>
             </v-data-table-virtual>
             <v-divider></v-divider>
@@ -21,13 +53,16 @@
             <v-dialog v-model="isDetailsOpen" width="auto">
                 <UserDetails v-model="isDetailsOpen" :user="selectedUser"/>
             </v-dialog>
+            <v-dialog v-model="isFilterDiagOpen" min-width="200px">
+                <FilterUsersDialog @update-filter="handleFilter" @closed="isFilterDiagOpen=false"/>
+            </v-dialog>
             <v-dialog v-model="isEditChargeOpen" min-width="200px">
                 <v-container>
                     <v-card class="bg-primary">
                         <v-card-title class="bg-ternary"> Vas a editar el càrrec de {{ selectedUser.fullName }} </v-card-title>
                         <v-select v-if="auth.userInfo.accessType=='Superusuari'"
                         :items="accessTypes"
-                        v-model="selectedUser.accessType"
+                        v-model="localUser.accessType"
                         label="Modificar el permís d'accés">
                         </v-select>
                         <v-card-actions>
@@ -48,11 +83,11 @@ import { ref, computed } from 'vue';
 import UserDetails from './UserDetails.vue';
 import { isSuperUser } from '@/stores/checkAccessType';
 import { accessTypes } from '@/stores/backendEnums';
-
+import FilterUsersDialog from './FilterUsersDialog.vue';
 const auth = useAuthStore()
 const users = ref(null)
 
-const search = ref('')
+
 const orderedUsers = computed(() => {
     let base = users.value 
         ? [...users.value] 
@@ -66,13 +101,28 @@ const orderedUsers = computed(() => {
         return nameA.localeCompare(nameB);
     });
 })
+const getChargeIcon = (aType) => {
+    if(aType == accessTypes[0]) return 'mdi-account'
+    if(aType == accessTypes[1]) return 'mdi-account-child'
+    if(aType == accessTypes[2]) return 'mdi-account-star'
+    if(aType == accessTypes[3]) return 'mdi-account-key'
+    return 'mdi-account-cancel'
+}
+
+const handleFilter = (list) => {
+    users.value = list
+    isFilterDiagOpen.value = false
+}
+
 const selectedUser = ref(null)
+const localUser = ref({...selectedUser.value})
 const isDetailsOpen = ref(false)
 const isEditChargeOpen = ref(false)
+const isFilterDiagOpen = ref(false)
 const editAccessType = async () => {
     try {
         const accessRequest = {
-            accessType: selectedUser.value.accessType,
+            accessType: localUser.value.accessType,
             userId: selectedUser.value.id
         }
         await auth.editAccessType(accessRequest)
@@ -159,3 +209,36 @@ const headers = [
     },
 ]
 </script>
+<style scoped>
+
+@media (max-width: 600px) {
+  :deep(thead) { display: none; }
+
+  .responsive-tr {
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    border-bottom: 8px solid #eeeeee;
+    height: auto !important;
+    background-color: white;
+    margin-bottom: 8px;
+  }
+
+  .responsive-td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center !important;
+    border: none !important;
+    padding: 8px 0 !important;
+    min-height: 40px;
+  }
+
+  .responsive-td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    color: #757575;
+  }
+}
+</style>

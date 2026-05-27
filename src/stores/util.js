@@ -36,3 +36,20 @@ export function useDateFormatter(dateRef) {
 
   return { formattedDate }
 }
+
+export const fileToBase64 = (file) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    
+    reader.onload = () => {
+      // reader.result es algo como: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQ..."
+      // Al hacer split(',') separamos el encabezado de los datos reales.
+      const base64Clean = reader.result.split(',') // <-- Esto obtiene solo los bytes
+      
+      resolve(base64Clean)
+    }
+    
+    reader.onerror = (error) => reject(error)
+  })
+}

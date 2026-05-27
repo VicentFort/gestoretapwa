@@ -6,9 +6,9 @@
         <v-card-title>
             {{ auth.fallaAdminInfo?.name }}
         </v-card-title>
-        <v-sheet elevation="2" rounder="lg" :class="mobile ?'pa-1' : 'pa-5'">
-            <v-tabs v-model="tab" color="primary" class="bg-ternary">
-                <v-tab value="one">Events</v-tab>
+        <v-sheet elevation="2" rounded="lg" :class="xs ?'pa-1' : 'pa-2'">
+            <v-tabs v-model="tab" color="primary" class="bg-ternary" grow>
+                <v-tab value="one">Esdeveniments</v-tab>
                 <v-tab value="two">Membres</v-tab>
                 <v-tab value="three">Inventari</v-tab>
                 <v-tab value="four">Moviments</v-tab>
@@ -17,14 +17,14 @@
         </v-sheet>
         <v-divider></v-divider>
 
-        <v-window v-model="tab">
+        <v-window v-model="tab" :touch="false">
             <v-tabs-window-item value="one">
-                <v-row rows="12" md="6">
-                    <v-col>
+                <v-row>
+                    <v-col cols="12" md="6">
                         <EventPanel/>
                     </v-col>
-                    <v-col>
-                       <TagPanel/>
+                    <v-col cols="12" md="6">
+                        <TagPanel/>
                     </v-col>
                 </v-row>
             </v-tabs-window-item>
@@ -68,6 +68,6 @@ const auth = useAuthStore()
 if(!auth.fallaAdminInfo) {
     auth.fetchFallaAdminInfo()
 }
-const mobile = useDisplay
+const {xs} = useDisplay()
 const tab = ref('one')
 </script>

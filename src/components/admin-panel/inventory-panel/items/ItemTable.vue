@@ -1,40 +1,59 @@
 <template>
     <v-container>
         <v-card title="Items">
+            <v-btn
+            icon="mdi-filter"
+            color="secondary"
+            @click="isFilterDiagOpen=true"
+            class="ms-2"
+            />
+            <v-btn
+            class="ms-2"
+            icon="mdi-filter-remove"
+            color="secondary"
+            @click="filteredItems = null"
+            :disabled="!filteredItems"
+            />
             <v-data-table-virtual 
             :items="inventoryItems" 
             item-value="id"
             hide-default-footer="true"
             :sort-by="initialSort" 
             :headers="headers"
-            :density="compact"
-            class="bg-ternary elevation-1"
+            class="bg-primary elevation-1"
             style="max-width: 100vw;"
+            no-data-text="Sense item de inventari"
             >
-                <template #item.actions="{ item }">
-                    <v-btn
-                    icon="mdi-file-edit"
-                    variant="text"
-                    color="ternary"
-                    @click="selectedItem=item; showEditItem=true"
-                    >
-                    </v-btn>
-                </template>
-                <template #item.storeName="{ item }">
-                    <div v-for="(stock, index) in item.stocks" :key="index" class="bg-primary">
-                        {{ stock.storeName }}
-                    </div>
-                </template>
-                <template #item.amount="{ item }">
-                    <div v-for="(stock, index) in item.stocks" :key="index" class="py-1 bg-primary">
-                        <v-chip size="small">{{ stock.amount }}</v-chip>
-                    </div>
-                </template>
-                <template #item.category="{item}">
-                    <v-icon
-                    color="ternary"
-                    :icon="returnCategoryIcon(item.category)"
-                    />
+                <template #item="{ item }">
+                    <tr class="responsive-tr">
+                        <td class="responsive-td" data-label="Nom">{{ item.name }}</td>
+                        <td class="responsive-td" data-label="Accions">
+                            <div class="justify-center align-center d-flex">
+                                <v-btn
+                                icon="mdi-file-edit"
+                                variant="text"
+                                color="ternary"
+                                @click="selectedItem=item; showEditItem=true;"
+                                />
+                                <v-btn
+                                icon="mdi-warehouse"
+                                color="ternary"
+                                variant="text"
+                                @click="selectedItemForStocks=item; showItemStocks = true;"
+                                />
+                            </div>
+                        </td>
+                        <td class="responsive-td" data-label="Categoria">
+                            <div class="justify-center align-center d-flex">
+                                <v-icon 
+                                :icon="returnCategoryIcon(item.category)" 
+                                color="ternary"
+                                />                 
+                            </div>
+                        </td>
+                        
+                        <td class="responsive-td" data-label="Descripció">{{ item.description }}</td>
+                    </tr>
                 </template>
             </v-data-table-virtual>
             <v-divider></v-divider>
@@ -49,6 +68,12 @@
             </v-card-actions>
         </v-card>
     </v-container>
+    <v-dialog v-model="showItemStocks" min-width="200px">
+        <ItemStocksDialog :inv-item="selectedItemForStocks" @closed="showItemStocks=false"/>
+    </v-dialog>
+    <v-dialog v-model="isFilterDiagOpen" min-width="200px">
+        <ItemFilterDialog @update-filter="handleFilter" @closed="isFilterDiagOpen=false"/>
+    </v-dialog>
     <ErrorDialog @closed="showErr=false" :message="error" v-model="showErr"/>
 </template>
 
@@ -58,21 +83,34 @@ import { ref, computed } from 'vue';
 import CreateItemDialog from '@/components/admin-panel/inventory-panel/items/CreateItemDialog.vue';
 import EditItemDialog from '@/components/admin-panel/inventory-panel/items/EditItemDialog.vue';
 import ErrorDialog from '@/components/ErrorDialog.vue';
+import ItemStocksDialog from './ItemStocksDialog.vue';
+import ItemFilterDialog from './ItemFilterDialog.vue';
 
 
 const auth = useAuthStore()
 
 const showCreateItem = ref(false)
 const showEditItem = ref(false)
+const showItemStocks = ref(false)
 
 const selectedItem = ref(null)
+const selectedItemForStocks = ref(null)
 
 const showErr = ref(false)
 const error = ref('')
 
-const inventoryItems = computed(() => auth.fallaAdminInfo?.inventoryItems.filter(item=> {
-    return item.enabled==true
-}) || []) 
+const filteredItems = ref(null)
+const isFilterDiagOpen = ref(false)
+const inventoryItems = computed(() =>  {
+    const base = !filteredItems.value ? [...(auth.fallaAdminInfo?.inventoryItems) || []] : filteredItems.value
+    return base.filter(item=> {return item.enabled==true}) || []
+    }
+) 
+
+const handleFilter = (list) => {
+    filteredItems.value = list
+    isFilterDiagOpen.value = false
+}
 
 
 const returnCategoryIcon = (category) => {
@@ -98,7 +136,7 @@ const headers = [
         sortable:true,
         value: "name",
          cellProps: {
-            class:"bg-primary",
+            class:"bg-primary justify-center",
             width:"10%"
         },
         headerProps: {
@@ -118,34 +156,9 @@ const headers = [
             class: "bg-ternary font-weight-bold"
         }
     },
-     {
-        title:"Stocks",
-        align:"center",
-        sortable:false,
-        children: [
-        { 
-            title: "Magatzem", 
-            sortable:false,
-            key: "storeName", 
-            align: "center",
-            cellProps: { class: "bg-primary", width:"10%" }, 
-            headerProps: { class: "bg-quaternary font-weight-bold" }
-        },
-        { 
-            title: "Quantitat", 
-            key: "amount", 
-            align: "center",
-            sortable:false,
-            cellProps: { class: "bg-primary", width:"10%" }, 
-            headerProps: { class: "bg-quaternary font-weight-bold" }
-        },
-        ],
-        headerProps: {
-            class:"bg-ternary font-weight-bold"
-        }
-     },
+    
         {  
-        title: "Categoría", 
+        title: "Categoria", 
         sortable:true,
         align:"center",
         value: "category",
@@ -174,4 +187,37 @@ const headers = [
 
 ]
 </script>
+
+<style scoped>
+@media (max-width: 600px) {
+  :deep(thead) { display: none; }
+
+  .responsive-tr {
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    border-bottom: 8px solid #eeeeee;
+    height: auto !important;
+    background-color: white;
+    margin-bottom: 8px;
+  }
+
+  .responsive-td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center !important;
+    border: none !important;
+    padding: 8px 0 !important;
+    min-height: 40px;
+  }
+
+  .responsive-td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    color: #757575;
+  }
+}
+</style>
 

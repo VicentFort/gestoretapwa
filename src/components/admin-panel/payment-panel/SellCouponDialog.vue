@@ -37,6 +37,7 @@ import ErrorDialog from '@/components/ErrorDialog.vue';
 import { useAuthStore } from '@/stores/auth';
 import { paymentTypes } from '@/stores/backendEnums';
 import { computed, ref } from 'vue';
+import { useDisplay } from 'vuetify/lib/composables/display';
 
 
 const auth = useAuthStore()
@@ -47,6 +48,7 @@ const form = ref(null)
 
 const emit = defineEmits(['closed'])
 
+const {xs} = useDisplay()
 
 const error = ref('')
 const showErrorDiag = ref(false)

@@ -6,7 +6,7 @@ import EventList from './EventList.vue';
 import EventCallendar from './EventCallendar.vue';
 import FallaInfo from './FallaInfo.vue';
 const auth = useAuthStore()
-const mobile = useDisplay()
+const {xs} = useDisplay()
 const tabFalla = ref('one')
 </script>
 
@@ -16,13 +16,13 @@ const tabFalla = ref('one')
             <v-row rows="12" md="6">
                 <v-container v-if="auth.userInfo.fallaInfo">
                     <v-card-title>{{ auth.userInfo.fallaInfo.name }}</v-card-title>
-                    <v-sheet elevation="2" rounder="lg" :class="mobile ?'pa-1' : 'pa-5'">
-                        <v-tabs v-model="tabFalla" color="primary" :direction="mobile ? 'horizontal' : 'vertical'">
+                    <v-sheet elevation="2" rounded="lg" :class="xs ?'pa-1' : 'pa-2'">
+                        <v-tabs v-model="tabFalla" color="primary" grow>
                             <v-tab value="one" :class="mobile ?'pa-1': 'pa-5'">Events</v-tab>
                             <v-tab value="two">Informació</v-tab>
                         </v-tabs>
                     </v-sheet>
-                    <v-window v-model="tabFalla" class="mt-4">
+                    <v-window v-model="tabFalla" class="mt-4" :touch="false">
                         <v-window-item value="one" >
                             <v-row rows="12" md="6">
                                 <v-col>

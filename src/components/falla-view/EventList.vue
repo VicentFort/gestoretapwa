@@ -2,7 +2,7 @@
     <v-row class="fill-height">
         <v-col>
             <v-card class="bg-primary">
-                <v-card-title class="bg-ternary">Llistat d'events</v-card-title>
+                <v-card-title class="bg-ternary">Llistat d'esdeveniments</v-card-title>
                 <v-list class="bg-primary event-list">
                     <v-list-item
                         v-for="event in eventsToShow" 
