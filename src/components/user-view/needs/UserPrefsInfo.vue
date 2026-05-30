@@ -1,8 +1,8 @@
 <template>
     <v-container v-if="auth.userInfo?.eventTagPrefs && auth.userInfo?.fallaInfo">
-        <v-card class="bg-primary">
-            <v-card-title class="bg-ternary">Disposicions d'encarregat:</v-card-title>
-            <v-list class="bg-primary text-primary">
+        <v-card>
+            <v-card-title class="text-h6">Disposicions d'encarregat:</v-card-title>
+            <v-list class="">
                 <v-list-item
                     v-for="pref in auth.userInfo?.eventTagPrefs"
                     class="text-black"
@@ -12,7 +12,7 @@
                 />
             </v-list>
             <v-card-actions class="justify-center">
-                <v-btn @click="openCreateForm" class="bg-ternary" :disabled="!fallaTags">Afegir disposició</v-btn>
+                <v-btn @click="openCreateForm" class="" :disabled="!fallaTags" icon="mdi-plus"/>
             </v-card-actions>
             <v-dialog v-model="isCreateOpen">
                 <AddPrefDialog v-model="isCreateOpen" />

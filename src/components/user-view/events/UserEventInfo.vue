@@ -4,7 +4,7 @@ import UserEventDialog from './UserEventDialog.vue';
 import { ref, computed} from 'vue';
 import UserEventAttDialog from './UserEventAttDialog.vue';
 import UserEventFilter from './UserEventFilter.vue';
-
+import { monthLabel, dayLabel } from '@/stores/util.js';
 
 const auth = useAuthStore()
 const isDialogOpen = ref(false);
@@ -35,7 +35,7 @@ const attEventsProcesados = computed(() => {
 
     if (!showAllAttEvents.value) {
         // Modo inicial: Solo los que están abiertos
-        return originalEvents.filter(event => event.active === true);
+        return originalEvents.filter(event => event.active === true && !event.assist);
     } else {
         return [...originalEvents].sort((a, b) => {
             return (b.active === true ? 1 : 0) - (a.active === true ? 1 : 0);
@@ -72,22 +72,30 @@ const showEvent = (event) => {
         <v-row rows="12" md="6">
         <v-col>
                 <v-container>
-                    <v-card class="bg-primary">
-                        <v-card-title class="bg-ternary">Assistències</v-card-title>
-                        <v-list class="bg-primary event-list">
-                            <v-list-item
-                                v-for="event in eventsToShow" 
-                                :key="event.id"
-                                :title="event.title"
-                                @click="showEvent(event)"
-                                :class="event.active == true ?'item-open' : 'item-closed'"
-                            >
+                    <v-card>
+                        <v-card-title class="text-h6">Assistències</v-card-title>
+                        <v-list class="pa*-0">
+                            <v-list-item v-for="event in eventsToShow" :key="event.id" @click="showEvent(event)">
+                            <template #prepend>
+                                <div class="date-chip">
+                                <span class="date-chip__month">{{ monthLabel(event.date) }}</span>
+                                <span class="date-chip__day">{{ dayLabel(event.date) }}</span>
+                                </div>
+                            </template>
+                            <v-list-item-title class="font-weight-medium">{{ event.title }}</v-list-item-title>
+                            <v-list-item-subtitle>{{ event.startHour }} · {{ event.tagName }}</v-list-item-subtitle>
+                            <template #append>
+                                <v-chip size="small" :color="event.active ? 'success' : 'error'" variant="tonal">
+                                {{ event.active ? 'Obert' : 'Tancat' }}
+                                </v-chip>
+                            </template>
                             </v-list-item>
-                        </v-list>
+
+                    </v-list>
                     </v-card>
                 </v-container>
                 <v-container>
-                    <v-card class="bg-primary">
+                    <v-card>
                         <UserEventFilter 
                             @update-filter="handleFilter" 
                             @toggle-closed="handleToggleClosed"
@@ -99,23 +107,30 @@ const showEvent = (event) => {
                 <v-container>
                     <v-divider></v-divider>
                     <v-card>
-                        <v-card-title class="bg-ternary">Events amb càrrec</v-card-title>
-                        <v-list class="bg-primary event-list">
-                            <v-list-item
-                                v-for="event in attEventsProcesados" 
-                                :key="event.id"
-                                :title="event.title"
-                                @click="showAttEvent(event)"
-                                :class="event.active ?'item-open' : 'item-closed'"
-                            >
+                        <v-card-title class="text-h6">Esdeveniments amb càrrec</v-card-title>
+                         <v-list class="pa*-0">
+                            <v-list-item v-for="event in attEventsProcesados" :key="event.id" @click="showAttEvent(event)">
+                            <template #prepend>
+                                <div class="date-chip">
+                                <span class="date-chip__month">{{ monthLabel(event.date) }}</span>
+                                <span class="date-chip__day">{{ dayLabel(event.date) }}</span>
+                                </div>
+                            </template>
+                            <v-list-item-title class="font-weight-medium">{{ event.title }}</v-list-item-title>
+                            <v-list-item-subtitle>{{ event.startHour }} · {{ event.tagName }}</v-list-item-subtitle>
+                            <template #append>
+                                <v-chip size="small" :color="event.active ? 'success' : 'error'" variant="tonal">
+                                {{ event.active ? 'Obert' : 'Tancat' }}
+                                </v-chip>
+                            </template>
                             </v-list-item>
-                        </v-list>
+
+                    </v-list>
                         <v-card-actions>
                             <v-btn 
                             :icon="showAllAttEvents ? 'mdi-filter' : 'mdi-clock-outline'" 
-                            :class="showAllAttEvents ?'bg-secondary' : 'bg-ternary'"
                             @click="toggleAttEvents"
-                            ></v-btn>
+                            />
                             <span class="ml-2 text-caption">
                             {{ showAllAttEvents ? 'Mostrant tots' : 'Només oberts' }}
                             </span>
@@ -136,9 +151,5 @@ const showEvent = (event) => {
 </template>
 
 <style>
-.v-card{
-    border-color: rgb(var(--v-theme-ternary));
-    border-width: 10px;
-    border-style: solid;
-}
+
 </style>

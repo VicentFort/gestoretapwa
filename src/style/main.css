@@ -1,77 +1,168 @@
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter:wght@400;500;600;700&display=swap");
 
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Inter", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  color: rgb(var(--v-theme-secondary));
+}
+.text-display {
+  font-family: "Instrument Serif", Georgia, serif;
+  letter-spacing: -0.01em;
+}
+/* Date-chip reutilizable (sustituye al icono reloj) */
+.date-chip {
+  display: inline-flex; flex-direction: column; align-items: center; justify-content: center;
+  width: 48px; height: 48px; border: 1px solid rgba(45,62,80,.12); border-radius: 10px;
+  background: #fff;
+}
+.date-chip__month { font: 700 10px/1 "Inter"; text-transform: uppercase; color: #6b7280; }
+.date-chip__day   { font: 600 18px/1 "Instrument Serif"; color: #E35D33; }
+
+
+
+
+#app .v-text-field {
+  background-color: rgb(var(--v-theme-background));
+  color: rgb(var(--v-theme-secondary))
+}
+
+#app .v-card {
+    color: 'secondary';
+    background-color: 'background' 
 }
 
 
 
-.v-application .v-list-item {
-    width: 300px;
-    justify-content: center;
-    justify-items: center;
-    justify-self: center;
-    background-color: rgb(var(--v-theme-ternary)) !important;
-    margin-top: 2%;
-    border: 5px solid rgb(var(--v-theme-ternary)) !important;
-    border-radius: 10px !important;
-    overflow: hidden; /* Vital para que el fondo no se salga de las esquinas */
-    
+#app .v-form {
+  background-color: rgb(var(--v-theme-background));
+  color: rgb(var(--v-theme-secondary));
 }
 
-#app .event-list .v-list-item.item-open {
+
+
+
+#app .v-container .v-card {
+  background-color: rgb(var(--v-theme-background));
+  border-color: rgb(var(--v-theme-secondary));
+  border-style: solid !important;
+}
+
+#app .v-form .v-switch {
+  background-color: rgb(var(--v-theme-background)) !important; 
+  color: rgb(var(--v-theme-secondary)) !important
+}
+
+#app .v-file-input {
+  background-color: rgb(var(--v-theme-background)) !important;
+  color: rgb(var(--v-theme-secondary)) !important
+}
+
+#app .v-form .v-card {
+  background-color: rgb(var(--v-theme-background)) !important;
+  color: rgb(var(--v-theme-secondary)) !important
+}
+
+
+#app .v-card .v-card-title {
   background-color: rgb(var(--v-theme-secondary)) !important;
-  border-color: rgb(var(--v-theme-secondary)) !important;
-  color: white !important;
-  
+  color: rgb(var(--v-theme-surface)) !important
+}
+
+#app .v-tabs {
+    background-color: rgb(var(--v-theme-primary));
+}
+
+
+#app .v-tabs .v-tab {
+  background-color: rgb(var(--v-theme-primary)) !important;
+  color: rgb(var(--v-theme-surface)) !important
 }
 
 
 
-#app .event-list .v-list-item.item-closed {
+#app .v-select {
+  background-color: rgb(var(--v-theme-background));
+  color: rgb(var(--v-theme-secondary))
+}
+
+#app .v-sheet {
+  background-color: rgb(var(--v-theme-primary));
+}
+
+#app .v-row .v-sheet {
+    background-color: rgb(var(--v-theme-secondary)) !important;
+    color: rgb(var(--v-theme-background)) !important;
+
+}
+
+
+
+#app .v-btn {
+    color: rgb(var(--v-theme-secondary))
+}
+.v-card-actions .v-btn {
+  color:rgb(var(--v-theme-secondary)) !important
+}
+
+#app .v-form .v-field {
+  background-color: rgb(var(--v-theme-background)) !important;
+  color: rgb(var(--v-theme-secondary)) !important;
+}
+
+#app .log-out {
+ color: rgb(var(--v-theme-background)) !important;
+  background-color: rgb(var(--v-theme-secondary)) !important;
+}
+
+#app .notification-button {
+  color: rgb(var(--v-theme-transaction)) !important;
+}
+
+#app .v-list-item-title {
+  align-self: center !important;
+  justify-self: center !important;
+  color: rgb(var(--v-theme-secondary)) !important;
+
+}
+
+#app .v-list-item {
+  border-color:  rgb(var(--v-theme-secondary)) !important;
+  border-style: soild !important;
+  border-radius: 2px !important;
+}
+
+.v-card  .v-card-title {
+  border-color:  rgb(var(--v-theme-secondary)) !important;
+    background-color: rgb(var(--v-theme-secondary)) !important;
+    color: rgb(var(--v-theme-background)) !important;
+    font-family: "Inter", system-ui,  !important;
+  -webkit-font-smoothing: antialiased !important;
+}
+
+#app .v-card  .v-card-item {
+    border-color:  rgb(var(--v-theme-secondary)) !important;
+    background-color: rgb(var(--v-theme-secondary)) !important;
+
+
+}
+#app .v-app-bar .v-btn {
+      color: rgb(var(--v-theme-background)) !important;
+}
+
+.event-closed-dialog {
+  border-color: rgb(var(--v-theme-error)) !important;
+  color: rgb(var(--v-theme-secondary)) !important
+}
+
+.event-closed-dialog .v-card-title{
   background-color: rgb(var(--v-theme-error)) !important;
+}
+
+
+.error-dialog {
   border-color: rgb(var(--v-theme-error)) !important;
-  color: white !important;
+  color: rgb(var(--v-theme-secondary)) !important
 }
-
-/* Si quieres que el texto se lea bien (blanco o negro según fondo) */
-#app .event-list .v-list-item {
-    color: rgb(var(--v-theme-primary)) !important; 
-}
-
-.event-dialog-open {
-  border-color: rgb(var(--v-theme-secondary)) !important;
-  background-color: rgb(var(--v-theme-primary)) !important;
-  color: black !important
-}
-
-.event-dialog-closed {
-  border-color: rgb(var(--v-theme-error)) !important;
-  background-color: rgb(var(--v-theme-primary)) !important;
-    color: black !important
-
-}
-
-.empty-border {
-  border-color: white !important;
-
-}
-
-
-.event-dialog-open .v-card-title {
-  background-color: rgb(var(--v-theme-secondary));
-}
-.event-dialog-closed .v-card-title {
-  background-color: rgb(var(--v-theme-error));
-}
-.confirm-delete-dialog {
-  border-color: rgb(var(--v-theme-error)) !important;
-}
-@media (max-width: 600px) {
-      .v-application .v-list-item {
-        width: 150px !important; /* Se encoge en pantallas grandes */
-        margin-top: 2% !important;
-      }
+ .error-dialog .v-card-title{
+  background-color: rgb(var(--v-theme-error)) !important;
 }

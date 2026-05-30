@@ -1,7 +1,9 @@
 <template>
-    <v-card class="bg-primary">
-        <v-card-title class="bg-ternary">Filtrar events: </v-card-title>
+    
+        
         <v-form ref="form" v-model="valid" @submit.prevent="submitForm">
+            <v-card>
+            <v-card-title class="text-h6">Filtrar events: </v-card-title>
             <v-row>
                 <v-col cols="12" class="justify-center d-flex">
                     <v-text-field
@@ -25,13 +27,13 @@
                             <v-card-actions>
                                 <v-btn 
                                     :icon="showClosed ? 'mdi-eye' : 'mdi-eye-off'" 
-                                    :class="showClosed ? 'bg-secondary' : 'bg-grey-lighten-1'"
+
                                     @click="toggleClosed"
                                     title="Mostrar tancats"
-                                ></v-btn>
+                                />
                                 <v-spacer></v-spacer>
 
-                                <v-btn variant="text" class="bg-ternary" @click="dateMenu = false">Tancar</v-btn>
+                                <v-btn variant="text" class="" @click="dateMenu = false" icon="mdi-cancel"/>
                             </v-card-actions>
                         </v-card>
                     </v-dialog>
@@ -57,7 +59,7 @@
                             ></v-date-picker>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
-                                <v-btn variant="text" class="bg-ternary" @click="endDateMenu = false">Tancar</v-btn>
+                                <v-btn variant="text" class="" @click="endDateMenu = false" icon="mdi-cancel"/>
                             </v-card-actions>
                         </v-card>
                     </v-dialog>
@@ -69,6 +71,7 @@
                         item-title="name"
                         item-value="name"
                         persistent-hint
+                        label="Etiquetes"
                         variant="outlined"
                     ></v-select>
                 </v-col>
@@ -82,19 +85,19 @@
                 </v-col>
             </v-row>
             <v-card-actions>
-                <v-btn class="text-white bg-ternary" type="text" @click="emptyFields">Buidar</v-btn>
-                <v-btn class="text-white bg-ternary" type="submit" :disabled="!valid">Filtrar</v-btn>
+                <v-btn class="text-white" type="text" @click="emptyFields" icon="mdi-delete"/>
+                <v-btn class="text-white" type="submit" :disabled="!valid" icon="mdi-calendar-search"/>
                 <v-btn 
                 :icon="showClosed ? 'mdi-filter' : 'mdi-clock-outline'" 
-                :class="showClosed ? 'bg-secondary' : 'bg-ternary'"
                 @click="toggleClosed"
-                ></v-btn>
+                />
                 <span class="ml-2 text-caption">
                 {{ showClosed ? 'Mostrant tots' : 'Només oberts' }}
                 </span>
             </v-card-actions>
+              </v-card>
         </v-form>
-    </v-card>
+  
 </template>
 
 <script setup>

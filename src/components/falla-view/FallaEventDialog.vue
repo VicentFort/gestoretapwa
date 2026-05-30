@@ -1,6 +1,6 @@
 <template>
     <v-dialog v-model="show" width="500">
-    <v-card v-if="event"  :class="event.active ?'event-dialog-open' : 'event-dialog-closed'" >
+    <v-card v-if="event"  :class="event.active ?'event-dialog-open' : 'event-closed-dialog'" >
       <v-img
         v-if="eventImageUrl"
         :src="eventImageUrl"
@@ -10,7 +10,7 @@
       >
       </v-img>
       
-      <v-card-title class="bg-secondary">
+      <v-card-title class="bg-secondary" :class="event.active ?'' : 'event-closed-dialog'">
         Títol: {{ event?.title }}
       </v-card-title>
 
@@ -23,9 +23,9 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="primary" class="bg-ternary" variant="text" :disabled="!event.active" @click="joinEvent">Assistir</v-btn>
+        <v-btn variant="text" :disabled="!event.active" @click="joinEvent" icon="mdi-calendar-plus"/>
         <v-spacer></v-spacer>
-        <v-btn color="primary" class="bg-ternary"  variant="text" @click="show = false">Tanca</v-btn>
+        <v-btn variant="text" @click="show = false" icon="mdi-cancel"/>
       </v-card-actions>
       <v-dialog v-model="showAssistSuccess" max-width="400">
             <v-card>
@@ -33,9 +33,7 @@
                 <v-card-title>{{ event.title }}</v-card-title>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="error" variant="text" @click="showAssistSuccess=false">
-                        Tanca
-                    </v-btn>
+                    <v-btn color="error" variant="text" @click="showAssistSuccess=false" icon="mdi-cancel"/>
                 </v-card-actions>
             </v-card>
         </v-dialog>

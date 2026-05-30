@@ -1,10 +1,10 @@
 <template>
     <v-container>
-        <v-card class="bg-primary">
-            <v-card-text>
+        <v-card>
+            <v-card-text class="bg-secondary">
             Quantitat total de {{ invItem.name }}:  {{ totalItemAmount }}
             </v-card-text>
-            <v-list class="bg-primary">
+            <v-list class="">
                 <v-list-item v-for="stock in itemStocks"
                 :key="stock.stockId"
                 :title="stock.storeName"
@@ -12,9 +12,10 @@
                 />
             </v-list>
             <v-card-actions>
+                <v-spacer/>
                 <v-btn
-                @click="emits('closed')"
-                color="ternary"
+                @click="emit('closed')"
+                
                 icon="mdi-cancel"
                 />
             </v-card-actions>
@@ -32,7 +33,7 @@ const props = defineProps({
     modelView: Boolean,
     invItem: Object
 })
-const emits = defineEmits(['closed'])
+const emit = defineEmits(['closed'])
 
 const totalItemAmount = computed(() => {
     let count = 0;

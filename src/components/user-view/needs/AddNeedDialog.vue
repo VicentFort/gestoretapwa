@@ -1,7 +1,7 @@
 <template>
     <v-dialog v-model="show" width="500">
-        <v-card class="bg-primary">
-            <v-card-title class="bg-ternary">Afig la necessitat</v-card-title>
+        <v-card>
+            <v-card-title class="text-h6">Afig la necessitat</v-card-title>
             <v-select
                 v-model="desc"
                 :items="descriptions"
@@ -21,8 +21,8 @@
             </v-select>
             <v-divider></v-divider>
             <v-card-actions>
-                <v-btn  variant="text" @click="saveNeed"  class="bg-ternary" :disabled="desc==''">Guarda</v-btn>
-                <v-btn  variant="text" @click="show=false" class="bg-ternary">Tanca</v-btn>
+                <v-btn  variant="text" @click="saveNeed"  class="" :disabled="desc==''" icon="mdi-content-save"/>
+                <v-btn  variant="text" @click="show=false" class="" icon="mdi-cancel"/>
             </v-card-actions>
 
         </v-card>

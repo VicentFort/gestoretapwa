@@ -28,7 +28,7 @@ const unreadNotifications = computed(() => {
         </v-img>
         <v-spacer/>
         <v-row v-if="xs" class="justify-center">
-            <v-btn @click="showNotificationsTable=true" icon="mdi-bell" :color="unreadNotifications > 0 ? 'error' : 'ternary' " class="align-self-center ms-2"/>
+            <v-btn @click="showNotificationsTable=true" icon="mdi-bell" :color="unreadNotifications > 0 ? 'error' : 'success' " class="align-self-center ms-2"/>
             <v-btn @click="showCouponTable=true" icon="mdi-cash" color="success" class="align-self-center ms-2"/>
         </v-row>
         <v-dialog v-model="showCouponTable" width="auto">

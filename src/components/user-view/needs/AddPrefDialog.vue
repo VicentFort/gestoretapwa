@@ -1,7 +1,7 @@
 <template>
      <v-dialog v-model="show" width="500">
-        <v-card class="bg-primary">
-            <v-card-title class="bg-ternary">Afig disposició</v-card-title>
+        <v-card>
+            <v-card-title class="text-h6">Afig disposició</v-card-title>
             <v-select
                 v-model="tag.id"
                 :items="fallaTags"
@@ -24,8 +24,8 @@
             </v-select>
             <v-divider></v-divider>
             <v-card-actions>
-                <v-btn  variant="text" @click="submitForm" class="bg-ternary" :disabled="tag.id==null" >Guarda</v-btn>
-                <v-btn  variant="text" @click="show=false" class="bg-ternary">Tanca</v-btn>
+                <v-btn  variant="text" @click="submitForm" class="" :disabled="tag.id==null" icon="mdi-content-save"/>
+                <v-btn  variant="text" @click="show=false" class="" icon="mdi-cancel"/>
             </v-card-actions>
 
         </v-card>

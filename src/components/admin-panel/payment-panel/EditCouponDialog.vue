@@ -1,14 +1,16 @@
 <template>
     <v-container>
         <v-form @submit.prevent="submitForm" ref="form" v-model="valid">
-            <v-card class="bg-primary">
-                <v-card-title class="text-primary font-weight-bold bg-ternary">
+            <v-card>
+                <v-card-title class="font-weight-bold">
                     Editant el tiquet: {{ localCoupon.name }}
                     Id: {{ localCoupon.id }}
                 </v-card-title>
                 <v-col>
                     <v-row rows="12" md="6">
-                        <v-text-field v-model="localCoupon.name" label="Nom del tiquet"/>
+                        <v-text-field 
+                        v-model="localCoupon.name" 
+                        label="Nom del tiquet"/>
                     </v-row>
                 </v-col>
                 <v-col>
@@ -22,8 +24,9 @@
                     </v-row>
                 </v-col>
                 <v-card-actions>
-                    <v-btn @click="emits('closed')" icon="mdi-cancel" color="ternary" variant="text"/>
-                    <v-btn @click="submitForm" icon="mdi-plus" color="ternary" variant="text"/>
+                    <v-spacer/>
+                    <v-btn @click="submitForm" icon="mdi-content-save-edit"  variant="text"/>
+                    <v-btn @click="emit('closed')" icon="mdi-cancel"  variant="text"/>
                 </v-card-actions>
             </v-card>
         </v-form>
@@ -34,17 +37,22 @@
 <script setup>
 import { useAuthStore } from '@/stores/auth';
 import ErrorDialog from '@/components/ErrorDialog.vue';
-import { ref } from 'vue';
+import { ref,computed } from 'vue';
+import { itemCategories } from '@/stores/backendEnums';
 
 
 const auth = useAuthStore()
-const items = ref(auth.fallaAdminInfo?.inventoryItems)
+const items = computed(() => {
+    return auth.fallaAdminInfo.inventoryItems.filter(item => {
+        return item.category === itemCategories[1] || item.category === itemCategories[4]
+    })
+})
 const props = defineProps({
     modelView : Boolean,
     coupon: Object
 })
 const localCoupon = ref({...props.coupon})
-const emits = defineEmits(['closed'])
+const emit = defineEmits(['closed'])
 
 const valid = ref(false)
 const form = ref(null)
@@ -53,10 +61,12 @@ const showErrorDiag = ref(false)
 
 function itemProps (item) {
     return {
-        title: item.name,
+        title:item.name,
+        subtitle: item.category,
         value: item.id
     }
 }
+
 
 const submitForm = async () => {
      try {
@@ -70,7 +80,7 @@ const submitForm = async () => {
         }
         console.log(couponReq)
         await auth.editCoupon(couponReq)
-        emits('closed')
+        emit('closed')
      } catch(err) {
         error.value=err
         showErrorDiag.value = true

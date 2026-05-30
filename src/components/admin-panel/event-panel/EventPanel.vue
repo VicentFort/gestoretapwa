@@ -3,6 +3,7 @@ import { ref, computed } from 'vue';
 import EventDialog from './EventDialog.vue';
 import { useAuthStore } from '@/stores/auth';
 import EventCreateDialog from './EventCreateDialog.vue';
+import { dayLabel, monthLabel } from '@/stores/util.js';
 const auth = useAuthStore()
 const isDetailsOpen = ref(false);
 const isCreateOpen = ref(false)
@@ -33,20 +34,27 @@ const openCreateEvent = () => {
 
 <template>
     <v-container>
-        <v-card class="bg-primary event-list" >
-            <v-card-title class='bg-ternary'>
+        <v-card >
+            <v-card-title class='text-h6'>
                 Llistat d'esdeveniments
             </v-card-title>
-            <v-list class="bg-primary">
-                <v-list-item 
-                    v-for="event in orderedEvents" 
-                    :key="event.id"
-                    :title="event.title"
-                    link 
-                    @click="openDetails(event)"
-                    :class="event.active == true ?'item-open' : 'item-closed'"
-                >
-            </v-list-item>
+            <v-list class="">
+                <v-list-item v-for="event in orderedEvents" :key="event.id" @click="openDetails(event)">
+                    <template #prepend>
+                        <div class="date-chip">
+                        <span class="date-chip__month">{{ monthLabel(event.date) }}</span>
+                        <span class="date-chip__day">{{ dayLabel(event.date) }}</span>
+                        </div>
+                    </template>
+                    <v-list-item-title class="font-weight-medium">{{ event.title }}</v-list-item-title>
+                    <v-list-item-subtitle>{{ event.startHour }} · {{ event.tagName }}</v-list-item-subtitle>
+                    <template #append>
+                        <v-chip size="small" :color="event.active ? 'success' : 'error'" variant="tonal">
+                        {{ event.active ? 'Obert' : 'Tancat' }}
+                        </v-chip>
+                    </template>
+                    </v-list-item>
+
             </v-list>
 
             <v-divider></v-divider>
@@ -62,15 +70,15 @@ const openCreateEvent = () => {
                     <v-col cols="12" md="6">
                         <v-btn 
                         :icon="showClosed ? 'mdi-filter' : 'mdi-clock-outline'" 
-                        :class="'bg-ternary'"
+                        :class="''"
                         @click="toggleClosedEvents"
-                        ></v-btn>
+                        />
                         <span class="ml-2 text-caption">
                         {{ showClosed ? 'Mostrant tots' : 'Només oberts' }}
                         </span>
                     </v-col>
                     <v-col cols="12" md="6">
-                        <v-btn icon="mdi-plus" class="justify-center bg-ternary" type="text" @click='openCreateEvent'/> 
+                        <v-btn icon="mdi-calendar-plus" class="justify-center" type="text" @click='openCreateEvent'/> 
 
                     </v-col>
                 </v-row>
@@ -81,9 +89,5 @@ const openCreateEvent = () => {
 </template>
 
 <style>
-.v-card{
-    border-color: rgb(var(--v-theme-ternary));
-    border-width: 10px;
-    border-style: solid;
-}
+
 </style>

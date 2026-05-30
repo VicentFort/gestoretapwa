@@ -1,6 +1,6 @@
 <template>
     <v-dialog v-model="show" width="500" >
-    <v-card v-if="event" :class="event.active ?'event-dialog-open' :'event-dialog-closed'">
+    <v-card v-if="event" :class="event.active ?'' : 'event-closed-dialog'">
       <v-img
         v-if="eventImageUrl"
         :src="eventImageUrl"
@@ -9,9 +9,11 @@
         class="align-end text-white"
       >
       </v-img>
-      <v-card-title class="bg-secondary">
+      <v-card-title class="bg-secondary" :class="event.active ?'' : 'event-closed-dialog'">
         Títol: {{ event?.title }}
       </v-card-title>
+
+      <v-card-text v-if="isUserManagerOfEvent" class="pa-4">Ets al càrrec d'aquest esdeveniment</v-card-text>
 
       <v-card-text class="pa-4">Descripció: {{ event?.description }}</v-card-text>
 
@@ -23,13 +25,14 @@
 
       <v-divider></v-divider>
 
+
+
       <v-card-actions>
+        <v-btn   variant="text" @click="deleteAssist" :disabled="event.active==false || !event.assist" icon="mdi-calendar-remove"/>
         <v-spacer></v-spacer>
-        <v-btn color="primary" class="bg-ternary" variant="text" @click="deleteAssist" :disabled="event.active==false">No assistir</v-btn>
-        <v-spacer></v-spacer>
-        <v-btn color="primary" class="bg-ternary" variant="text" @click="show = false">Tanca</v-btn>
+        <v-btn  class="" variant="text" @click="show = false" icon="mdi-cancel"/>
       </v-card-actions>
-      <ErrorDialog :message="error" v-model="showErrorDiag" @closed="showErrorDiag=false"/>
+      <ErrorDialog :message="error" v-model="showErrorDiag" @closed="closeError"/>
     </v-card>
   </v-dialog>
 </template>
@@ -57,9 +60,17 @@ const closeError = () => {
   showErrorDiag.value = false
 }
 
+const isUserManagerOfEvent = computed(() => {
+  const attEvents = auth.userInfo.attEvents || []
+  if(!attEvents || attEvents.length <= 0) return false
+  return attEvents.some(event => event.id === props.event.id)
+})
+
+
+
 const deleteAssist = async () => {
   try {
-    await auth.deleteAssist(props.event.id)
+    await auth.deleteAssist(props.event.assist.assistId)
     show.value = false
   } catch (err) {
     error.value=err 

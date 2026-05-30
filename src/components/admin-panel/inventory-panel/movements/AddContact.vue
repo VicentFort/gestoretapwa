@@ -1,8 +1,8 @@
 <template>
     <v-containner>
         <v-form @subimt.prevent="submitForm" ref="form" v-model="valud">
-            <v-card class="bg-primary">
-                <v-card-title class="bg-ternary text-primary font-weight-bold">
+            <v-card>
+                <v-card-title class="text-h6 font-weight-bold">
                     Registrar contacte
                 </v-card-title>
                 <v-row>
@@ -30,8 +30,10 @@
                     </v-col>
                 </v-row>
                 <v-card-actions>
-                    <v-btn class="bg-ternary" icon="mdi-cancel" @click="emit('closed')"></v-btn>
-                    <v-btn variant="submit" class="bg-ternary" icon="mdi-plus" @click="submitForm" :disabled="name=='' || phone=='' || email=='' || dniCif==''"></v-btn>
+                    <v-spacer/>
+                    <v-btn variant="submit" class="" icon="mdi-content-save" @click="submitForm" :disabled="name=='' || phone=='' || email=='' || dniCif==''"/>
+                    <v-btn class="" icon="mdi-cancel" @click="emit('closed')"/>
+
                 </v-card-actions>
             </v-card>
         </v-form>

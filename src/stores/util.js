@@ -53,3 +53,29 @@ export const fileToBase64 = (file) => {
     reader.onerror = (error) => reject(error)
   })
 }
+
+const MONTHS_CA = [
+  'Gen', 'Feb', 'Mar', 'Abr', 'Mai', 'Jun',
+  'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Des'
+];
+
+/**
+ * Abreviatura del mes en català (3 lletres)
+ * @param {Date|string} date - Data raw (ISO, Date object...)
+ * @returns {string}
+ */
+export function monthLabel(date) {
+  const d = date instanceof Date ? date : new Date(date);
+  return MONTHS_CA[d.getMonth()] ?? '--';
+}
+
+/**
+ * Dia del mes amb dos xifres (01, 12, 19...)
+ * @param {Date|string} date
+ * @returns {string}
+ */
+export function dayLabel(date) {
+  const d = date instanceof Date ? date : new Date(date);
+  const day = d.getDate();
+  return day.toString().padStart(2, '0');
+}

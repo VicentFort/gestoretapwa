@@ -1,8 +1,8 @@
 <template>
     <v-container>
         <v-form @submit.prevent="submitForm" ref="form" v-model="valid">
-            <v-card class="bg-primary">
-                <v-card-title class="text-primary font-weight-bold bg-ternary">
+            <v-card>
+                <v-card-title class="font-weight-bold">
                     Editant el item: {{ item.name }}
                 </v-card-title>
                 <v-col>
@@ -31,8 +31,9 @@
                     </v-row>
                 </v-col>
                 <v-card-actions>
-                    <v-btn class="align-left bg-ternary" icon="mdi-cancel" @click="emit('closed')"></v-btn>
-                    <v-btn class="bg-ternary" type="submit" icon="mdi-plus"></v-btn>
+                    <v-spacer/>
+                    <v-btn type="submit" icon="mdi-content-save-edit"/>
+                    <v-btn icon="mdi-cancel" @click="emit('closed')"/>
                 </v-card-actions>
             </v-card>
         </v-form>
@@ -96,7 +97,6 @@ const submitForm = async () => {
     padding: 12px;
     border-bottom: 8px solid #eeeeee;
     height: auto !important;
-    background-color: white;
     margin-bottom: 8px;
   }
 

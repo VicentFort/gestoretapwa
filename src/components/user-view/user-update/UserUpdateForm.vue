@@ -61,12 +61,12 @@ import { ref, computed } from 'vue';
 <template>
     <v-container>
         <v-form @submit.prevent="sendUpdateForm" class="w-100">
-            <v-card class="bg-primary">
-                <v-card-title class="bg-ternary">Info de: {{ auth.userInfo.name }}</v-card-title>
+            <v-card>
+                <v-card-title class="text-h6">Info de: {{ auth.userInfo.name }}</v-card-title>
                 <v-row>
                     <v-col cols="12" md="6">
                         <v-text-field
-                        class="text-black"
+                        class="pa-2"
                         label="Nickname / Malnom"
                         :rules="[v => !!v || 'Nickname necessari']"
                         v-model="uNickname"
@@ -75,7 +75,7 @@ import { ref, computed } from 'vue';
                     </v-col>
                     <v-col cols="12" md="6" >
                         <v-switch
-                        class="text-black"
+                        class="pa-2"
                         label="Aniversari públic"
                         v-model="uShowBday"
                         />
@@ -88,6 +88,7 @@ import { ref, computed } from 'vue';
                             label="Selecciona la nova imatge de perfil"
                             accept="image/jpeg, image/png"
                             prepend-icon="mdi-camera"
+                            class="pa-2"
                             variant="filled"
                             :show-size="1024"
                             @update:model-value="onFileChange"
@@ -103,7 +104,8 @@ import { ref, computed } from 'vue';
                     </v-col>
                 </v-row>
                 <v-card-options>
-                    <v-btn text="Guarda canvis" class="bg-ternary" type="submit" :disabled="uSurname=='' || uName=='' "></v-btn>
+                    <v-spacer/>
+                    <v-btn icon="mdi-account-edit" class="" type="submit" :disabled="uSurname=='' || uName=='' "/>
                 </v-card-options>
                 
                
@@ -113,7 +115,7 @@ import { ref, computed } from 'vue';
                     <v-card-title class="bg-secondary">Usuari actualitzat</v-card-title>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn variant="text" @click="showSuccessDiag=false">Tanca</v-btn>
+                        <v-btn variant="text" @click="showSuccessDiag=false" icon="mdi-cancel"/>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
@@ -123,10 +125,6 @@ import { ref, computed } from 'vue';
 </template>
 
 <style>
-.v-card{
-    border-color: rgb(var(--v-theme-ternary));
-    border-width: 10px;
-    border-style: solid;
-}
+
 
 </style>

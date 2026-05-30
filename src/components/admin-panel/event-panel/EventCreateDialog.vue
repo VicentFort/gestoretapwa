@@ -1,7 +1,7 @@
 <template>
-                <v-card class="bg-primary pa-2">
-                    <v-card-title class="bg-ternary">Afegir event</v-card-title>
-                    <v-form ref="form" v-model="valid" @submit.prevent="submitForm">
+    <v-form ref="form" v-model="valid" @submit.prevent="submitForm">
+        <v-card>
+            <v-card-title class="text-h6">Afegir esdeveniment</v-card-title>
                     <v-row>
                         <v-col cols="12">
                             <v-text-field
@@ -44,7 +44,7 @@
                                         @update:model-value="dateMenu = false"
                                     ></v-date-picker>
                                     <v-card-actions>
-                                        <v-btn variant="text" class="bg-ternary" @click="dateMenu = false">Tancar</v-btn>
+                                        <v-btn variant="text" class="" @click="dateMenu = false" icon="mdi-cancel"/>
                                     </v-card-actions>
                                 </v-card>
                             </v-dialog>
@@ -72,7 +72,7 @@
                                         @update:model-value="endDateMenu = false"
                                     ></v-date-picker>
                                     <v-card-actions>
-                                        <v-btn variant="text" @click="endDateMenu = false">Tancar</v-btn>
+                                        <v-btn variant="text" @click="endDateMenu = false" icon="mdi-cancel"/>
                                     </v-card-actions>
                                 </v-card>
                             </v-dialog>
@@ -96,7 +96,7 @@
                             <v-switch
                                 v-model="event.publicField"
                                 label="Event públic"
-                                color="secondary"
+                                
                             ></v-switch>
                         </v-col>
                         
@@ -104,7 +104,7 @@
                             <v-switch
                             v-model="event.checkNeeds"
                             label="Event amb necessitats alimentàries"
-                            color="secondary"
+                            
                             >
                             </v-switch>
                         </v-col>
@@ -134,17 +134,17 @@
                                 multiple
                                 chips
                                 variant="outlined"
-                                class="mt-4 bg-primary"
+                                class="mt-4"
                                 >
                                 <template v-slot:chip="{ props, item }">
                                     <v-chip
-                                    class="bg-primary"
+                                    class=""
                                     v-bind="props"
                                     :text="item.name" 
                                     ></v-chip>
                                 </template>
                                 <template v-slot:no-data>
-                                    <v-list-item class="bg-primary">
+                                    <v-list-item class="">
                                     <v-list-item-title>
                                         No hi ha usuaris disponibles per a l'etiqueta "{{ selectedTag?.name }}"
                                     </v-list-item-title>
@@ -181,12 +181,11 @@
                     </v-row>
                 
                 <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn class="text-white bg-ternary" type="submit" :disabled="!valid">Crear</v-btn>
-                <v-btn class="text-white bg-ternary" variant="text" @click="emit('closed')">Tanca</v-btn>
-            </v-card-actions>
-            </v-form>
+                    <v-btn type="submit" :disabled="!valid" icon="mdi-calendar-plus"/>
+                    <v-btn @click="emit('closed')" icon="mdi-cancel"/>
+                </v-card-actions>
             </v-card>
+            </v-form>
             
 </template>
 

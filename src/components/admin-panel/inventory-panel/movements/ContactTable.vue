@@ -1,23 +1,24 @@
 <template>
     <v-container>
-        <v-card flat title="Contactes">
+        <v-card flat title="Contactes" class="text-h6">
+            <v-card-actions>
+                <v-btn variant="text" icon="mdi-account-plus" @click="showAddContact=true"/>
+            </v-card-actions>
            <v-data-table-virtual 
             :items="contacts" 
             item-value="id"
             hide-default-footer="true" 
             :headers="headers"
             :density="compact"
-            class="bg-primary elevation-1"
+            class="elevation-1"
             no-data-text="Sense contactes"
             style="max-width: 100vw;"
             >
                 <template #item.actions="{ item }">
-                    <v-btn icon="mdi-file-edit" color="ternary" variant="text" @click="showUpdateContact=true; selectedContact=item"></v-btn>
+                    <v-btn icon="mdi-file-edit"  variant="text" @click="showUpdateContact=true; selectedContact=item"/>
                 </template>
             </v-data-table-virtual>
-            <v-card-actions>
-                <v-btn variant="text" icon="mdi-plus"@click="showAddContact=true"></v-btn>
-            </v-card-actions>
+            
         </v-card>
     </v-container>
     <v-dialog v-model="showAddContact">
@@ -50,10 +51,10 @@ const headers = [
         align:"center",
         sortable:true,
         cellProps: {
-            class:"bg-primary"
+            class:""
         }, 
         headerProps: {
-            class:"bg-ternary font-weight-bold text-primary"
+            class:" font-weight-bold "
         }
     },
     {
@@ -62,10 +63,10 @@ const headers = [
         align:"center",
         sortable:true,
         cellProps: {
-            class:"bg-primary"
+            class:""
         }, 
         headerProps: {
-            class:"bg-ternary font-weight-bold text-primary"
+            class:" font-weight-bold "
         }
     },
     {
@@ -74,10 +75,10 @@ const headers = [
         align:"center",
         sortable:true,
         cellProps: {
-            class:"bg-primary"
+            class:""
         }, 
         headerProps: {
-            class:"bg-ternary font-weight-bold text-primary"
+            class:" font-weight-bold "
         }
     },
     {
@@ -86,10 +87,10 @@ const headers = [
         align:"center",
         sortable:true,
         cellProps: {
-            class:"bg-primary"
+            class:""
         }, 
         headerProps: {
-            class:"bg-ternary font-weight-bold text-primary"
+            class:" font-weight-bold "
         }
     }, 
     {
@@ -97,10 +98,10 @@ const headers = [
         key:"actions",
         align:"center",
         cellProps: {
-            class:"bg-primary"
+            class:""
         }, 
         headerProps: {
-            class:"bg-ternary font-weight-bold text-primary"
+            class:" font-weight-bold "
         }
     }
 

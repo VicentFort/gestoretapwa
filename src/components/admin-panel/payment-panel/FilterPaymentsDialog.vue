@@ -1,8 +1,8 @@
 <template>
     <v-container>
         <v-form @submit.prevent="submitForm" ref="form" v-model="valid">
-            <v-card class="bg-primary">
-                <v-card-title class="text-primary font-weight-bold bg-ternary">
+            <v-card>
+                <v-card-title class="font-weight-bold">
                 Filtrar esdeveniments
                 </v-card-title>
                 <v-col>
@@ -29,7 +29,7 @@
                                     @update:model-value="dateMenu = false"
                                 ></v-date-picker>
                                 <v-card-actions>
-                                    <v-btn variant="text" class="bg-ternary" @click="dateMenu = false">Tancar</v-btn>
+                                    <v-btn variant="text" class="" @click="dateMenu = false" icon="mdi-cancel"/>
                                 </v-card-actions>
                             </v-card>
                         </v-dialog>
@@ -42,8 +42,9 @@
                     </v-row>
                 </v-col>
                 <v-card-actions>
-                    <v-btn @click="submitForm" icon="mdi-filter" class="bg-secondary" variant="text"/>
-                    <v-btn @click="emits('closed')" icon="mdi-cancel" class="bg-ternary" variant="text"/>
+                    <v-spacer/>
+                    <v-btn @click="submitForm" icon="mdi-filter" variant="text"/>
+                    <v-btn @click="emit('closed')" icon="mdi-cancel"  variant="text"/>
                 </v-card-actions>
             </v-card>
         </v-form>
@@ -71,7 +72,7 @@ const type = ref(null)
 const date = ref(null)
 const manager = ref(null)
 const price = ref(0)
-const emits = defineEmits(['update-filter', 'closed'])
+const emit = defineEmits(['update-filter', 'closed'])
 const {formattedDate: formattedDate} = useDateFormatter(() => date.value)
 const dateMenu = ref(false)
 
@@ -95,7 +96,7 @@ const submitForm = async () => {
             return meetsType && meetsDate && meetsPrice && meetsManager
 
         })
-        emits('update-filter', filtered)
+        emit('update-filter', filtered)
      } catch(err) {
         error.value = err
         showErrorDiag.value = true

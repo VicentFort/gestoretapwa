@@ -1,7 +1,7 @@
 <template>
         <v-form @submit.prevent="submitForm" ref="form" v-model="valid" width="auto">
-            <v-card class="bg-primary pa-5">
-                <v-card-title class="bg-ternary">Crear usuari</v-card-title>
+            <v-card>
+                <v-card-title  class="text-h6">Crear usuari</v-card-title>
                 <v-row>
                     <v-col cols="12" md="6">
                         <v-text-field
@@ -67,7 +67,7 @@
                         <v-dialog v-model="menu" max-width="340">
                             <v-card>
                             <v-date-picker
-                                class="text-black"
+                                class="text-black text-h6"
                                 v-model="birthday"
                                 picker-date="initialPickerDate"
                                 title="Selecciona la data"
@@ -76,7 +76,7 @@
                             ></v-date-picker>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
-                                <v-btn variant="text" class="bg-ternary" @click="menu = false">Tancar</v-btn>
+                                <v-btn variant="text" class="" @click="menu = false" icon="mdi-cancel"/>
                             </v-card-actions>
                             </v-card>
                         </v-dialog>
@@ -88,7 +88,7 @@
                     </v-col>
                 </v-row>
                 <v-card-actions>
-                    <v-btn type="submit" class="bg-ternary" :disabled="name=='' || surname=='' || email == '' || password=='' || !email.includes('@') || email.endsWith('@')">Crear usuari</v-btn>
+                    <v-btn type="submit" class="" :disabled="name=='' || surname=='' || email == '' || password=='' || !email.includes('@') || email.endsWith('@')" icon="mdi-account-plus"/>
                 </v-card-actions>
 
             </v-card>

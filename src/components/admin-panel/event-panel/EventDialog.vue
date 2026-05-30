@@ -1,6 +1,6 @@
 <template>
     <v-dialog v-model="show" width="500">
-    <v-card v-if="event" :class="event.active ?'event-dialog-open' : 'event-dialog-closed','text-black'">
+    <v-card v-if="event" :class="event.active ?'' : 'event-closed-dialog','text-black'">
       <v-img
         v-if="eventImageUrl"
         :src="eventImageUrl"
@@ -9,7 +9,7 @@
         class="align-end text-white"
       >
         </v-img>
-      <v-card-title>
+      <v-card-title :class="event.active ?'' : 'event-closed-dialog'">
       {{  event.title }}
       </v-card-title>
       <v-card-text class="pa-4">
@@ -43,10 +43,10 @@
 
       <v-card-actions>
         <v-btn class="bg-transaction" variant="text" @click="payEvent" icon="mdi-currency-eur" :disabled="event.active==false || event.price <= 0 || checkUnpaidAssists"/>
-        <v-btn class="bg-ternary" variant="text" @click="showEditDialog = true" icon="mdi-arrow-u-down-left" :disabled="event.active==false"/>
+        <v-btn class="" variant="text" @click="showEditDialog = true" icon="mdi-arrow-u-down-left" :disabled="event.active==false"/>
         <v-btn class="bg-error" variant="text" @click="confirmDelete" icon="mdi-delete" :disabled="event.active==false"/>
         <v-spacer></v-spacer>
-        <v-btn class="bg-ternary" variant="text" @click="show = false" icon="mdi-cancel"/>
+        <v-btn class="" variant="text" @click="show = false" icon="mdi-cancel"/>
       </v-card-actions>
       <v-dialog v-model="showPayDialog" widht="auto">
         <EventPaymentDialog :event="event" @closed="showPayDialog=false; emit('update:modelValue')"/>
@@ -55,7 +55,7 @@
         <EventEditDialog @closed="showEditDialog=false; show=false" :event="selectedEvent"/>
       </v-dialog>
       <v-dialog v-model="showDeleteDialog" max-width="400">
-        <v-card class="bg-primary confirm-delete-dialog" >
+        <v-card>
           <v-card-title class="text-h5 text-white bg-error">¿Vols eliminar el event?</v-card-title>
           
           <v-card-text class="pa-4">
@@ -73,9 +73,7 @@
               variant="text"
               @click="showDeleteDialog = false"
               :disabled="loading"
-            >
-              Cancelar
-            </v-btn>
+             icon="mdi-cancel"/>
             <v-btn
               color="error"
               variant="elevated"

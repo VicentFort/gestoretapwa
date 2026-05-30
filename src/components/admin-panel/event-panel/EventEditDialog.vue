@@ -1,8 +1,8 @@
 <template>
-        <v-card class="bg-primary pa-2">
             
-            <v-card-title class="bg-ternary">Editar esdeveniment</v-card-title>
             <v-form ref="form" v-model="valid" @submit.prevent="submitForm">
+            <v-card>
+                <v-card-title class="text-h6">Editar esdeveniment</v-card-title>
             <v-row>
                 <v-col cols="12">
                     <v-text-field
@@ -31,7 +31,7 @@
                     variant="outlined"
                     @click="dateMenu = true"
                     ></v-text-field>
-                    <v-dialog v-model="dateMenu" max-width="340 bg-ternary">
+                    <v-dialog v-model="dateMenu" max-width="340 ">
                         <v-card>
                             <v-date-picker
                                 class="text-black"
@@ -43,7 +43,7 @@
                             ></v-date-picker>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
-                                <v-btn variant="text" class="bg-ternary" @click="dateMenu = false">Tancar</v-btn>
+                                <v-btn variant="text"  @click="dateMenu = false" icon="mdi-cancel"/>
                             </v-card-actions>
                         </v-card>
                     </v-dialog>
@@ -71,7 +71,7 @@
                             ></v-date-picker>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
-                                <v-btn variant="text" @click="endDateMenu = false">Tancar</v-btn>
+                                <v-btn variant="text" @click="endDateMenu = false" icon="mdi-cancel"/>
                             </v-card-actions>
                         </v-card>
                     </v-dialog>
@@ -93,7 +93,7 @@
                     <v-switch
                         v-model="localEvent.publicField"
                         label="Event públic"
-                        color="secondary"
+                        
                     ></v-switch>
                 </v-col>
                 
@@ -101,7 +101,7 @@
                     <v-switch
                     v-model="localEvent.checkNeeds"
                     label="Event amb necessitats alimentàries"
-                    color="secondary"
+                    
                     >
                     </v-switch>
                 </v-col>
@@ -133,7 +133,7 @@
                         >
                         
                         <template v-slot:no-data>
-                            <v-list-item class="bg-primary">
+                            <v-list-item class="">
                             <v-list-item-title>
                                 No hi ha usuaris disponibles per a l'etiqueta "{{ selectedTag?.name }}"
                             </v-list-item-title>
@@ -172,12 +172,12 @@
             </v-row>
         
         <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn class="text-white bg-secondary" type="submit" :disabled="!valid">Guarda</v-btn>
-        <v-btn class="text-white bg-secondary" variant="text" @click="emit('closed')">Tanca</v-btn>
-    </v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn  type="submit" :disabled="!valid" icon="mdi-calendar-edit"/>
+            <v-btn  variant="text" @click="emit('closed')" icon="mdi-cancel"/>
+        </v-card-actions>
+        </v-card>
     </v-form>
-    </v-card>
     <ErrorDialog :message="error" v-model="showErrorDiag" @closed="showErrorDiag=false"/>
 </template>
 

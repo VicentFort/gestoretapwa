@@ -1,7 +1,7 @@
 <template>
     <v-container>
-        <v-card class="bg-primary">
-            <v-card-title class="bg-ternary">Pagaments</v-card-title>
+        <v-card>
+            <v-card-title class="text-h6">Pagaments</v-card-title>
             <PaymentTable/>
         </v-card>
     </v-container>

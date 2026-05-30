@@ -1,5 +1,11 @@
 <template>
     <v-card>
+        <v-card-title class="text-h6">
+            Tiquets
+        </v-card-title>
+        <v-btn
+        @click="createCoupon"
+        icon="mdi-plus"/>
         <v-data-table-virtual
         :items="auth.fallaAdminInfo.coupons"
         item-value="id"
@@ -11,12 +17,15 @@
             {{ item.price }} €
         </template> 
         <template #item.actions="{item}">
-            <v-btn icon="mdi-arrow-u-down-left" color="ternary" @click="showEditCouponDialog(item)"/>
+            <v-btn icon="mdi-content-save-edit" variant="text" @click="showEditCouponDialog(item)"/>
         </template>
         </v-data-table-virtual>
     </v-card>
     <v-dialog v-model="showEditCoupon">
         <EditCouponDialog @closed="closeEditCouponDialog" :coupon="selectedCoupon"/>
+    </v-dialog>
+    <v-dialog v-model="showCreateCoupon">
+        <CreateCouponDialog @closed="showCreateCoupon=false"/>
     </v-dialog>
 </template>
 
@@ -24,10 +33,12 @@
 import { useAuthStore } from '@/stores/auth';
 import { ref } from 'vue';
 import EditCouponDialog from './EditCouponDialog.vue';
+import CreateCouponDialog from './CreateCouponDialog.vue';
 
 
 const auth = useAuthStore()
 
+const showCreateCoupon = ref(false)
 const showEditCoupon = ref(false)
 const selectedCoupon = ref(null)
 
@@ -44,6 +55,10 @@ const closeEditCouponDialog = () => {
     
 }
 
+const createCoupon = async () => {
+    showCreateCoupon.value = true
+}
+
 const headers = [
     {
         title: 'Nom',
@@ -51,10 +66,10 @@ const headers = [
         align: 'center',
         sortable: true,
         cellProps: {
-            class:"bg-primary"
+            class:""
         },
         headerProps: {
-            class:"bg-ternary font-weight-bold"
+            class:" font-weight-bold"
         }
     },
     {
@@ -63,10 +78,10 @@ const headers = [
         align: 'center',
         sortable: true,
         cellProps: {
-            class:"bg-primary"
+            class:""
         },
         headerProps: {
-            class:"bg-ternary font-weight-bold"
+            class:" font-weight-bold"
         }
     },
     {
@@ -75,10 +90,10 @@ const headers = [
         align: 'center',
         sortable: true,
         cellProps: {
-            class:"bg-primary"
+            class:""
         },
         headerProps: {
-            class:"bg-ternary font-weight-bold"
+            class:" font-weight-bold"
         }
     },
     {
@@ -87,10 +102,10 @@ const headers = [
         align: 'center',
         sortable: true,
         cellProps: {
-            class:"bg-primary"
+            class:""
         },
         headerProps: {
-            class:"bg-ternary font-weight-bold"
+            class:" font-weight-bold"
         }
     },
     {
@@ -99,10 +114,10 @@ const headers = [
         align: 'center',
         sortable: true,
         cellProps: {
-            class:"bg-primary"
+            class:""
         },
         headerProps: {
-            class:"bg-ternary font-weight-bold"
+            class:" font-weight-bold"
         }
     },
     

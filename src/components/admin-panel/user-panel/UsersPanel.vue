@@ -1,23 +1,23 @@
 <template>
     <v-container>
-        <v-card flat title="Llistat de mebres">
+        <v-card flat class="text-h6" title="Llistat de mebres">
             <v-btn
             icon="mdi-filter"
-            color="secondary"
+            
             @click="isFilterDiagOpen=true"
             class="ms-2"
             />
             <v-btn
             class="ms-2"
             icon="mdi-filter-remove"
-            color="secondary"
+            
             @click="users = null"
             :disabled="!users"
             />
             <v-data-table-virtual
             :items="orderedUsers"
             :headers="headers"
-            class="bg-primary"
+            class=""
             hide-default-footer
             no-data-text="No s'han trobat membres"
             >
@@ -28,8 +28,8 @@
                         </td>
                         <td class="responsive-td" data-label="Accions">
                             <div class="justify-center align-center d-flex">
-                                <v-btn icon="mdi-plus" variant="text" color="ternary" @click="openUserDetails(item)"/>
-                                <v-btn icon="mdi-police-badge" variant="text" color="ternary" @click="editUserCharge(item)" :disabled="!isSuperUser(auth.userInfo.accessType)"/>
+                                <v-btn icon="mdi-plus" variant="text"  @click="openUserDetails(item)"/>
+                                <v-btn icon="mdi-police-badge" variant="text"  @click="editUserCharge(item)" :disabled="!isSuperUser(auth.userInfo.accessType)"/>
                             </div>
                         </td>
                         <td class="responsive-td" data-label="Faller des de">
@@ -41,7 +41,7 @@
                         <td class="responsive-td" data-label="Càrrec">
                             <v-icon
                             :icon="getChargeIcon(item.accessType)"
-                            color="ternary"
+                            
                             />
                         </td>
                     </tr>
@@ -58,16 +58,17 @@
             </v-dialog>
             <v-dialog v-model="isEditChargeOpen" min-width="200px">
                 <v-container>
-                    <v-card class="bg-primary">
-                        <v-card-title class="bg-ternary"> Vas a editar el càrrec de {{ selectedUser.fullName }} </v-card-title>
+                    <v-card>
+                        <v-card-title class="text-h6"> Vas a editar el càrrec de {{ selectedUser.fullName }} </v-card-title>
                         <v-select v-if="auth.userInfo.accessType=='Superusuari'"
                         :items="accessTypes"
                         v-model="localUser.accessType"
                         label="Modificar el permís d'accés">
                         </v-select>
                         <v-card-actions>
-                            <v-btn @click="isEditChargeOpen=false" icon="mdi-cancel" color="ternary" variant="text"/>
-                            <v-btn @click="editAccessType()" icon="mdi-check" color="ternary" variant="text"/>
+                            <v-spacer/>
+                            <v-btn @click="editAccessType()" icon="mdi-check"  variant="text"/>
+                            <v-btn @click="isEditChargeOpen=false" icon="mdi-cancel"  variant="text"/>
                         </v-card-actions>
                     </v-card>
                 </v-container>
@@ -153,10 +154,10 @@ const headers = [
         value: 'fullName',
         sortable: true,
         cellProps: {
-            class:"bg-primary"
+            class:""
         },
         headerProps: {
-            class:"bg-ternary font-weight-bold"
+            class:" font-weight-bold"
         }
     },
     {
@@ -165,10 +166,10 @@ const headers = [
         value: 'actions',
         sortable: true,
         cellProps: {
-            class:"bg-primary"
+            class:""
         },
         headerProps: {
-            class:"bg-ternary font-weight-bold"
+            class:" font-weight-bold"
         }
     },
     {
@@ -177,10 +178,10 @@ const headers = [
         value: 'joinDate',
         sortable: true,
         cellProps: {
-            class:"bg-primary"
+            class:""
         },
         headerProps: {
-            class:"bg-ternary font-weight-bold"
+            class:" font-weight-bold"
         }
     },
     {
@@ -189,10 +190,10 @@ const headers = [
         value: 'birthday',
         sortable: true,
         cellProps: {
-            class:"bg-primary"
+            class:""
         },
         headerProps: {
-            class:"bg-ternary font-weight-bold"
+            class:" font-weight-bold"
         }
     },
     {
@@ -201,10 +202,10 @@ const headers = [
         value: 'accessType',
         sortable: true,
         cellProps: {
-            class:"bg-primary"
+            class:""
         },
         headerProps: {
-            class:"bg-ternary font-weight-bold"
+            class:" font-weight-bold"
         }
     },
 ]
@@ -220,7 +221,6 @@ const headers = [
     padding: 12px;
     border-bottom: 8px solid #eeeeee;
     height: auto !important;
-    background-color: white;
     margin-bottom: 8px;
   }
 

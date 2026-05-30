@@ -34,8 +34,8 @@ const closeError = async () => {
 <template>
   <v-container v-if="!auth.token">
         <v-form ref="form" v-model="valid" @submit.prevent="handleLogin">
-          <v-card class="bg-primary pa-5">
-            <v-card-title class="bg-ternary">Log In</v-card-title>
+          <v-card>
+            <v-card-title class="text-h6">Log In</v-card-title>
             <v-row>
               <v-col cols="12" md="6">
                 <v-text-field
@@ -56,7 +56,7 @@ const closeError = async () => {
             </v-row>
             <v-card-actions>
               <v-spacer/>
-              <v-btn type="submit" class="bg-ternary" :disabled="password=='' || email==''">Log in</v-btn>
+              <v-btn type="submit" class="" :disabled="password=='' || email==''" icon="mdi-login"/>
             </v-card-actions>
           </v-card>
         </v-form>

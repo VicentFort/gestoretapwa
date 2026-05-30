@@ -1,26 +1,29 @@
 <template>
     <v-container>
-        <v-card title="Items">
+        <v-card title="Items" class="text-h6">
             <v-btn
             icon="mdi-filter"
-            color="secondary"
+            
             @click="isFilterDiagOpen=true"
             class="ms-2"
             />
+            
             <v-btn
             class="ms-2"
             icon="mdi-filter-remove"
-            color="secondary"
+            
             @click="filteredItems = null"
             :disabled="!filteredItems"
             />
+
+            <v-btn @click="showCreateItem=true" icon="mdi-plus" class="ms-2"/>
             <v-data-table-virtual 
             :items="inventoryItems" 
             item-value="id"
             hide-default-footer="true"
             :sort-by="initialSort" 
             :headers="headers"
-            class="bg-primary elevation-1"
+            class="elevation-1"
             style="max-width: 100vw;"
             no-data-text="Sense item de inventari"
             >
@@ -32,12 +35,12 @@
                                 <v-btn
                                 icon="mdi-file-edit"
                                 variant="text"
-                                color="ternary"
+                                
                                 @click="selectedItem=item; showEditItem=true;"
                                 />
                                 <v-btn
                                 icon="mdi-warehouse"
-                                color="ternary"
+                                
                                 variant="text"
                                 @click="selectedItemForStocks=item; showItemStocks = true;"
                                 />
@@ -47,7 +50,7 @@
                             <div class="justify-center align-center d-flex">
                                 <v-icon 
                                 :icon="returnCategoryIcon(item.category)" 
-                                color="ternary"
+                                
                                 />                 
                             </div>
                         </td>
@@ -57,15 +60,12 @@
                 </template>
             </v-data-table-virtual>
             <v-divider></v-divider>
-            <v-dialog v-model="showCreateItem" width="auto">
+            <v-dialog v-model="showCreateItem" min-width="200px">
                 <CreateItemDialog @closed="showCreateItem=false"/>
             </v-dialog>
-            <v-dialog v-model="showEditItem" width="auto">
+            <v-dialog v-model="showEditItem" min-width="200px">
                 <EditItemDialog :item="selectedItem" @closed="showEditItem=false"/>
             </v-dialog>
-            <v-card-actions>
-                <v-btn @click="showCreateItem=true" icon="mdi-plus"></v-btn>
-            </v-card-actions>
         </v-card>
     </v-container>
     <v-dialog v-model="showItemStocks" min-width="200px">
@@ -136,11 +136,11 @@ const headers = [
         sortable:true,
         value: "name",
          cellProps: {
-            class:"bg-primary justify-center",
+            class:" justify-center",
             width:"10%"
         },
         headerProps: {
-            class:"bg-ternary font-weight-bold"
+            class:" font-weight-bold"
         }
      },
      {
@@ -149,11 +149,11 @@ const headers = [
         sortable:false,
         align:"end",
         cellProps: {
-            class:"bg-primary",
+            class:"",
             width:"10%"
         },
         headerProps: {
-            class: "bg-ternary font-weight-bold"
+            class: " font-weight-bold"
         }
     },
     
@@ -163,11 +163,11 @@ const headers = [
         align:"center",
         value: "category",
         cellProps: {
-            class:"bg-primary",
+            class:"",
             width:"10%"
         },
         headerProps: {
-            class:"bg-ternary font-weight-bold"
+            class:" font-weight-bold"
         }
 
      },
@@ -176,11 +176,11 @@ const headers = [
         align:"center",  
         value:"description",
          cellProps: {
-            class:"bg-primary",
+            class:"",
             width:"20%"
         },
         headerProps: {
-            class:"bg-ternary font-weight-bold"
+            class:" font-weight-bold"
         }
      }
     
@@ -198,7 +198,6 @@ const headers = [
     padding: 12px;
     border-bottom: 8px solid #eeeeee;
     height: auto !important;
-    background-color: white;
     margin-bottom: 8px;
   }
 

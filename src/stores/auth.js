@@ -12,7 +12,7 @@ export const useAuthStore = defineStore("auth", {
     movementTypes: [
       'Entrada',
       'Eixida',
-      'Prèstec'
+      'Préstec'
     ],
     loanStates: [
       "Pendent",
@@ -330,14 +330,14 @@ export const useAuthStore = defineStore("auth", {
     /*
     * Elimina una asistencia a un evento.
     */
-    async deleteAssist(eventId) {
+    async deleteAssist(assistId) {
       try {
-        const response = await api.delete('/event/leave/' + eventId).catch(handleApiError)
+        const response = await api.delete('/event/leave/' + new Number(assistId)).catch(handleApiError)
       } catch (error) {
         throw error
       } finally {
-        this.fetchFallaAdminInfo()
-        this.fetchUserInfo()
+        await this.fetchFallaAdminInfo()
+        await this.fetchUserInfo()
       }
     },
     
@@ -491,6 +491,15 @@ export const useAuthStore = defineStore("auth", {
     async editCoupon(coupon) {
       try {
         const response = await api.put("/payment/editCoupon", coupon).catch(handleApiError)
+      } catch(err) {
+        throw (err)
+      } finally {
+        this.fetchFallaAdminInfo()
+      }
+    },
+    async createCoupon(request) {
+      try {
+        const response = await api.post("/payment/createCoupon", request).catch(handleApiError)
       } catch(err) {
         throw (err)
       } finally {

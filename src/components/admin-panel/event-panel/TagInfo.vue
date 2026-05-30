@@ -1,16 +1,16 @@
 <template>
     <v-dialog v-model="show" width="500">
-    <v-card v-if="tag" class="bg-primary">
-      <v-card-title class="text-h5 text-primary bg-ternary">
+    <v-card v-if="tag" class="">
+      <v-card-title class="text-h5">
         {{  tag.name }}
       </v-card-title>
 
       <v-divider></v-divider>
 
       <v-card-actions class="justify-center align-center">
-        <v-btn icon="mdi-tag-minus" class="text-primary bg-ternary" variant="text" @click="confirmDelete"/>
+        <v-btn icon="mdi-tag-minus" class="" variant="text" @click="confirmDelete"/>
         <v-spacer></v-spacer>
-        <v-btn icon="mdi-cancel" class="text-primary bg-ternary" variant="text" @click="show = false"/>
+        <v-btn icon="mdi-cancel" class="" variant="text" @click="show = false"/>
       </v-card-actions>
       <v-dialog v-model="showDeleteDialog" max-width="400">
         <v-card>
@@ -31,9 +31,7 @@
               variant="text"
               @click="showDeleteDialog = false"
               :disabled="loading"
-            >
-              Cancelar
-            </v-btn>
+             icon="mdi-cancel"/>
             <v-btn
               color="error"
               variant="elevated"

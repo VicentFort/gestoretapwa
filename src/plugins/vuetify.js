@@ -17,41 +17,53 @@ export default createVuetify({
     },
   },
   theme:{
-    defaultTheme: 'light',
-    dark:false,
-    themes:{
-      form:{
-        dark:false,
-        colors: {
-          background: '#87CEEB',
-          primary: '#F5F5F5',
-          secondary: '#87CEEB',
-          ternary: 'rgb(var(--v-theme-ternary))',
-          surface: '#f9c3a5'
-
-        },
-        variables: {
-          'border-color': '#000000',
-          'border-opacity': 0.5
-        }
+  defaultTheme: 'gestoreta',
+  themes: {
+    gestoreta: {
+      dark: false,
+      colors: {
+        background: '#FDFCF8',   // bone (era azul)
+        surface:    '#FFFFFF',   // blanco puro (era naranja!)
+        primary:    '#E35D33',   // terracotta — el acento, no el fondo
+        secondary:  '#8B9E83',   // charcoal — para texto/acentos serios
+        accent:     '#E35D33',
+        error:      '#9E3026',
+        success:    '#2F8F5A',
+        warning:    '#C98A2E',
+        info:       '#3B6FA0',
+        // mantenemos los alias usados en tu código:
+        ternary:    '#8B9E83',   // misma terracotta para no romper 
+        quaternary: '#c1c9d2',   // cream para zonas suaves
+        transaction:'#2F8F5A',
       },
-      light: {
-        dark:false,
-        colors: {
-          background: '#6facc6',
-          secondary: '#6facc6',
-          primary: '#F5F5F5',
-          ternary: '#e27b55',
-          quaternary: '#e27b55',
-          surface: '#e27b55',
-          error: '#9e3026',
-          transaction: '#74df84'
+      variables: {
+        'border-color':   '#2D3E50',
+        'border-opacity': 0.08,    // borde sutil, era 0.5
+        'theme-on-background': '#2D3E50',
+      },
+    },
+  },
+},
+defaults: {
+  VCard:   { 
+    elevation: 0, 
+    border: true, 
 
-          
-        }
-        
-      }
-    }
-  }
+  },
+  
+  VBtn:    { 
+    rounded: 'lg'
+  },
+  VForm:   {
+    rounded: 'lg', variant: 'flat',
+    border:true,
+  },
+  VChip:   { rounded: 'lg' },
+  VSheet:  { 
+    rounded: 'lg',
+   },
+
+}
+
   
 })

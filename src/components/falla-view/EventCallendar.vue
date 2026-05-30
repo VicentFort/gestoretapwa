@@ -2,28 +2,28 @@
   <v-row class="fill-height">
     <v-col>
       <v-card>
-      <v-sheet height="64" class="bg-ternary sheet-container">
-        <v-text v-if="calendar" class="text-primary text-body-2 text-sm-h6"> Calendari d'esdeveniments</v-text>
-        <v-toolbar flat class="bg-ternary" density="comfortable">
+      <v-sheet height="64">
+        <v-card-title v-if="calendar"> Calendari d'esdeveniments</v-card-title>
+        <v-toolbar flat  density="comfortable">
 
             <v-spacer></v-spacer>
 
-            <v-btn @click="setToday" class="bg-secondary ms-1" icon-mobile variant="flat">
+            <v-btn @click="setToday"  icon-mobile variant="flat">
                 <v-icon d-sm-none>mdi-calendar-today</v-icon>
                 <span class="d-none d-sm-inline">Huí</span>
             </v-btn>
 
-            <v-btn @click="prev" class="bg-secondary ms-1" icon-mobile variant="flat">
+            <v-btn @click="prev" icon-mobile variant="flat">
                 <v-icon>mdi-chevron-left</v-icon>
                 <span class="d-none d-sm-inline">Anterior</span>
             </v-btn>
 
-            <v-btn @click="next" class="bg-secondary ms-1" icon-mobile variant="flat">
+            <v-btn @click="next" icon-mobile variant="flat">
                 <span class="d-none d-sm-inline">Següent</span>
                 <v-icon>mdi-chevron-right</v-icon>
             </v-btn>
 
-            <v-btn @click="viewMonth" class="bg-secondary ms-1" icon-mobile variant="flat">
+            <v-btn @click="viewMonth" icon-mobile variant="flat">
                 <v-icon>mdi-view-module</v-icon>
                 <span class="d-none d-sm-inline ms-1">Vista</span>
             </v-btn>
@@ -32,12 +32,12 @@
 
       <v-sheet height="600">
         <v-calendar
-        class="bg-primary"
+        class=""
           ref="calendar"
           v-model="focus"
           :events="formattedEvents"
           :type="type"
-          color="primary"
+          
           @click:date="viewDay"
           @click:event="showEvent"
           @click:more="viewDay"
@@ -49,10 +49,10 @@
         offset-y
         :close-on-content-click="false"
         >
-          <v-card min-width="300px" flat :class="selectedEvent.active ?'event-dialog-open' : 'event-dialog-closed'">
-            <v-card-title class="bg-ternary">{{ selectedEvent.title }}</v-card-title>
+          <v-card min-width="300px" flat :class="selectedEvent.active ?'event-dialog-open' : 'event-closed-dialog'">
+            <v-card-title :class="event.active ?'' : 'event-closed-dialog'">{{ selectedEvent.title }}</v-card-title>
             <v-card-text>
-              <div class="mb-2 text-subtitle-1">
+              <div>
                 <strong>Etiqueta:</strong> {{ selectedEvent.tagName }}
               </div>
               <p>{{ selectedEvent.description }}</p>
@@ -64,20 +64,18 @@
               <div><strong>Fí:</strong> {{ selectedEvent.endHour }}</div>
             </v-card-text>
             <v-card-actions>
-              <v-btn variant="text" color="black" class="bg-ternary" @click="joinEvent" icon="mdi-plus"/>
-              <v-btn variant="text" color="black"  class="bg-ternary" @click="selectedOpen = false" icon="mdi-cancel"/>
+              <v-btn variant="text" @click="joinEvent" icon="mdi-plus"/>
+              <v-btn variant="text" @click="selectedOpen = false" icon="mdi-cancel"/>
             </v-card-actions>
           </v-card>
         </v-menu>
         <v-dialog v-model="showAssistSuccess" max-width="400">
             <v-card>
-                <v-card-title class="text-h5 text-white bg-secondary">Assistència guardada al esdeveniment</v-card-title>
+                <v-card-title>Assistència guardada al esdeveniment</v-card-title>
                 <v-card-title>{{ selectedEvent.title }}</v-card-title>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="ternary" variant="text" @click="showAssistSuccess=false">
-                        Tanca
-                    </v-btn>
+                    <v-btn  variant="text" @click="showAssistSuccess=false" icon="mdi-cancel"/>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -202,10 +200,6 @@ const joinEvent = async () => {
 </script>
 
 <style>
-.sheet-container{
-    border-color: rgb(var(--v-theme-ternary));
-    border-width: 10px;
-    border-style: solid;
-}
+
 
 </style>

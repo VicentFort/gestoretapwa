@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-card flat title="Moviments d'inventari">
+    <v-card flat title="Moviments de inventari" class="text-h6">
       
       <template v-slot:text>
         <v-text-field
@@ -10,7 +10,7 @@
           variant="outlined"
           hide-details
           single-line
-          class="bg-primary"
+          class=""
         />
       </template>
       <v-card-actions>
@@ -18,7 +18,7 @@
           v-if="inventoryMovements.length > 25" 
           variant="text" 
           :icon="showAllMovements ? 'mdi-filter': 'mdi-clock-outline'"
-          color="primary" 
+           
           @click="showAllMovements = !showAllMovements"
         />
         <span class="text-caption">
@@ -28,7 +28,7 @@
             }}
         </span>
         <v-spacer />
-        <v-btn variant="text" icon="mdi-plus" @click="showAddMovement=true"></v-btn>
+        <v-btn variant="text" icon="mdi-plus" @click="showAddMovement=true"/>
       </v-card-actions>
       <v-data-table-virtual
         :items="displayedMovements"
@@ -39,7 +39,7 @@
         :search="search"
         :sort-by="initialSort"
         no-data-text="Sense moviment d'inventari"
-        class="bg-primary elevation-1 responsive-table"
+        class="elevation-1 responsive-table"
         style="max-width: 100vw;"
       >
         <template #item="{ item }">
@@ -51,12 +51,12 @@
             <td class="responsive-td" data-label="Tipus">
               <div class="justify-end align-center d-flex">
                 
-                <template v-if="item.movementType === 'Prèstec'">
+                <template v-if="item.movementType === 'Préstec'">
                   <v-btn 
                     v-if="item.loan?.state === 'Pendent' || item.loan?.state === 'Atrassat'"
                     :class="returnButtonStyle(item.loan?.state)"
                     :icon="returnButtonIcon(item.loan?.state)"
-                    size="small"
+                    size="medium"
                     @click="showReturnDialog=true; selectedLoan=item.loan"
                   />
                   <v-icon 
@@ -144,7 +144,7 @@ const returnButtonStyle = (state) => {
     switch(state) {
         case "Tornat": return 'bg-green'
         case "Atrassat": return 'bg-error'
-        default: return 'bg-ternary'
+        default: return ''
     }
 }
 
@@ -169,10 +169,10 @@ const headers = [
         key:"date",
         sortable:true,
         cellProps: {
-            class:"bg-primary"
+            class:""
         },
         headerProps: {
-            class:"bg-ternary font-weight-bold"
+            class:" font-weight-bold"
         }
     },
     {
@@ -180,14 +180,14 @@ const headers = [
         align:"center",
         key:"movementType",
         sort: (a,b) => {
-            const priority = { "Entrada": 1, "Eixida": 2, "Prèstec": 3}
+            const priority = { "Entrada": 1, "Eixida": 2, "Préstec": 3}
             return priority[a] - priority[b]
         },
         cellProps: {
-            class:"bg-primary"
+            class:""
         },
         headerProps: {
-            class:"bg-ternary font-weight-bold"
+            class:" font-weight-bold"
         }
     },
     {
@@ -196,10 +196,10 @@ const headers = [
         sortable:"true",
         value:"itemName",
         cellProps: {
-            class:"bg-primary"
+            class:""
         },
         headerProps: {
-            class:"bg-ternary font-weight-bold"
+            class:" font-weight-bold"
         }
     },
     {
@@ -208,10 +208,10 @@ const headers = [
         sortable:"true",
         value:"storeName",
         cellProps: {
-            class:"bg-primary"
+            class:""
         },
         headerProps: {
-            class:"bg-ternary font-weight-bold"
+            class:" font-weight-bold"
         }
     },
     {
@@ -220,10 +220,10 @@ const headers = [
         value:"amount",
         sortable: true,
         cellProps: {
-            class:"bg-primary"
+            class:""
         },
         headerProps: {
-            class:"bg-ternary font-weight-bold"
+            class:" font-weight-bold"
         }
     },
     {
@@ -231,10 +231,10 @@ const headers = [
         align:"center",
         value:"message",
         cellProps: {
-            class:"bg-primary"
+            class:""
         },
         headerProps: {
-            class:"bg-ternary font-weight-bold"
+            class:" font-weight-bold"
         }
     },
     {
@@ -242,10 +242,10 @@ const headers = [
         align:"center",
         value:"createdBy",
         cellProps: {
-            class:"bg-primary"
+            class:""
         },
         headerProps: {
-            class:"bg-ternary font-weight-bold"
+            class:" font-weight-bold"
         }
     }, 
     
@@ -262,7 +262,6 @@ const headers = [
     padding: 12px;
     border-bottom: 8px solid #eeeeee;
     height: auto !important;
-    background-color: white;
     margin-bottom: 8px;
   }
 

@@ -1,8 +1,8 @@
 <template>
     <v-container>
         <v-form @submit.prevent="submitForm" ref="form" v-model="valid">
-            <v-card class="bg-primary">
-                <v-card-title class="text-primary font-weight-bold bg-ternary">
+            <v-card>
+                <v-card-title class="font-weight-bold">
                     Editant el magatzem: {{ store.name }}
                 </v-card-title>
                 <v-col>
@@ -26,9 +26,11 @@
                     </v-row>
                 </v-col>
                 <v-card-actions>
-                    <v-btn class="bg-ternary align-left" icon="mdi-cancel" @click="emit('closed')"></v-btn>
 
-                    <v-btn class="bg-ternary" type="submit" icon="mdi-plus"></v-btn>
+                    <v-spacer/>
+                    <v-btn class="" type="submit" icon="mdi-content-save-edit"/>
+                    <v-btn class="align-left" icon="mdi-cancel" @click="emit('closed')"/>
+
                 </v-card-actions>
             </v-card>
 

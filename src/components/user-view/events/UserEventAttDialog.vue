@@ -1,7 +1,15 @@
 <template>
     <v-dialog v-model="show" width="500" >
-    <v-card v-if="event" :class="event.active ?'event-dialog-open' :'event-dialog-closed'">
-      <v-card-title class="bg-ternary">
+    <v-card v-if="event" :class="event.active ?'' : 'event-closed-dialog'">
+      <v-img
+        v-if="eventImageUrl"
+        :src="eventImageUrl"
+        height="100"
+        cover
+        class="align-end text-white"
+      >
+      </v-img>
+      <v-card-title class="text-h6":class="event.active ?'' : 'event-closed-dialog'">
         Títol: {{ event?.title }}
       </v-card-title>
 
@@ -17,10 +25,11 @@
       <v-divider></v-divider>
 
       <v-card-actions>
+        <v-btn  variant="text" class="" @click="assistEvent" :disabled="event.active==false || event.assist" icon="mdi-calendar-plus"/>
+        <v-btn   variant="text" @click="deleteAssist" :disabled="event.active==false || !event.assist" icon="mdi-calendar-remove"/>
+
         <v-spacer></v-spacer>
-        <v-btn color="primary" variant="text" class="bg-ternary" @click="assistEvent" :disabled="event.active==false || !event.assist" icon="mdi-plus"/>
-        <v-spacer></v-spacer>
-        <v-btn color="primary" variant="text"  class="bg-ternary" @click="show = false" icon="mdi-cancel"/>
+        <v-btn  variant="text"  class="" @click="show = false" icon="mdi-cancel"/>
       </v-card-actions>
       <ErrorDialog :message="error" v-model="showErrorDiag" @closed="closeError"/>
     </v-card>
@@ -42,6 +51,17 @@ const show = computed({
     set: (value) => emit('update:modelValue', value)
 })
 
+const eventImageUrl = computed(() => {
+  if (props.event?.image) {
+    if (props.event.image.startsWith('data:')) {
+      return props.event.image
+    }
+    // Si el backend te devuelve los bytes limpios en Base64, le pones el prefijo tú
+    return `data:image/jpeg;base64,${props.event.image}`
+  }
+  return null 
+})
+
 const error = ref('')
 const showErrorDiag = ref(false)
 
@@ -53,6 +73,16 @@ const closeError = () => {
 const assistEvent = async () => {
   try {
     await auth.joinEvent(props.event.id)
+    show.value = false
+  } catch (err) {
+    error.value=err 
+    showErrorDiag.value = true   
+  }
+}
+
+const deleteAssist = async () => {
+  try {
+    await auth.deleteAssist(props.event.assist.assistId)
     show.value = false
   } catch (err) {
     error.value=err 

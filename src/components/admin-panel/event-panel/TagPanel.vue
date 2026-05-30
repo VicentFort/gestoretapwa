@@ -30,11 +30,11 @@ const openCreateTag = () => {
 
 <template>
     <v-container>
-        <v-card class="bg-primary">
-            <v-card-title class='bg-ternary'>
+        <v-card>
+            <v-card-title class='text-h6'>
                 Llistat d'etiquetes
             </v-card-title>
-            <v-list class="text-primary bg-primary">
+            <v-list class="">
                 <v-list-item 
                     v-for="tag in orderedTags" 
                     :key="tag.id"
@@ -54,7 +54,7 @@ const openCreateTag = () => {
                 <TagCreateDialog v-model="isCreateOpen"/>
             </v-dialog>
             <v-card-actions class="justify-center">
-               <v-btn icon="mdi-tag-check-outline" class="justify-center bg-ternary" type="text" @click='openCreateTag'/>
+               <v-btn icon="mdi-tag-check-outline" class="justify-center" type="text" @click='openCreateTag'/>
             </v-card-actions>
         </v-card>
     </v-container>

@@ -1,8 +1,8 @@
 <template>
     <v-container>
         <v-form @submit.prevent="submitForm" ref="form" v-model="valid">
-            <v-card class="bg-primary">
-                <v-card-title class="text-primary font-weight-bold bg-ternary">
+            <v-card>
+                <v-card-title class="font-weight-bold">
                 Registrar un pagament
             </v-card-title>
             <v-col>
@@ -46,8 +46,9 @@
                 </v-row>
             </v-col>
             <v-card-actions>
-                <v-btn @click="emit('closed')" icon="mdi-cancel" color="ternary"/>
-                <v-btn @click="submitForm" icon="mdi-plus" color="ternary" :disabled="!checkFields"/>
+                <v-spacer/>
+                <v-btn @click="submitForm" icon="mdi-content-save"  :disabled="!checkFields"/>
+                <v-btn @click="emit('closed')" icon="mdi-cancel" />
             </v-card-actions>  
             </v-card>
         </v-form>

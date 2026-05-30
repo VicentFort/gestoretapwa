@@ -1,8 +1,8 @@
 <template>
     <v-container>
         <v-form @submit.prevent="submitForm" ref="form" v-model="valid">
-            <v-card class="bg-primary">
-                <v-card-title class="font-weight-bold text-primary bg-ternary">
+            <v-card>
+                <v-card-title class="font-weight-bold">
                     Editant el contacte de {{ contact.name }}
                 </v-card-title>
                 <v-row>
@@ -36,8 +36,9 @@
                         </v-text-field>
                     </v-col>
                     <v-card-actions>
-                        <v-btn class="bg-ternary" icon="mdi-cancel" @click="emit('closed')"></v-btn>
-                        <v-btn type="submit" class="bg-ternary" icon="mdi-plus"/>
+                        <v-spacer/>
+                        <v-btn type="submit" class="" icon="mdi-content-save-edit"/>
+                        <v-btn class="" @click="emit('closed')" icon="mdi-cancel"/>
                     </v-card-actions>
                 </v-row>
             </v-card>

@@ -1,9 +1,8 @@
 <template>
     <v-dialog v-model="show" width="500">
-            
-                <v-card class="bg-primary pa-2">
-                    <v-card-title class="bg-ternary">Afegir etiqueta</v-card-title>
-                    <v-form ref="form" v-model="valid" @submit.prevent="submitForm">
+        <v-form ref="form" v-model="valid" @submit.prevent="submitForm">
+                    <v-card>
+                    <v-card-title class="text-h6">Afegir etiqueta</v-card-title>
                     <v-row>
                         <v-col cols="12">
                             <v-text-field
@@ -19,11 +18,12 @@
                 
                 <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn class="text-white bg-primary" type="submit" :disabled="!valid">Crear</v-btn>
-                <v-btn class="text-white bg-primary" variant="text" @click="show = false">Tanca</v-btn>
+                <v-btn class="text-white" type="submit" :disabled="!valid" icon="mdi-tag-plus"/>
+                <v-btn class="text-white" variant="text" @click="show = false" icon="mdi-cancel"/>
             </v-card-actions>
-            </v-form>
             </v-card>
+            </v-form>
+
             
     </v-dialog>
 </template>

@@ -1,40 +1,43 @@
 <template>
     <v-card>
         
-            <v-row rows="12" md="6" class="justify-center">
-                <v-btn
-                @click="filterPayments()"
-                icon="mdi-filter"
-                color="secondary"
-                />
-                <v-btn
-                @click="filteredPayments = null"
-                icon="mdi-filter-minus"
-                color="secondary"
-                :disabled="!filteredPayments"
-                />
-                <v-spacer/>
+            
+            <v-col cols="12" md="6" class="justify-center" grow>
                 <v-btn
                 @click="registerPayment()"
                 icon="mdi-plus"
-                color="transaction"
+                class="ms-2"
                 />
                 <v-btn
                 @click="sellCoupon()"
                 icon="mdi-currency-eur"
-                color="transaction"
+                class="ms-2"
                 />
                 <v-btn
                 @click="exchangeCoupon()"
                 icon="mdi-cash"
-                color="transaction"
+                class="ms-2"
                 />
-            </v-row>
+                <v-divider class="ms-2"/>
+
+                <v-btn
+                @click="filterPayments()"
+                icon="mdi-filter"
+                class="ms-2"
+                />
+                <v-btn
+                @click="filteredPayments = null"
+                icon="mdi-filter-minus"
+                :disabled="!filteredPayments"
+                class="ms-2"
+                />
+                
+            </v-col>
         <v-data-table-virtual
             :items="paymentsToShow"
             item-value="id"
             hide-default-footer
-            class="bg-primary"
+            class=""
             no-data-text="Sense pagaments"
             :sort-by="initialSort"
             :headers="headers"
@@ -44,7 +47,7 @@
                 <v-btn
                 icon="mdi-information"
                 variant="text"
-                color="ternary"
+                
                 @click="showPaymentInfo(item)"
                 />
             </template>
@@ -69,7 +72,7 @@
                         <v-btn
                             icon="mdi-information"
                             variant="text"
-                            color="ternary"
+                            
                             @click="showPaymentInfo(item)"
                         />
                     </td>
@@ -113,6 +116,7 @@ import { useDisplay } from 'vuetify';
 const auth = useAuthStore()
 const initialSort = ref([{key:'date', order:'desc'}])
 
+const {xs} = useDisplay()
 
 
 const formattedDate = (dateString) => {
@@ -173,10 +177,10 @@ const headers = [
         key:"date",
         sortable:true,
         cellProps: {
-            class:"bg-primary"
+            class:""
         },
         headerProps: {
-            class:"bg-ternary font-weight-bold"
+            class:" font-weight-bold"
         }
     },
     {
@@ -185,10 +189,10 @@ const headers = [
         key:"type",
         sortable:true,
         cellProps: {
-            class:"bg-primary"
+            class:""
         },
         headerProps: {
-            class:"bg-ternary font-weight-bold"
+            class:" font-weight-bold"
         }
     },
     {
@@ -197,10 +201,10 @@ const headers = [
         key:"actions",
         sortable:true,
         cellProps: {
-            class:"bg-primary"
+            class:""
         },
         headerProps: {
-            class:"bg-ternary font-weight-bold"
+            class:" font-weight-bold"
         }
     },
     {
@@ -209,10 +213,10 @@ const headers = [
         key:"displayPrice",
         sortable:true,
         cellProps: {
-            class:"bg-primary"
+            class:""
         },
         headerProps: {
-            class:"bg-ternary font-weight-bold"
+            class:" font-weight-bold"
         }
     },
     {
@@ -221,10 +225,10 @@ const headers = [
         key:"manager",
         sortable:true,
         cellProps: {
-            class:"bg-primary"
+            class:""
         },
         headerProps: {
-            class:"bg-ternary font-weight-bold"
+            class:" font-weight-bold"
         }
     },
     
@@ -242,7 +246,6 @@ const headers = [
     padding: 12px;
     border-bottom: 8px solid #eeeeee;
     height: auto !important;
-    background-color: white;
     margin-bottom: 8px;
   }
 

@@ -1,7 +1,7 @@
 <template>
     <v-container>
-        <v-card class="bg-primary">
-            <v-card-title class="bg-ternary">Tiquets</v-card-title>
+        <v-card>
+            <v-card-title class="text-h6">Tiquets</v-card-title>
             <CouponTable/>
         </v-card>
     </v-container>

@@ -1,8 +1,8 @@
 <template>
     <v-container>
         <v-form @submit.prevent="submitForm" ref="form" v-model="valid">
-            <v-card class="bg-primary">
-                <v-card-title class="text-primary font-weight-bold bg-ternary">
+            <v-card>
+                <v-card-title class="font-weight-bold">
                     Crear un nou magatzem
                 </v-card-title>
                 <v-col>
@@ -24,18 +24,19 @@
                     </v-row>
                 </v-col>
                 <v-card-actions>
-                    <v-btn class="bg-ternary align-left" icon="mdi-cancel" @click="emit('closed')"></v-btn>
+                    <v-spacer/>
+                    <v-btn type="submit" class="" :disabled="name=='' || location==''" icon="mdi-content-save"/>
+                    <v-btn class="align-left" icon="mdi-cancel" @click="emit('closed')"/>
 
-                    <v-btn type="submit" class="bg-ternary" :disabled="name=='' || location==''" icon="mdi-plus"></v-btn>
                 </v-card-actions>
             </v-card>
         </v-form>
         <v-dialog v-model="showErrorDiag" width="400px">
-            <v-card class="bg-primary">
+            <v-card>
                 <v-card-title class="text-white bg-error">Error</v-card-title>
                 <v-card-text>{{ error }}</v-card-text>
                 <v-card-actions>
-                    <v-btn type="error", variant="text" @click="showErrorDiag=false">Tanca</v-btn>
+                    <v-btn type="error", variant="text" @click="showErrorDiag=false" icon="mdi-cancel"/>
                 </v-card-actions>
             </v-card>
         </v-dialog>

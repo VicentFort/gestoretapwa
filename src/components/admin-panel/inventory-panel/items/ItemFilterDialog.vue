@@ -1,8 +1,8 @@
 <template>
     <v-container>
         <v-form @submit.prevent="submitForm" ref="form" v-model="valid">
-            <v-card class="bg-primary">
-                <v-card-title class="text-primary font-weight-bold bg-ternary">
+            <v-card>
+                <v-card-title class="font-weight-bold">
                 Filtrar item de inventari
                 </v-card-title>
                 <v-row>
@@ -17,8 +17,9 @@
                     </v-col>
                 </v-row>
                 <v-card-actions>
-                    <v-btn @click="submitForm" icon="mdi-filter" class="bg-secondary" variant="text"/>
-                    <v-btn @click="emits('closed')" icon="mdi-cancel" class="bg-ternary" variant="text"/>
+                    <v-spacer/>
+                    <v-btn @click="submitForm" icon="mdi-filter" variant="text"/>
+                    <v-btn @click="emit('closed')" icon="mdi-cancel" class="" variant="text"/>
                 </v-card-actions>
             </v-card>
         </v-form>
@@ -49,7 +50,7 @@ const stores = computed(() => {
 
 const store = ref(null)
 
-const emits = defineEmits(['update-filter', 'closed'])
+const emit = defineEmits(['update-filter', 'closed'])
 
 
 
@@ -66,7 +67,7 @@ const submitForm = async () => {
 
         })
 
-        emits('update-filter', filtered)
+        emit('update-filter', filtered)
      } catch(err) {
         error.value = err
         showErrorDiag.value = true

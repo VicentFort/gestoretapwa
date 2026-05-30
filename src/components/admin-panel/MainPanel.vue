@@ -7,7 +7,7 @@
             {{ auth.fallaAdminInfo?.name }}
         </v-card-title>
         <v-sheet elevation="2" rounded="lg" :class="xs ?'pa-1' : 'pa-2'">
-            <v-tabs v-model="tab" color="primary" class="bg-ternary" grow>
+            <v-tabs v-model="tab" align-tabs="start" class="bg-surface" color="surface" grow>
                 <v-tab value="one">Esdeveniments</v-tab>
                 <v-tab value="two">Membres</v-tab>
                 <v-tab value="three">Inventari</v-tab>

@@ -1,8 +1,8 @@
 <template>
     <v-container>
         <v-form @submit.prevent="submitForm" ref="form" v-model="valid">
-            <v-card class="bg-primary">
-                <v-card-title class="text-primary font-weight-bold bg-ternary">
+            <v-card>
+                <v-card-title class="font-weight-bold">
                 Filtrar usuaris
                 </v-card-title>
                 <v-row>
@@ -34,7 +34,7 @@
                                     @update:model-value="dateMenu = false"
                                 ></v-date-picker>
                                 <v-card-actions>
-                                    <v-btn variant="text" class="bg-ternary" @click="dateMenu = false">Tancar</v-btn>
+                                    <v-btn variant="text" class="" @click="dateMenu = false" icon="mdi-cancel"/>
                                 </v-card-actions>
                             </v-card>
                         </v-dialog>
@@ -58,7 +58,7 @@
                                     @update:model-value="bDayDateMenu = false"
                                 ></v-date-picker>
                                 <v-card-actions>
-                                    <v-btn variant="text" class="bg-ternary" @click="bDayDateMenu = false">Tancar</v-btn>
+                                    <v-btn variant="text" class="" @click="bDayDateMenu = false" icon="mdi-cancel"/>
                                 </v-card-actions>
                             </v-card>
                         </v-dialog>
@@ -66,7 +66,7 @@
                 </v-row>
                 <v-card-actions>
                     <v-btn @click="submitForm" icon="mdi-filter" class="bg-secondary" variant="text"/>
-                    <v-btn @click="emits('closed')" icon="mdi-cancel" class="bg-ternary" variant="text"/>
+                    <v-btn @click="emit('closed')" icon="mdi-cancel" class="" variant="text"/>
                 </v-card-actions>
             </v-card>
         </v-form>
@@ -96,7 +96,7 @@ const birthday = ref(null)
 const nickname = ref('')
 const name = ref('')
 
-const emits = defineEmits(['update-filter', 'closed'])
+const emit = defineEmits(['update-filter', 'closed'])
 const {formattedDate: formattedDate} = useDateFormatter(() => date.value)
 const {formattedDate: formattedBDay} = useDateFormatter(() => birthday.value)
 const dateMenu = ref(false)
@@ -117,7 +117,7 @@ const submitForm = async () => {
             return meetsAccessType && meetsDate && meetsBDay && meetsNickname && meetsName
 
         })
-        emits('update-filter', filtered)
+        emit('update-filter', filtered)
      } catch(err) {
         error.value = err
         showErrorDiag.value = true

@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-label clasS='text-primary'>{{ auth.userInfo.fallaInfo.name }}</v-label>
+        <v-label clasS=''>{{ auth.userInfo.fallaInfo.name }}</v-label>
     </v-container>
 </template>
 

@@ -6,15 +6,15 @@
       persistent
     >
       <v-progress-circular
-        color="primary"
+        
         indeterminate
         size="64"
         />
     </v-overlay>
     <v-container class="align-center d-flex">
-      <v-app-bar>
+      <v-app-bar class="bg-secondary">
 
-      <v-toolbar-title class="font-weight-bold text-primary">
+      <v-toolbar-title class="font-weight-bold">
         <v-icon size="large">
           <img src="@/assets/ic_gestoreta_logo.png" width=40 height=40  alt="icon" />
         </v-icon>
@@ -29,7 +29,6 @@
           v-if="isManager(auth.userInfo?.accessType)" 
           to="/adminPanel" 
           variant="text" 
-          color="primary"
         >
           Administrar
         </v-btn>
@@ -39,13 +38,13 @@
           @click="reloadAll" 
           color="success"
           icon="mdi-refresh"
-        ></v-btn>
+        />
       </div>
 
       <div class="hidden-md-and-up">
         <v-menu>
           <template v-slot:activator="{ props }">
-            <v-btn class="bg-secondary" v-bind="props" icon="mdi-menu"></v-btn>
+            <v-btn class="bg-secondary" v-bind="props" icon="mdi-menu"/>
           </template>
           <v-list>
             <v-list-item to="/">Falla</v-list-item>
@@ -91,7 +90,4 @@ onMounted(async () => {
 
 
 </script>
-<style lang="css">
 
-
-</style>

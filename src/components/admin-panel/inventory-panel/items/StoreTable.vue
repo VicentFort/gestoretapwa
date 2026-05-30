@@ -1,11 +1,14 @@
 <template>
     <v-container>
-        <v-card flat title="Magatzems">
+        <v-card flat title="Magatzems" class="text-h6">
+            <v-card-actions>
+                <v-btn @click="showCreateStore=true" icon="mdi-plus"/>
+            </v-card-actions>
             <v-data-table-virtual 
             :items="stores"
             :headers="headers"
             hide-default-footer
-            class="bg-primary elevation-1"
+            class="elevation-1"
             style="max-width: 100vw;"
             :loading="isLoading"
             :sort-by="initialSort"
@@ -24,7 +27,7 @@
                         <v-btn
                         icon="mdi-file-edit"
                         variant="text"
-                        color="ternary"
+                        
                         @click="selectedStore=item; showEditStore=true"
                         />
                     </td>
@@ -39,9 +42,7 @@
             <v-dialog v-model="showEditStore" width="auto">
                 <EditStoreDialog :store="selectedStore" @closed="showEditStore=false"/>
             </v-dialog>
-            <v-card-actions>
-                <v-btn @click="showCreateStore=true" icon="mdi-plus"></v-btn>
-            </v-card-actions>
+            
         </v-card>
     </v-container>
     <ErrorDialog @closed="showErr=false" :message="error" v-model="showErr"/>
@@ -74,10 +75,10 @@ const headers = [
         key:"name",
         align:"center",
         cellProps: {
-            class:"bg-primary"
+            class:""
         },
         headerProps: {
-            class: "bg-ternary font-weight-bold"
+            class: " font-weight-bold"
         }
     },
     {
@@ -85,10 +86,10 @@ const headers = [
         key:"location",
         align:"center",
         cellProps: {
-            class:"bg-primary"
+            class:""
         },
         headerProps: {
-            class: "bg-ternary font-weight-bold"
+            class: " font-weight-bold"
         }
     },
     {
@@ -97,10 +98,10 @@ const headers = [
         sortable:false,
         align:"end",
         cellProps: {
-            class:"bg-primary"
+            class:""
         },
         headerProps: {
-            class: "bg-ternary font-weight-bold"
+            class: " font-weight-bold"
         }
     }
 ]
@@ -117,7 +118,6 @@ const headers = [
     padding: 12px;
     border-bottom: 8px solid #eeeeee;
     height: auto !important;
-    background-color: white;
     margin-bottom: 8px;
   }
 

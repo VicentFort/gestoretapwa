@@ -1,15 +1,16 @@
 <template>
     <v-container>
-        <v-card class="bg-primary">
+        <v-card>
             <v-data-table-virtual
             :items="displayedCouponStocks"
-            class="bg-primary"
+            class=""
             no-data-text="No tens tiquets per bescanviar"
             :headers="headers"
             >
             </v-data-table-virtual>
             <v-card-actions>
-                <v-btn @click="emits('closed')" icon="mdi-cancel" color="ternary"/>
+                <v-spacer/>
+                <v-btn @click="emit('closed')" icon="mdi-cancel" />
             </v-card-actions>
         </v-card>
     </v-container>
@@ -24,7 +25,7 @@ const auth = useAuthStore()
 const displayedCouponStocks = computed(() => {
     return auth.userInfo.couponStocks
 })
-const emits = defineEmits(['closed'])
+const emit = defineEmits(['closed'])
 
 const headers = [
     {
@@ -33,10 +34,10 @@ const headers = [
         key:"coupon",
         sortable:true,
         cellProps: {
-            class:"bg-primary"
+            class:""
         },
         headerProps: {
-            class:"bg-ternary font-weight-bold"
+            class:" font-weight-bold bg-secondary"
         }
     },
     {
@@ -45,10 +46,10 @@ const headers = [
         key:"amount",
         sortable:true,
         cellProps: {
-            class:"bg-primary"
+            class:""
         },
         headerProps: {
-            class:"bg-ternary font-weight-bold"
+            class:" font-weight-bold bg-secondary"
         }
     },
 ]

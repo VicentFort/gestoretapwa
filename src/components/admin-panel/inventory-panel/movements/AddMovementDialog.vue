@@ -1,13 +1,13 @@
 <template>
     <v-container>
         <v-form @submit.prevent="submitForm" ref="form" v-model="valid">
-            <v-card class="bg-primary">
-                <v-card-title class="text-primary font-weight-bold bg-ternary">
+            <v-card>
+                <v-card-title class="font-weight-bold">
                     Registrar moviment d'inventari
                 </v-card-title>
-                <v-card-text class="bg-primary" style="max-height: 70vh; overflow-y: auto;">
+                <v-card-text class="" style="max-height: 70vh; overflow-y: auto;">
                     <v-divider/>
-                    <v-card-text class="text-primary bg-ternary">Dades generals</v-card-text>
+                    <v-card-text class="">Dades generals</v-card-text>
                         <v-row>
                             <v-col cols="12" md="6">
                                 <v-select label="Magatzem" :items="stores"
@@ -38,9 +38,9 @@
                             </v-col>
                         </v-row>
                         <v-divider/>
-                        <v-card-text class="text-primary bg-ternary" v-if="selectedType=='Préstec'">Dades de contacte</v-card-text>
-                        <v-row v-if="selectedType=='Prèstec'">
-                            <v-col cols="12" md="6" v-if="selectedType=='Prèstec'">
+                        <v-card-text class="" v-if="selectedType=='Préstec'">Dades de contacte</v-card-text>
+                        <v-row v-if="selectedType=='Préstec'">
+                            <v-col cols="12" md="6" v-if="selectedType=='Préstec'">
                                 <v-select
                                 :items="contacts"
                                 item-title="name"
@@ -49,7 +49,7 @@
                                 label="Contacte">
                                 </v-select>
                             </v-col>
-                            <v-col cols="12" md="6" v-if="selectedType=='Prèstec'">
+                            <v-col cols="12" md="6" v-if="selectedType=='Préstec'">
                                 <v-text-field
                                     class="text-black"
                                     v-model="formattedAdquisitionDate"
@@ -71,12 +71,12 @@
                                             @update:model-value="adquisitonDateMenu = false"
                                         ></v-date-picker>
                                         <v-card-actions>
-                                            <v-btn variant="text" @click="adquisitonDateMenu = false">Tancar</v-btn>
+                                            <v-btn variant="text" @click="adquisitonDateMenu = false" icon="mdi-cancel"/>
                                         </v-card-actions>
                                     </v-card>
                                 </v-dialog>
                             </v-col>
-                            <v-col cols="12" md="6" v-if="selectedType=='Prèstec'">
+                            <v-col cols="12" md="6" v-if="selectedType=='Préstec'">
                                 <v-text-field
                                     class="text-black"
                                     v-model="formattedIdealReturnDate"
@@ -98,7 +98,7 @@
                                             @update:model-value="idealReturnDateMenu = false"
                                         ></v-date-picker>
                                         <v-card-actions>
-                                            <v-btn variant="text" @click="idealReturnDateMenu = false">Tancar</v-btn>
+                                            <v-btn variant="text" @click="idealReturnDateMenu = false" icon="mdi-cancel"/>
                                             
                                         </v-card-actions>
                                     </v-card>
@@ -108,8 +108,10 @@
                 </v-card-text>
                 
                 <v-card-actions>
-                    <v-btn class="bg-ternary" @click="emit('closed')" icon="mdi-cancel"></v-btn>
-                    <v-btn class="bg-ternary" variant="submit" icon="mdi-plus" @click="submitForm" :disabled="selectedStore==null || selectedItem==null || selectedType==null || amount==null || message=='' || (selectedType=='Prèstec' && (selectedContact==null || adquistionDate=='' || idealReturnDate == ''))"></v-btn>
+                    <v-spacer/>
+                    <v-btn class="" variant="submit" icon="mdi-content-save" @click="submitForm" :disabled="selectedStore==null || selectedItem==null || selectedType==null || amount==null || message=='' || (selectedType=='Préstec' && (selectedContact==null || adquistionDate=='' || idealReturnDate == ''))"/>
+                    <v-btn class="" icon="mdi-cancel" @click="emit('closed')"/>
+
                 </v-card-actions>
             </v-card>
         </v-form>
@@ -196,33 +198,6 @@ const submitForm = async () => {
         }
         
         const movementInfo = await auth.processMovement(inventoryMovement)
-        
-        if(inventoryMovement.type=='Prèstec') {
-            
-            const serviceId = process.env.VUE_APP_EMAIL_JS_SERVICE_ID
-            const templateId = process.env.VUE_APP_EMAIL_JS_TEMPLATE_CREATE_LOAN_ID
-            const key = process.env.VUE_APP_EMAIL_JS_KEY
-            
-
-            const formData = {
-                user_name:selectedContact.value.name,
-                user_email:selectedContact.value.email,
-                message: message.value,
-                item: movementInfo.loan?.itemName,
-                amount: movementInfo.amount,
-                fallaName: auth.fallaAdminInfo.name,
-                loanDate:  formattedDate(movementInfo.loan?.acquisitionDate),
-                returnDate: formattedDate(movementInfo.loan?.idealReturnDate),
-                loanId: movementInfo.loan?.id
-
-            }
-            await emailjs.send(
-                serviceId,
-                templateId,
-                formData,
-                key
-            )
-        }
     
         emit('closed')
     } catch(err) {

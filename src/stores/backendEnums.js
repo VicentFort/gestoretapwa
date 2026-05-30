@@ -1,7 +1,7 @@
 const movementTypes = [
       'Entrada',
       'Eixida',
-      'Prèstec'
+      'Préstec'
     ]
 
 const loanStates = [

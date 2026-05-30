@@ -1,18 +1,18 @@
 <template>
     <v-container>
         <v-form @subimt.prevent="handleLogin" ref="form" v-model="valid">
-            <v-card class="bg-primary">
-                <v-card-title class="text-primary font-weight-bold bg-ternary">
+            <v-card>
+                <v-card-title class="font-weight-bold">
                     Registrar la tornada del préstec amb id: {{ loan.id }}
                 </v-card-title>
                 <v-divider/>
-                <v-card-text class="bg-primary">
+                <v-card-text class="">
                     Item: {{ loan.itemName }}
                 </v-card-text>
-                <v-card-text class="bg-primary">
+                <v-card-text class="">
                     Contacte: {{ loan.contactName }}
                 </v-card-text>
-                <v-card-text class="bg-primary">
+                <v-card-text class="">
                     Quantitat: {{ loan.amount }}
                 </v-card-text>
                 <v-divider/>
@@ -34,8 +34,10 @@
                     </v-col>
                 </v-row>
                 <v-card-actions>
-                    <v-btn class="bg-ternary" @click="emit('closed')" icon="mdi-cancel"></v-btn>
-                    <v-btn class="bg-ternary" variant="submit" icon="mdi-plus" @click="submitForm" :disabled="selectedStore==null || message==null"></v-btn>
+                    <v-spacer/>
+                    <v-btn class="" variant="submit" icon="mdi-content-save" @click="submitForm" :disabled="selectedStore==null || message==null"/>
+                    <v-btn class="" @click="emit('closed')" icon="mdi-cancel"/>
+
                 </v-card-actions>
             </v-card>
         </v-form>
@@ -87,31 +89,6 @@ const submitForm = async () => {
         console.log("LOAN INFO: ")
         console.log(loanInfo)
 
-        const serviceId = process.env.VUE_APP_EMAIL_JS_SERVICE_ID
-        const templateId = process.env.VUE_APP_EMAIL_JS_TEMPLATE_RETURN_LOAN_ID
-        const key = process.env.VUE_APP_EMAIL_JS_KEY
-
-
-        const formData = {
-            loanId: loanInfo.id,
-            contactName: loanInfo.contactName,
-            contactEmail: loanInfo.contactEmail,
-            amount: loanInfo.amount,
-            itemName: loanInfo.itemName,
-            fallaName: auth.fallaAdminInfo?.name,
-            returnDate: formattedDate(loanInfo.realReturnDate)
-        }
-        console.log("FORM DATA: ")
-        console.log(formData)
-
-        const emailResponse = await emailjs.send(
-            serviceId,
-            templateId,
-            formData,
-            key
-        )
-        
-        console.log("EMAIL RESPONSE: " + emailResponse)
 
         emit('closed')
     } catch(err) {
