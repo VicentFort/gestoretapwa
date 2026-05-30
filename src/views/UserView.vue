@@ -1,6 +1,6 @@
 <template>
   <div class="">
-      <UserMain/>
+    <UserMain />
   </div>
 </template>
 
@@ -20,5 +20,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

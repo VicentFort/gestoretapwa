@@ -1,7 +1,6 @@
 <template>
   <v-container>
     <v-card flat title="Moviments de inventari" class="text-h6">
-      
       <template v-slot:text>
         <v-text-field
           v-model="search"
@@ -14,21 +13,21 @@
         />
       </template>
       <v-card-actions>
-        <v-btn 
-          v-if="inventoryMovements.length > 25" 
-          variant="text" 
-          :icon="showAllMovements ? 'mdi-filter': 'mdi-clock-outline'"
-           
+        <v-btn
+          v-if="inventoryMovements.length > 25"
+          variant="text"
+          :icon="showAllMovements ? 'mdi-filter' : 'mdi-clock-outline'"
           @click="showAllMovements = !showAllMovements"
         />
         <span class="text-caption">
-            {{ !showAllMovements 
-                ? `Mostrant només els primers ${xs ? 5 : 25}` 
-                : `Mostrant tots (${inventoryMovements.length})` 
-            }}
+          {{
+            !showAllMovements
+              ? `Mostrant només els primers ${xs ? 5 : 25}`
+              : `Mostrant tots (${inventoryMovements.length})`
+          }}
         </span>
         <v-spacer />
-        <v-btn variant="text" icon="mdi-plus" @click="showAddMovement=true"/>
+        <v-btn variant="text" icon="mdi-plus" @click="showAddMovement = true" />
       </v-card-actions>
       <v-data-table-virtual
         :items="displayedMovements"
@@ -40,221 +39,242 @@
         :sort-by="initialSort"
         no-data-text="Sense moviment d'inventari"
         class="elevation-1 responsive-table"
-        style="max-width: 100vw;"
+        style="max-width: 100vw"
       >
         <template #item="{ item }">
           <tr class="responsive-tr">
             <td class="responsive-td" data-label="Data">
-              {{ item.date ? formattedDate(item.date) : 'Cargando...' }}
+              {{ item.date ? formattedDate(item.date) : "Cargando..." }}
             </td>
-            
+
             <td class="responsive-td" data-label="Tipus">
               <div class="justify-end align-center d-flex">
-                
                 <template v-if="item.movementType === 'Préstec'">
-                  <v-btn 
-                    v-if="item.loan?.state === 'Pendent' || item.loan?.state === 'Atrassat'"
+                  <v-btn
+                    v-if="
+                      item.loan?.state === 'Pendent' ||
+                      item.loan?.state === 'Atrassat'
+                    "
                     :class="returnButtonStyle(item.loan?.state)"
                     :icon="returnButtonIcon(item.loan?.state)"
                     size="medium"
-                    @click="showReturnDialog=true; selectedLoan=item.loan"
+                    @click="
+                      showReturnDialog = true;
+                      selectedLoan = item.loan;
+                    "
                   />
-                  <v-icon 
-                    v-else 
+                  <v-icon
+                    v-else
                     :color="item.loan?.state === 'Tornat' ? 'green' : 'error'"
                     :icon="returnButtonIcon(item.loan?.state)"
                   />
                 </template>
 
-                <v-icon 
-                  v-else 
-                  :icon="getMovementIcon(item.movementType)" 
-                  :color="item.movementType === 'Entrada' ? 'success' : 'orange'"
+                <v-icon
+                  v-else
+                  :icon="getMovementIcon(item.movementType)"
+                  :color="
+                    item.movementType === 'Entrada' ? 'success' : 'orange'
+                  "
                 />
               </div>
             </td>
 
             <td class="responsive-td" data-label="Item">{{ item.itemName }}</td>
-            <td class="responsive-td" data-label="Magatzem">{{ item.storeName }}</td>
-            <td class="responsive-td" data-label="Quantitat">{{ item.amount }}</td>
-            <td class="responsive-td" data-label="Missatge">{{ item.message }}</td>
-            <td class="responsive-td" data-label="Creat per">{{ item.createdBy }}</td>
+            <td class="responsive-td" data-label="Magatzem">
+              {{ item.storeName }}
+            </td>
+            <td class="responsive-td" data-label="Quantitat">
+              {{ item.amount }}
+            </td>
+            <td class="responsive-td" data-label="Missatge">
+              {{ item.message }}
+            </td>
+            <td class="responsive-td" data-label="Creat per">
+              {{ item.createdBy }}
+            </td>
           </tr>
         </template>
-
       </v-data-table-virtual>
-
-      
     </v-card>
 
     <v-dialog v-model="showAddMovement" scrollable max-width="600px">
-        <AddMovementDialog @closed="showAddMovement=false" />
+      <AddMovementDialog @closed="showAddMovement = false" />
     </v-dialog>
     <v-dialog v-model="showReturnDialog">
-        <ReturnDialog @closed="showReturnDialog=false" :loan="selectedLoan"/>
+      <ReturnDialog @closed="showReturnDialog = false" :loan="selectedLoan" />
     </v-dialog>
   </v-container>
 </template>
 
 <script setup>
-import { useAuthStore } from '@/stores/auth';
-import { computed, ref } from 'vue';
-import AddMovementDialog from '@/components/admin-panel/inventory-panel/movements/AddMovementDialog.vue';
-import ReturnDialog from '@/components/admin-panel/inventory-panel/movements/ReturnDialog.vue';
-import { useDisplay } from 'vuetify/lib/composables/display';
+import { useAuthStore } from "@/stores/auth";
+import { computed, ref } from "vue";
+import AddMovementDialog from "@/components/admin-panel/inventory-panel/movements/AddMovementDialog.vue";
+import ReturnDialog from "@/components/admin-panel/inventory-panel/movements/ReturnDialog.vue";
+import { useDisplay } from "vuetify/lib/composables/display";
 
-const { xs } = useDisplay()
+const { xs } = useDisplay();
 
-const auth = useAuthStore()
-const inventoryMovements = computed(() => auth.fallaAdminInfo?.inventoryMovements || []) 
-const showAllMovements = ref(false)
-const search = ref('')
-const selectedLoan = ref(null)
-const showAddMovement = ref(false)
-const showReturnDialog = ref(false)
-const initialSort = ref([{key: 'date', order:'desc'}])
+const auth = useAuthStore();
+const inventoryMovements = computed(
+  () => auth.fallaAdminInfo?.inventoryMovements || []
+);
+const showAllMovements = ref(false);
+const search = ref("");
+const selectedLoan = ref(null);
+const showAddMovement = ref(false);
+const showReturnDialog = ref(false);
+const initialSort = ref([{ key: "date", order: "desc" }]);
 
 const displayedMovements = computed(() => {
   // 1. Clonamos y ordenamos siempre por fecha
   const sorted = [...inventoryMovements.value].sort((a, b) => {
-    return new Date(b.date) - new Date(a.date)
-  })
+    return new Date(b.date) - new Date(a.date);
+  });
 
   // 2. Si "Mostrar todos" está activo, no cortamos nada
   if (showAllMovements.value) {
-    return sorted
+    return sorted;
   }
 
   // 3. Lógica de corte inteligente:
   // Si es móvil (xs), mostramos 5. Si es escritorio, mostramos 25.
-  const limit = xs.value ? 5 : 25
-  
-  return sorted.slice(0, limit)
-})
+  const limit = xs.value ? 5 : 25;
+
+  return sorted.slice(0, limit);
+});
 
 // --- LÓGICA DE ICONOS ---
 
 const getMovementIcon = (type) => {
-    if (type === 'Entrada') return 'mdi-arrow-down-bold-circle-outline'
-    if (type === 'Eixida') return 'mdi-arrow-up-bold-circle-outline'
-    return 'mdi-help'
-}
+  if (type === "Entrada") return "mdi-arrow-down-bold-circle-outline";
+  if (type === "Eixida") return "mdi-arrow-up-bold-circle-outline";
+  return "mdi-help";
+};
 
 const returnButtonStyle = (state) => {
-    switch(state) {
-        case "Tornat": return 'bg-green'
-        case "Atrassat": return 'bg-error'
-        default: return ''
-    }
-}
+  switch (state) {
+    case "Tornat":
+      return "bg-green";
+    case "Atrassat":
+      return "bg-error";
+    default:
+      return "";
+  }
+};
 
 const returnButtonIcon = (state) => {
-    switch(state) {
-        case "Tornat": return 'mdi-check-all'
-        case "Atrassat": return 'mdi-clock-alert'
-        default: return 'mdi-keyboard-return' // Este es el que invita a interactuar
-    }
-}
+  switch (state) {
+    case "Tornat":
+      return "mdi-check-all";
+    case "Atrassat":
+      return "mdi-clock-alert";
+    default:
+      return "mdi-keyboard-return"; // Este es el que invita a interactuar
+  }
+};
 
 const formattedDate = (dateString) => {
-  if (!dateString) return ''
-  const date = new Date(dateString)
-  return date.toLocaleString('es-ES') // Simplificado para el ejemplo
-}
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  return date.toLocaleString("es-ES"); // Simplificado para el ejemplo
+};
 
 const headers = [
-    {
-        title:"Data del moviment",
-        align:"center",
-        key:"date",
-        sortable:true,
-        cellProps: {
-            class:""
-        },
-        headerProps: {
-            class:" font-weight-bold"
-        }
+  {
+    title: "Data del moviment",
+    align: "center",
+    key: "date",
+    sortable: true,
+    cellProps: {
+      class: "",
     },
-    {
-        title:"Tipus",
-        align:"center",
-        key:"movementType",
-        sort: (a,b) => {
-            const priority = { "Entrada": 1, "Eixida": 2, "Préstec": 3}
-            return priority[a] - priority[b]
-        },
-        cellProps: {
-            class:""
-        },
-        headerProps: {
-            class:" font-weight-bold"
-        }
+    headerProps: {
+      class: " font-weight-bold",
     },
-    {
-        title:"Item",
-        align:"center",
-        sortable:"true",
-        value:"itemName",
-        cellProps: {
-            class:""
-        },
-        headerProps: {
-            class:" font-weight-bold"
-        }
+  },
+  {
+    title: "Tipus",
+    align: "center",
+    key: "movementType",
+    sort: (a, b) => {
+      const priority = { Entrada: 1, Eixida: 2, Préstec: 3 };
+      return priority[a] - priority[b];
     },
-    {
-        title:"Magatzem",
-        align:"center",
-        sortable:"true",
-        value:"storeName",
-        cellProps: {
-            class:""
-        },
-        headerProps: {
-            class:" font-weight-bold"
-        }
+    cellProps: {
+      class: "",
     },
-    {
-        title:"Quantitat",
-        align:"center",
-        value:"amount",
-        sortable: true,
-        cellProps: {
-            class:""
-        },
-        headerProps: {
-            class:" font-weight-bold"
-        }
+    headerProps: {
+      class: " font-weight-bold",
     },
-    {
-        title:"Missatge",
-        align:"center",
-        value:"message",
-        cellProps: {
-            class:""
-        },
-        headerProps: {
-            class:" font-weight-bold"
-        }
+  },
+  {
+    title: "Item",
+    align: "center",
+    sortable: "true",
+    value: "itemName",
+    cellProps: {
+      class: "",
     },
-    {
-        title:"Creat per",
-        align:"center",
-        value:"createdBy",
-        cellProps: {
-            class:""
-        },
-        headerProps: {
-            class:" font-weight-bold"
-        }
-    }, 
-    
-]
+    headerProps: {
+      class: " font-weight-bold",
+    },
+  },
+  {
+    title: "Magatzem",
+    align: "center",
+    sortable: "true",
+    value: "storeName",
+    cellProps: {
+      class: "",
+    },
+    headerProps: {
+      class: " font-weight-bold",
+    },
+  },
+  {
+    title: "Quantitat",
+    align: "center",
+    value: "amount",
+    sortable: true,
+    cellProps: {
+      class: "",
+    },
+    headerProps: {
+      class: " font-weight-bold",
+    },
+  },
+  {
+    title: "Missatge",
+    align: "center",
+    value: "message",
+    cellProps: {
+      class: "",
+    },
+    headerProps: {
+      class: " font-weight-bold",
+    },
+  },
+  {
+    title: "Creat per",
+    align: "center",
+    value: "createdBy",
+    cellProps: {
+      class: "",
+    },
+    headerProps: {
+      class: " font-weight-bold",
+    },
+  },
+];
 </script>
 
 <style scoped>
 @media (max-width: 600px) {
-  :deep(thead) { display: none; }
+  :deep(thead) {
+    display: none;
+  }
 
   .responsive-tr {
     display: flex;

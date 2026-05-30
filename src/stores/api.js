@@ -1,42 +1,45 @@
 import axios from "axios";
 import { useLoadingStore } from "./loadingStore";
 
-
-const API_IP = "https://nondistributive-nonhedonistically-monserrate.ngrok-free.dev";
+const API_IP =
+  "https://nondistributive-nonhedonistically-monserrate.ngrok-free.dev";
 const LOCAL_API_IP = "http://37.135.29.68:8080";
-const GOOGLE_CALLENDAR_API = 'https://www.googleapis.com/auth/calendar';
+const GOOGLE_CALLENDAR_API = "https://www.googleapis.com/auth/calendar";
 const api = axios.create({
   baseURL: API_IP,
   headers: {
     // Esta cabecera le dice a ngrok que ignore el aviso y te dé el JSON directo
-    'ngrok-skip-browser-warning': true
-  }
-})
-api.interceptors.request.use(config => {
-  const loading = useLoadingStore()
-  loading.show()
-  const token = sessionStorage.getItem('token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-}, error => {
-  return Promise.reject(error);
+    "ngrok-skip-browser-warning": true,
+  },
 });
+api.interceptors.request.use(
+  (config) => {
+    const loading = useLoadingStore();
+    loading.show();
+    const token = sessionStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 api.interceptors.response.use(
-  response => {
+  (response) => {
     const loading = useLoadingStore();
     loading.hide(); // Desactivamos al recibir respuesta
     return response;
   },
-  error => {
+  (error) => {
     const loading = useLoadingStore();
     loading.hide(); // Desactivamos aunque falle
     return Promise.reject(error);
   }
 );
 
-export default api
+export default api;
 /*
 export const crearEvento = async (evento)=> {
   const calendarId = 'primary'; // 'primary' se refiere al calendario principal del usuario

@@ -1,6 +1,6 @@
-import { defineStore } from 'pinia';
+import { defineStore } from "pinia";
 
-export const useLoadingStore = defineStore('loading', {
+export const useLoadingStore = defineStore("loading", {
   state: () => ({
     isLoading: false,
     activeRequests: 0, // Contador para manejar múltiples llamadas simultáneas
@@ -16,6 +16,6 @@ export const useLoadingStore = defineStore('loading', {
         this.activeRequests = 0;
         this.isLoading = false;
       }
-    }
-  }
+    },
+  },
 });

@@ -27,8 +27,8 @@
 }
 
 #app .v-card {
-    color: 'secondary';
-    background-color: 'background' 
+    color:rgb(var(--v-theme-secondary));
+    background-color: rgb(var(--v-theme-background))
 }
 
 

@@ -1,11 +1,11 @@
 <template>
-    <v-container>
-        <v-label clasS=''>{{ auth.userInfo.fallaInfo.name }}</v-label>
-    </v-container>
+  <v-container>
+    <v-label clasS="">{{ auth.userInfo.fallaInfo.name }}</v-label>
+  </v-container>
 </template>
 
 <script setup>
-import { useAuthStore } from '@/stores/auth';
+import { useAuthStore } from "@/stores/auth";
 
-const auth = useAuthStore()
+const auth = useAuthStore();
 </script>

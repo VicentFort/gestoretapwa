@@ -4,7 +4,7 @@
       <FallaMain />
     </p>
     <p v-if="!auth.token">
-      <UnloggedHome/>
+      <UnloggedHome />
     </p>
   </div>
 </template>

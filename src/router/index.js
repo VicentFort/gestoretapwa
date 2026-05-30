@@ -24,12 +24,12 @@ const routes = [
     meta: { requiresAuth: false },
   },
   {
-    path:"/adminPanel",
-    name:"adminPanel",
+    path: "/adminPanel",
+    name: "adminPanel",
     component: () =>
       import(/* webpackChunkName: "login" */ "../views/AdminPanelView.vue"),
     meta: { reuqiresAdmin: true },
-  }
+  },
 ];
 
 const router = createRouter({
@@ -42,8 +42,8 @@ router.beforeEach((to, from) => {
   if (to.meta.requiresAuth && !auth.token) {
     router.push({ name: "Login" });
   }
-  if(to.meta.requiresAdmin && !auth.token) {
-    router.push({name: "Login"})
+  if (to.meta.requiresAdmin && !auth.token) {
+    router.push({ name: "Login" });
   }
 });
 export default router;
