@@ -57,7 +57,6 @@ const submitForm = async () => {
             price: props.event.price,
             userId: user.value
         }
-        console.log(request)
         await auth.eventPayment(request)
         auth.fetchFallaAdminInfo()
         emit('closed')

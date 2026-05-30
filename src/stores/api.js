@@ -2,11 +2,15 @@ import axios from "axios";
 import { useLoadingStore } from "./loadingStore";
 
 
-const API_IP = "https://gestoretaapp-production.up.railway.app";
+const API_IP = "https://nondistributive-nonhedonistically-monserrate.ngrok-free.dev";
 const LOCAL_API_IP = "http://37.135.29.68:8080";
 const GOOGLE_CALLENDAR_API = 'https://www.googleapis.com/auth/calendar';
 const api = axios.create({
-  baseURL: LOCAL_API_IP
+  baseURL: API_IP,
+  headers: {
+    // Esta cabecera le dice a ngrok que ignore el aviso y te dé el JSON directo
+    'ngrok-skip-browser-warning': true
+  }
 })
 api.interceptors.request.use(config => {
   const loading = useLoadingStore()

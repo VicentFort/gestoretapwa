@@ -86,8 +86,6 @@ const submitForm = async () => {
         const response = await auth.returnLoan(returnDto)
         const loanInfo = response?.data
 
-        console.log("LOAN INFO: ")
-        console.log(loanInfo)
 
 
         emit('closed')

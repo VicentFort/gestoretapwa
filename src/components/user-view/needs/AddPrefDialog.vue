@@ -15,8 +15,6 @@
                 <v-list-item
                     v-bind="props"
                     :disabled="userPrefTags.some(s => {
-                        console.log(s)
-                        console.log(item)
                         return s.tagId === item.value
                     })"
                 ></v-list-item>

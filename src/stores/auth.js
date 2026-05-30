@@ -465,7 +465,7 @@ export const useAuthStore = defineStore("auth", {
         console.error(err)
         throw err
       } finally {
-        this.fetchFallaAdminInfo()
+        await this.fetchFallaAdminInfo()
       }
     },
     async feePayment(request) {
@@ -528,7 +528,25 @@ export const useAuthStore = defineStore("auth", {
       } catch(err) {
         throw err
       }
+    },
+
+    async generateQrCode(couponId, stockId, amount) {
+      try {
+        const response = await api.get('/payment/generateCouponQR', {
+          params: {couponId, stockId, amount}
+        }).catch(handleApiError)
+
+
+        if (typeof response.data === 'object' && response.data.text) {
+          return response.data.text;
+        }
+        return response.data;
+      } catch(err) {
+        throw err
+      }
     }
+
+
   }
 },
 );

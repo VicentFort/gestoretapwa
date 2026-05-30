@@ -16,7 +16,6 @@ const show = computed({
 const error = ref('')
 const showErrorDiag = ref(false)
 const mobile = useDisplay()
-console.log('NEED: ' + props.need)
 const deleteNeed = async () => {
     try {
         await auth.deleteNeed(props.need)

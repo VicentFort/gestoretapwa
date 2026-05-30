@@ -9,15 +9,11 @@ module.exports = defineConfig({
   },
   devServer: {
     host:'0.0.0.0',
-    /*
+    
     server: {
-      type:'https',
-      options: {
-        key: readFileSync('./certificates/37.135.29.68+2-key.pem'),
-        cert: readFileSync('./certificates/37.135.29.68+2.pem'),
-      }
+      type:'https'
     },
-    */
+    
     port: 5173
   },
 });

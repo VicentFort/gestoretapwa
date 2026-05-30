@@ -78,7 +78,6 @@ const submitForm = async () => {
             price: localCoupon.value.price,
             itemId: localCoupon.value.itemId
         }
-        console.log(couponReq)
         await auth.editCoupon(couponReq)
         emit('closed')
      } catch(err) {
