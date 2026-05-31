@@ -21,37 +21,44 @@ const unreadNotifications = computed(() => {
   return auth.userInfo.notifications.filter((n) => n.read == false).length;
 });
 
+const handleCouponExit = async () => {
+  this.showCouponTable.value = false
+  await auth.fetchUserInfo()
+}
+
 const handleLogout = async () => {
   auth.logout();
 };
 </script>
 
 <template>
-  <v-container v-if="auth.token && auth.userInfo">
-    <UserInfo />
+  <v-container v-if="auth.token && auth.userInfo" >
+      <UserInfo />
+      <v-divider/>
+
     <v-sheet
       elevation="2"
       rounded="lg"
-      :class="xs ? 'pa-1' : 'pa-2'"
+      :class="xs ?'pa-1' : 'pa-2', 'ma-4'"
       align-tabs="start"
     >
       <v-tabs v-model="tab" class="bg-surface" color="surface" grow>
-        <v-tab value="one" :class="xs ? 'pa-1' : 'pa-5'">Esdeveniments</v-tab>
-        <v-tab value="two" :class="xs ? 'pa-1' : 'pa-5'">Editar perfil</v-tab>
-        <v-tab value="three" :class="xs ? 'pa-1' : 'pa-5'">Preferències</v-tab>
+        <v-tab value="one" :class="xs ?'pa-1' : 'pa-5'">Esdeveniments</v-tab>
+        <v-tab value="two" :class="xs ?'pa-1' : 'pa-5'">Editar perfil</v-tab>
+        <v-tab value="three" :class="xs ?'pa-1' : 'pa-5'">Preferències</v-tab>
         <v-spacer />
         <v-btn
           v-if="!xs"
           @click="showNotificationsTable = true"
           icon="mdi-bell"
-          :color="unreadNotifications > 0 ? 'error' : 'secondary'"
+          :color="unreadNotifications > 0 ? 'error' : 'surface'"
           class="align-self-center notification-button ms-2"
         />
         <v-btn
           v-if="!xs"
           @click="showCouponTable = true"
           icon="mdi-cash"
-          color="secondary"
+          color="surface"
           class="align-self-center notification-button ms-2"
         />
       </v-tabs>
@@ -81,10 +88,10 @@ const handleLogout = async () => {
     <v-btn @click="handleLogout" class="log-out" icon="mdi-logout" />
   </v-container>
   <v-dialog v-model="showCouponTable" min-width="200px">
-    <CouponTable @closed="showCouponTable = false" />
+    <CouponTable @closed="showCouponTable = false; auth.fetchUserInfo()" />
   </v-dialog>
   <v-dialog v-model="showNotificationsTable" min-width="200px">
-    <NotificationList @closed="showNotificationsTable = false" />
+    <NotificationList @closed="handleCouponExit" />
   </v-dialog>
   <v-container v-if="!auth.token">
     <LoginForm />

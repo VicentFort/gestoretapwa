@@ -16,33 +16,34 @@ const unreadNotifications = computed(() => {
 </script>
 
 <template>
-  <v-container>
-    <v-label class="text-black" :text="'Hola: '"></v-label>
-    <br />
-    <v-label class="text-black"
-      >{{ auth.userInfo.name }} {{ auth.userInfo.surname }}
-    </v-label>
-    <br v-if="auth.userInfo?.nickname" />
-    <v-label v-if="auth.userInfo?.nickname" class="text-black">{{
-      auth.userInfo?.nickname
-    }}</v-label>
-    <v-img v-if="auth.userPfp">
-      <img width="80" height="80" :src="auth.userPfp" />
-    </v-img>
+  <v-container class="justify-center">
+   <v-row class="justify-center ma-4">
+      <v-col cols="12" md="6">
+        <v-label class="text-secondary ma-4 pa-2">Hola: {{ auth.userInfo.name }} {{ auth.userInfo.surname }} </v-label>
+        <br v-if="auth.userInfo?.nickname" />
+        <v-label v-if="auth.userInfo?.nickname" class="text-secondary ma-4 pa-2">({{auth.userInfo?.nickname}})</v-label>
+      </v-col>
+      <v-spacer/>
+      <v-col cols="12" md="6">
+        <v-img v-if="auth.userPfp">
+          <img width="120" height="120" :src="auth.userPfp" />
+        </v-img>
+      </v-col>
+    </v-row>
     <v-spacer />
-    <v-row v-if="xs" class="justify-center">
-      <v-btn
-        @click="showNotificationsTable = true"
-        icon="mdi-bell"
-        :color="unreadNotifications > 0 ? 'error' : 'success'"
-        class="align-self-center ms-2"
-      />
-      <v-btn
-        @click="showCouponTable = true"
-        icon="mdi-cash"
-        color="success"
-        class="align-self-center ms-2"
-      />
+    <v-row v-if="xs" class="justify-center align-center ga-4">
+        <v-btn
+          @click="showNotificationsTable = true"
+          icon="mdi-bell"
+          :color="unreadNotifications > 0 ? 'error' : 'success'"
+          class="align-self-center ms-2"
+        />
+        <v-btn
+          @click="showCouponTable = true"
+          icon="mdi-cash"
+          color="success"
+          class="align-self-center ms-2"
+        />
     </v-row>
     <v-dialog v-model="showCouponTable" width="auto">
       <CouponTable @closed="showCouponTable = false" />

@@ -10,9 +10,24 @@
         :disabled="!filteredItems"
       />
 
+
+      <v-btn
+          v-if="inventoryItems.length > 10 && !filteredItems"
+          variant="text"
+          :icon="showAllItems ? 'mdi-filter' : 'mdi-clock-outline'"
+          @click="showAllItems = !showAllItems"
+        />
+      <span class="text-caption" v-if="!filteredItems">
+        {{
+          !showAllItems
+            ? `Mostrant només els primers ${xs ? 5 : 10}`
+            : `Mostrant tots (${inventoryItems.length})`
+        }}
+      </span>
       <v-btn @click="showCreateItem = true" icon="mdi-plus" class="ms-2" />
+
       <v-data-table-virtual
-        :items="inventoryItems"
+        :items="displayedItems"
         item-value="id"
         hide-default-footer="true"
         :sort-by="initialSort"
@@ -88,9 +103,10 @@ import EditItemDialog from "@/components/admin-panel/inventory-panel/items/EditI
 import ErrorDialog from "@/components/ErrorDialog.vue";
 import ItemStocksDialog from "./ItemStocksDialog.vue";
 import ItemFilterDialog from "./ItemFilterDialog.vue";
+import { useDisplay } from "vuetify/lib/composables/display.js";
 
 const auth = useAuthStore();
-
+const {xs} = useDisplay()
 const showCreateItem = ref(false);
 const showEditItem = ref(false);
 const showItemStocks = ref(false);
@@ -103,6 +119,7 @@ const error = ref("");
 
 const filteredItems = ref(null);
 const isFilterDiagOpen = ref(false);
+const showAllItems = ref(false)
 const inventoryItems = computed(() => {
   const base = !filteredItems.value
     ? [...(auth.fallaAdminInfo?.inventoryItems || [])]
@@ -112,6 +129,18 @@ const inventoryItems = computed(() => {
       return item.enabled == true;
     }) || []
   );
+});
+
+const displayedItems = computed(() => {
+  const sorted = [...inventoryItems.value]
+
+  if (showAllItems.value) {
+    return sorted;
+  }
+
+  const limit = xs.value ? 5 : 10;
+
+  return sorted.slice(0, limit);
 });
 
 const handleFilter = (list) => {

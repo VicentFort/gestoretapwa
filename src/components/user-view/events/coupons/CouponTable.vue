@@ -71,7 +71,7 @@
             <v-chip color="secondary" variant="flat" class="mb-2">
               Quantitat a bescanviar: {{ modal.selectedAmount }}
             </v-chip>
-            <p>Presenta aquest codi a la falla</p>
+            <p>Presenta aquest codi a la falla: {{modal.selectedItem.falla}}</p>
           </div>
         </v-card-text>
 
@@ -150,6 +150,7 @@ const generateQrCode = async () => {
     const couponId = modal.selectedItem.couponId;
     const stockId = modal.selectedItem.id;
     const amount = modal.selectedAmount;
+    const itemId = modal.selectedItem.itemId;
 
     if (!couponId || !stockId) {
       throw new Error(
@@ -157,7 +158,7 @@ const generateQrCode = async () => {
       );
     }
 
-    const qrResponse = await auth.generateQrCode(couponId, stockId, amount);
+    const qrResponse = await auth.generateQrCode(couponId, stockId, amount, itemId);
 
     // Asignamos el String Base64 directo al estado reactivo
     await nextTick();
@@ -179,6 +180,13 @@ const headers = [
     headerProps: { class: "font-weight-bold bg-secondary" },
   },
   {
+    title: "Falla",
+    align: "center",
+    key: "falla",
+    sortable: true,
+    headerProps: { class: "font-weight-bold bg-secondary" },
+  },
+  {
     title: "Disponibles",
     align: "center",
     key: "amount",
@@ -192,5 +200,6 @@ const headers = [
     sortable: false,
     headerProps: { class: "font-weight-bold bg-secondary" },
   },
+  
 ];
 </script>

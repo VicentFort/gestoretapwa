@@ -8,10 +8,11 @@ const showErrorDiag = ref(false);
 const email = ref("");
 const password = ref("");
 const error = ref("");
+const remember = ref(false)
 
 const handleLogin = async () => {
   try {
-    await auth.login(email.value, password.value);
+    await auth.login(email.value, password.value, remember.value);
     error.value = "";
   } catch (err) {
     error.value = err;
@@ -56,6 +57,11 @@ const closeError = async () => {
         </v-row>
         <v-card-actions>
           <v-spacer />
+          <v-checkbox
+          v-model="remember"
+          label="Guardar sessió"
+          color="secondary"
+          hide-details/>
           <v-btn
             type="submit"
             class=""

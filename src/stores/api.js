@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useLoadingStore } from "./loadingStore";
+import { useAuthStore } from "./auth";
 
 const API_IP =
   "https://nondistributive-nonhedonistically-monserrate.ngrok-free.dev";
@@ -15,14 +16,24 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const loading = useLoadingStore();
+    const auth = useAuthStore()
     loading.show();
-    const token = sessionStorage.getItem("token");
+    const token = auth.token;
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
   (error) => {
+    if (error.response && error.response.status === 401) {
+      const authStore = useAuthStore()
+      
+      // Limpiamos el store de Pinia (y por ende la cookie de forma automática)
+      authStore.$reset() 
+      
+      // Redirigimos al Login de inmediato
+      router.push({ name: 'Login' })
+    }
     return Promise.reject(error);
   }
 );

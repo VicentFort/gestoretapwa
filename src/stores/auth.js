@@ -1,38 +1,56 @@
 import { defineStore } from "pinia";
 import api from "./api";
 import { isManager } from "./checkAccessType";
-import { fileToBase64 } from "./util";
+import Cookies from "js-cookie";
+
+let rememberSession = false;
+import router from "@/router";
 export const useAuthStore = defineStore("auth", {
   state: () => ({
-    token: sessionStorage.getItem("token") || null,
-    userEmail: sessionStorage.getItem("userEmail") || null,
-    userInfo: JSON.parse(sessionStorage.getItem("userInfo")) || null,
-    userPfp: sessionStorage.getItem("userPfp") || null,
-    fallaAdminInfo: JSON.parse(
-      sessionStorage.getItem("fallaAdminInfo") || null
-    ),
-    movementTypes: ["Entrada", "Eixida", "Préstec"],
-    loanStates: ["Pendent", "Tornat", "Atrassat"],
-    itemCategories: [
-      "Pirotècnia",
-      "Menjar",
-      "Oficina",
-      "Arts plàstiques",
-      "Beguda",
-      "Infraestructura",
-      "Electrònica / Informàtica",
-      "Altres",
-    ],
-    accessTypes: ["Sense càrrec", "Representatiu", "Gestor", "Superusuari"],
+    token: null,
+    userEmail: null,
+    userInfo: null,
+    userPfp: null,
+    fallaAdminInfo: null,
   }),
+  persist: {
+    key: "auth_session", // El nombre que tendrá la cookie en el navegador
+    storage: {
+      getItem: (key) => Cookies.get(key),
+      setItem: (key, value) => {
+        const rememberSession = Cookies.get("falla_remember_me") === "true"
+        if (rememberSession) {
+          // Si marcó el checkbox, la cookie dura 7 días y sobrevive al cerrar el navegador
+          Cookies.set(key, value, { 
+            expires: 7, 
+            secure: window.location.protocol === 'https:', 
+          })
+        } else {
+          // Si NO lo marcó, NO le pasamos el parámetro 'expires'.
+          // Esto crea una "Session Cookie": se borra automáticamente al cerrar el navegador/pestaña.
+          Cookies.set(key, value, { 
+            secure: window.location.protocol === 'https:', 
+          })
+        }
+      },
+      removeItem: (key) => Cookies.remove(key),
+    },
+  },
   actions: {
     //SECCIÓN USUARIOS
 
     /*
      * Llama al endpoint de login del backend
      */
-    async login(email, password) {
+    async login(email, password, remember) {
       try {
+        if (remember) {
+          // Si es true, creamos una marca que dura 7 días
+          Cookies.set("falla_remember_me", "true", { expires: 7 })
+        } else {
+          // Si es false, nos aseguramos de borrarla si existía de antes
+          Cookies.remove("falla_remember_me")
+        }
         const response = await api
           .post("/auth/login", {
             email,
@@ -41,8 +59,8 @@ export const useAuthStore = defineStore("auth", {
           .catch(handleApiError);
         this.token = response.data; // El string del JWT
         this.userEmail = email;
-        sessionStorage.setItem("token", this.token);
-        sessionStorage.setItem("userEmail", this.userEmail);
+        api.defaults.headers.common['Authorization'] = `Bearer ${response.data}`;
+        router.push("/user")
         await this.fetchUserInfo();
       } catch (error) {
         throw error;
@@ -61,7 +79,7 @@ export const useAuthStore = defineStore("auth", {
       }
     },
     /*
-     * Elimina la info del usuario guardada en el sessionStorage y quita los headers de autorización
+     * Elimina la info del usuario guardada y quita los headers de autorización
      */
     logout() {
       this.token = null;
@@ -69,13 +87,8 @@ export const useAuthStore = defineStore("auth", {
       this.userInfo = null;
       this.fallaAdminInfo = null;
       this.userPfp = null;
-
-      sessionStorage.removeItem("token");
-      sessionStorage.removeItem("userEmail");
-      sessionStorage.removeItem("userInfo");
-      sessionStorage.removeItem("fallaAdminInfo");
-
       delete api.defaults.headers.common["Authorization"];
+      this.$reset()
     },
     /*
      * Actualiza el usuario dados ciertos parámetro de entrada.
@@ -155,7 +168,7 @@ export const useAuthStore = defineStore("auth", {
       }
     },
     /*
-     * Obtiene la información del usuario y la guarda en el sessionStorage de "userInfo".
+     * Obtiene la información del usuario y la guarda.
      * Entre esta información está la información suya, la de su falla, y otras cosas como disposiciones o necesidades alimentarias.
      */
     async fetchUserInfo() {
@@ -166,13 +179,11 @@ export const useAuthStore = defineStore("auth", {
         orderJSONStructure(responseInfo.data);
         this.userInfo = responseInfo.data;
 
-        sessionStorage.setItem("userInfo", JSON.stringify(this.userInfo));
         await this.getPfpImage();
         if (isManager(this.userInfo?.accessType)) {
           await this.fetchFallaAdminInfo();
         }
       } catch (error) {
-        console.error(error);
         throw error;
       }
     },
@@ -200,10 +211,6 @@ export const useAuthStore = defineStore("auth", {
         const response = await api.get("/falla/info").catch(handleApiError);
         orderJSONStructure(response.data);
         this.fallaAdminInfo = response.data;
-        sessionStorage.setItem(
-          "fallaAdminInfo",
-          JSON.stringify(this.fallaAdminInfo)
-        );
       } catch (error) {
         console.error(error);
       }
@@ -565,9 +572,7 @@ export const useAuthStore = defineStore("auth", {
         reader.onloadend = () => {
           const base64String = reader.result;
           this.userPfp = base64String;
-          sessionStorage.setItem("userPfp", base64String);
         };
-        sessionStorage.setItem("userPfp", response.data);
       } catch (err) {
         throw err;
       }
@@ -585,11 +590,11 @@ export const useAuthStore = defineStore("auth", {
       }
     },
 
-    async generateQrCode(couponId, stockId, amount) {
+    async generateQrCode(couponId, stockId, amount, itemId) {
       try {
         const response = await api
           .get("/payment/generateCouponQR", {
-            params: { couponId, stockId, amount },
+            params: { couponId, stockId, amount, itemId },
           })
           .catch(handleApiError);
 

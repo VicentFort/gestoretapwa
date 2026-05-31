@@ -2,10 +2,23 @@
   <v-container>
     <v-card flat title="Magatzems" class="text-h6">
       <v-card-actions>
+        <v-btn
+          v-if="stores.length > 5"
+          variant="text"
+          :icon="showAllStores ? 'mdi-filter' : 'mdi-clock-outline'"
+          @click="showAllStores = !showAllStores"
+        />
+      <span class="text-caption">
+        {{
+          !showAllStores
+            ? `Mostrant només els primers ${xs ? 5 : 5}`
+            : `Mostrant tots (${stores.length})`
+        }}
+      </span>
         <v-btn @click="showCreateStore = true" icon="mdi-plus" />
       </v-card-actions>
       <v-data-table-virtual
-        :items="stores"
+        :items="displayedStores"
         :headers="headers"
         hide-default-footer
         class="elevation-1"
@@ -58,15 +71,31 @@ import CreateStoreDialog from "@/components/admin-panel/inventory-panel/items/Cr
 import { ref, computed } from "vue";
 import EditStoreDialog from "@/components/admin-panel/inventory-panel/items/EditStoreDialog.vue";
 import ErrorDialog from "@/components/ErrorDialog.vue";
+import { useDisplay } from "vuetify/lib/composables/display";
 
 const auth = useAuthStore();
+
+const {xs} = useDisplay()
 const showEditStore = ref(false);
+const showAllStores = ref(false)
 const stores = computed(
   () =>
     auth.fallaAdminInfo?.stores.filter((store) => {
       return store.enabled == true;
     }) || []
 );
+
+const displayedStores = computed(() => {
+  const sorted = [...stores.value]
+
+  if (showAllStores.value) {
+    return sorted;
+  }
+
+  const limit = xs.value ? 5 : 5;
+
+  return sorted.slice(0, limit);
+})
 const isLoading = ref(false);
 const selectedStore = ref(null);
 const showCreateStore = ref(false);

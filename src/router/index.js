@@ -12,23 +12,20 @@ const routes = [
   {
     path: "/user",
     name: "User Info",
-    component: () =>
-      import(/* webpackChunkName: "userinfo" */ "../views/UserView.vue"),
-    meta: { requiresAuth: false },
+    component: () => import("../views/UserView.vue"),
+    meta: { requiresAuth: true },
   },
   {
     path: "/login",
     name: "login",
-    component: () =>
-      import(/* webpackChunkName: "login" */ "../views/LoginView.vue"),
-    meta: { requiresAuth: false },
+    component: () => import("../views/LoginView.vue"),
+    meta: { requiresAuth: false }, // ✅ Cambiado a false para que cualquiera pueda entrar
   },
   {
     path: "/adminPanel",
     name: "adminPanel",
-    component: () =>
-      import(/* webpackChunkName: "login" */ "../views/AdminPanelView.vue"),
-    meta: { reuqiresAdmin: true },
+    component: () => import("../views/AdminPanelView.vue"),
+    meta: { requiresAuth: true }, // ✅ Corregido el typo y protegido
   },
 ];
 
@@ -37,13 +34,20 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from) => {
-  const auth = useAuthStore();
-  if (to.meta.requiresAuth && !auth.token) {
-    router.push({ name: "Login" });
+router.beforeEach(async (to, from, next) => {
+  const authStore = useAuthStore()
+
+  // 1. Si la ruta requiere autenticación y NO hay token
+  if (to.meta.requiresAuth && !authStore.token) {
+    return next({ name: 'login' })
   }
-  if (to.meta.requiresAdmin && !auth.token) {
-    router.push({ name: "Login" });
+
+  // 2. Si intenta ir al login pero YA está autenticado, lo mandamos a la Home
+  if (to.name === 'login' && authStore.token) {
+    return next('/')
   }
-});
+  
+
+  next() // Permitir el paso si todo está en orden
+})
 export default router;

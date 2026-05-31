@@ -8,13 +8,13 @@
 
         <v-col cols="12">
           <v-select
-            v-if="auth.fallaAdminInfo.stores"
-            :items="stores"
-            :item-props="storeProps"
             v-model="selectedStore"
+            :items="displayedStores"
+            :item-props="storeProps"
+            item-title="name" 
+            item-value="id"
+            :disabled="displayedStores.length === 0"
             label="Magatzem"
-            variant="outlined"
-            :rules="[(v) => !!v || 'El magatzem és obligatori']"
           />
         </v-col>
 
@@ -24,7 +24,6 @@
               :color="scanning ? 'error' : 'primary'"
               prepend-icon="mdi-camera"
               block
-              :disabled="!selectedStore"
               @click="toggleScanner"
             >
               {{ scanning ? "Aturar Escàner" : "Escanejar Codi QR" }}
@@ -50,8 +49,8 @@
             <v-icon icon="mdi-check-circle" size="large" class="mb-1" />
             <div class="text-subtitle-1 font-weight-bold">Tiquet Detectat!</div>
             <div class="text-caption">
-              ID Cupó: {{ scannedData.couponId }} | ID Stock:
-              {{ scannedData.stockId }} | Quantitat: {{ scannedData.amount }}
+              ID Tiquet: {{ scannedData.couponId }} | ID Stock:
+              {{ scannedData.stockId }} | Quantitat: {{ scannedData.amount }} | ID Item: {{scannedData.itemId}}
             </div>
           </v-card>
         </v-col>
@@ -86,8 +85,20 @@ import { Html5Qrcode } from "html5-qrcode";
 import { paymentTypes } from "@/stores/backendEnums";
 
 const auth = useAuthStore();
-const stores = ref(auth.fallaAdminInfo.stores);
 
+const displayedStores = computed(() => {
+  const itemId = scannedData.value?.itemId;
+
+  if (!itemId) {
+    return [];
+  }
+
+  return auth.fallaAdminInfo.stores.filter(s => {
+    return s.stocks.some(stock => {
+      return stock.itemId === scannedData.value.itemId;
+    });
+  });
+});
 const valid = ref(false);
 const form = ref(null);
 const loading = ref(false);
@@ -171,10 +182,19 @@ const processQrCode = async (text) => {
       couponId: parseInt(urlParams.get("couponId")),
       stockId: parseInt(urlParams.get("stockId")),
       amount: parseInt(urlParams.get("amount")) || 1,
+      itemId: parseInt(urlParams.get("itemId")),
+      fallaId: parseInt(urlParams.get("fallaId"))
     };
+    if(scannedData.value.fallaId !== auth.fallaAdminInfo.fallaId) {
+      await stopScanner()
+      scannedData.value = null
+      error.value="El tiquet no es de la falla"
+      showErrorDiag.value = true
+    } else {
+      await stopScanner();
 
-    // Detenemos la cámara automáticamente al capturar el tiquet con éxito
-    await stopScanner();
+    }
+      
   } catch (err) {
     await stopScanner();
     error.value = err.message || "Error al processar el codi QR";

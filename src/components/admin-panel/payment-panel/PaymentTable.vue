@@ -13,6 +13,20 @@
         :disabled="!filteredPayments"
         class="ms-2"
       />
+      <v-divider class="ms-2"/>
+      <v-btn
+          v-if="payments.length > 10"
+          variant="text"
+          :icon="showAllPayments ? 'mdi-filter' : 'mdi-clock-outline'"
+          @click="showAllPayments = !showAllPayments"
+        />
+      <span class="text-caption">
+        {{
+          !showAllPayments
+            ? `Mostrant només els primers ${xs ? 5 : 10}`
+            : `Mostrant tots (${payments.length})`
+        }}
+      </span>
     </v-col>
     <v-data-table-virtual
       :items="paymentsToShow"
@@ -110,7 +124,7 @@ const auth = useAuthStore();
 const initialSort = ref([{ key: "date", order: "desc" }]);
 
 const { xs } = useDisplay();
-
+const showAllPayments = ref(false)
 const formattedDate = (dateString) => {
   if (!dateString) return "";
   const date = new Date(dateString);
@@ -125,10 +139,28 @@ const getPTypeIcon = (type) => {
 };
 
 const filteredPayments = ref(null);
+
+const payments = computed(() => {
+  const base = !filterPayments.value
+    ? [...(auth.fallaAdminInfo?.payments || [])]
+    : filterPayments.value;
+
+  return base
+});
+
 const paymentsToShow = computed(() => {
-  return filteredPayments.value
-    ? [...filteredPayments.value]
-    : [...(auth.fallaAdminInfo.payments || [])];
+  const sorted = [...payments.value].sort((a, b) => {
+    return new Date(b.date) - new Date(a.date);
+  });
+
+    if(showAllPayments.value) {
+      return sorted
+    }
+
+    const limit = xs.value ? 5 : 10;
+
+    return sorted.slice(0,limit)
+
 });
 
 const selectedPayment = ref(null);

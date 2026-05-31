@@ -16,9 +16,6 @@ export default createVuetify({
     },
   },
   theme: {
-    options: {
-      customProperties: true, // Enables CSS variables
-    },
     defaultTheme: "gestoreta",
     themes: {
       gestoreta: {
@@ -62,6 +59,15 @@ export default createVuetify({
     },
     VChip: { rounded: "lg" },
     VSheet: {
+      rounded: "lg",
+    },
+    VToolbar: {
+      color: 'secondary', // Esto le aplica el color nativamente a todas las v-toolbar
+    },
+    VAppBar: {
+      color: 'secondary'
+    },
+    VTabs: {
       rounded: "lg",
     },
   },

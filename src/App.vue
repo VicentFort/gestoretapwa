@@ -9,16 +9,18 @@
       <v-progress-circular indeterminate size="64" />
     </v-overlay>
     <v-container class="align-center d-flex">
-      <v-app-bar class="bg-secondary" color="secondary">
+      <v-app-bar  v-if="$route.name !== 'Login'" class="bg-secondary" color="secondary" flat>
         <v-toolbar-title class="font-weight-bold">
-          <v-icon size="large">
-            <img
-              src="@/assets/ic_gestoreta_logo.png"
-              width="40"
-              height="40"
-              alt="icon"
-            />
-          </v-icon>
+            <v-icon size="large" class="pa-4">
+              <img
+                src="@/assets/ic_gestoreta_logo.png"
+                width="40"
+                height="40"
+                class="ma-4"
+                alt="icon"
+              />
+            </v-icon>
+          
         </v-toolbar-title>
 
         <v-spacer></v-spacer>
@@ -85,7 +87,13 @@ const reloadAll = async () => {
 };
 onMounted(async () => {
   if (auth.token) {
-    await auth.fetchUserInfo();
+    try {
+      await auth.fetchUserInfo();
+    } catch (error) {
+      // No necesitas hacer nada aquí, el interceptor de Axios 401 
+      // ya se habrá encargado de borrar el store y redirigir al login.
+      console.warn("Sesión expirada al cargar la app.");
+    }
   }
 });
 </script>
