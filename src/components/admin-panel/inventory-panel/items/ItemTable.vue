@@ -1,30 +1,40 @@
 <template>
   <v-container>
     <v-card title="Items" class="text-h6">
-      <v-btn icon="mdi-filter" @click="isFilterDiagOpen = true" class="ms-2" />
+      <v-row>
+        <v-col cols="12" md="6">
+           <v-btn
+              v-if="inventoryItems.length > 10 && !filteredItems"
+              variant="text"
+              :icon="showAllItems ? 'mdi-filter' : 'mdi-clock-outline'"
+              @click="showAllItems = !showAllItems"
+            />
+          <span class="text-caption" v-if="!filteredItems">
+            {{
+              !showAllItems
+                ? `Mostrant només els primers ${xs ? 5 : 10}`
+                : `Mostrant tots (${inventoryItems.length})`
+            }}
+          </span>
 
-      <v-btn
-        class="ms-2"
-        icon="mdi-filter-remove"
-        @click="filteredItems = null"
-        :disabled="!filteredItems"
-      />
+        </v-col>
+        <v-col cols="12" md="6">
+          <v-btn icon="mdi-filter" @click="isFilterDiagOpen = true" class="ms-2" />
 
+          <v-btn
+            class="ms-2"
+            icon="mdi-filter-remove"
+            @click="filteredItems = null"
+            :disabled="!filteredItems"
+          />
+          
+        </v-col>
+        <v-col cols="12" md="6">
+          <v-btn @click="showCreateItem = true" icon="mdi-plus" class="ms-2" />
+        </v-col>
+      </v-row>
 
-      <v-btn
-          v-if="inventoryItems.length > 10 && !filteredItems"
-          variant="text"
-          :icon="showAllItems ? 'mdi-filter' : 'mdi-clock-outline'"
-          @click="showAllItems = !showAllItems"
-        />
-      <span class="text-caption" v-if="!filteredItems">
-        {{
-          !showAllItems
-            ? `Mostrant només els primers ${xs ? 5 : 10}`
-            : `Mostrant tots (${inventoryItems.length})`
-        }}
-      </span>
-      <v-btn @click="showCreateItem = true" icon="mdi-plus" class="ms-2" />
+      
 
       <v-data-table-virtual
         :items="displayedItems"

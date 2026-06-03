@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="show" width="500">
     <v-card>
-      <v-card-title class="text-h6">Afig la necessitat</v-card-title>
+      <v-card-title class="text-h6">Afig la preferència alimentaria</v-card-title>
       <v-select
         v-model="desc"
         :items="descriptions"

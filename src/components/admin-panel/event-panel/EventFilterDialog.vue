@@ -23,12 +23,6 @@
                 @update:model-value="dateMenu = false"
               ></v-date-picker>
               <v-card-actions>
-                <v-btn
-                  :icon="showClosed ? 'mdi-eye' : 'mdi-eye-off'"
-                  @click="toggleClosed"
-                  title="Mostrar tancats"
-                />
-                <v-spacer></v-spacer>
 
                 <v-btn
                   variant="text"
@@ -96,7 +90,7 @@
           class="text-white"
           type="text"
           @click="emptyFields"
-          icon="mdi-delete"
+          icon="mdi-cancel"
         />
         <v-btn
           class="text-white"
@@ -104,13 +98,6 @@
           :disabled="!valid"
           icon="mdi-calendar-search"
         />
-        <v-btn
-          :icon="showClosed ? 'mdi-filter' : 'mdi-clock-outline'"
-          @click="toggleClosed"
-        />
-        <span class="ml-2 text-caption">
-          {{ showClosed ? "Mostrant tots" : "Només oberts" }}
-        </span>
       </v-card-actions>
     </v-card>
   </v-form>
@@ -120,19 +107,15 @@
 import { useAuthStore } from "@/stores/auth";
 import { ref, computed } from "vue";
 
-const showClosed = ref(false);
 
 const emit = defineEmits(["update-filter", "toggle-closed"]); // <--- Añadimos el nuevo emit
 
-const toggleClosed = () => {
-  showClosed.value = !showClosed.value;
-  emit("toggle-closed", showClosed.value); // Avisamos al padre del cambio
-};
+
 const valid = ref(false);
 const dateMenu = ref(false);
 const endDateMenu = ref(false);
 const auth = useAuthStore();
-const tags = ref([auth.userInfo?.fallaInfo?.tags || []]);
+const tags = ref(auth.fallaAdminInfo.tags);
 
 const date = ref("");
 const endDate = ref("");
@@ -140,7 +123,7 @@ const tag = ref(null);
 const maxPrice = ref(null);
 
 const submitForm = () => {
-  let filtered = auth.userInfo.events?.filter((event) => {
+  let filtered = auth.fallaAdminInfo.events?.filter((event) => {
     const meetsMaxPrice =
       maxPrice.value !== null && maxPrice.value !== ""
         ? event.price <= maxPrice.value
@@ -157,6 +140,7 @@ const submitForm = () => {
       ? new Date(event.endDate) <= new Date(endDate.value)
       : true;
 
+
     const meetsTag = tag.value ? event.tagName == tag.value : true;
 
     return meetsMaxPrice && meetsDate && meetsEndDate && meetsTag;
@@ -168,9 +152,8 @@ const emptyFields = () => {
   endDate.value = null;
   maxPrice.value = null;
   tag.value = null;
-  showClosed.value = false;
   emit("toggle-closed", false);
-  emit("update-filter", [...auth.userInfo.events]);
+  emit("update-filter", null);
 };
 
 const formattedDate = computed(() => {

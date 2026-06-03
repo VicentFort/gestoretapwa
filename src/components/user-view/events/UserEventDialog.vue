@@ -1,6 +1,6 @@
 <template>
   <v-dialog v-model="show" width="500">
-    <v-card v-if="event" :class="event.active ? '' : 'event-closed-dialog'">
+    <v-card v-if="event" :class="event.active ?'' : 'event-closed-dialog'">
       <v-img
         v-if="eventImageUrl"
         :src="eventImageUrl"
@@ -9,9 +9,16 @@
         class="align-end text-white"
       >
       </v-img>
+      <v-img
+        v-else
+        src="@/assets/ic_gestoreta_logo.png"
+        height="100"
+        cover
+        class="align-end text-white"
+      />
       <v-card-title
         class="bg-secondary"
-        :class="event.active ? '' : 'event-closed-dialog'"
+        :class="event.active ?'' : 'event-closed-dialog'"
       >
         Títol: {{ event?.title }}
       </v-card-title>
@@ -29,6 +36,10 @@
       <v-card-text class="pa-4">Hora: {{ formattedTime }}</v-card-text>
 
       <v-card-text class="pa-4">Etiqueta: {{ event?.tagName }}</v-card-text>
+
+      <v-card-text class="pa-4">Obert al públic: {{ formatPublic() }}</v-card-text>
+
+      <v-card-text class="pa-4" v-if="event.price !== null && event.price > 0">Preu {{ event.price }} €</v-card-text>
 
       <v-divider></v-divider>
 
@@ -70,6 +81,10 @@ const show = computed({
   get: () => props.modelValue,
   set: (value) => emit("update:modelValue", value),
 });
+
+const formatPublic = () => {
+  return props.event.public ? 'si' : 'no'
+}
 
 const error = ref("");
 const showErrorDiag = ref(false);

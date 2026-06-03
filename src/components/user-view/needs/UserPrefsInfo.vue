@@ -5,7 +5,7 @@
       <v-list class="">
         <v-list-item
           v-for="pref in auth.userInfo?.eventTagPrefs"
-          class="text-black"
+          class="text-secondary"
           :key="pref.prefId"
           :title="pref.tagName"
           @click="openInfo(pref)"
@@ -35,7 +35,7 @@ import { ref } from "vue";
 import DeletePrefDialog from "./DeletePrefDialog.vue";
 import AddPrefDialog from "./AddPrefDialog.vue";
 const auth = useAuthStore();
-const fallaTags = ref(auth.userInfo?.fallaInfo?.tags || []);
+const fallaTags = ref([auth.userInfo?.fallaInfo?.tags || []]);
 const isInfoOpen = ref(false);
 const isCreateOpen = ref(false);
 const selectedPreference = ref(null);

@@ -9,14 +9,28 @@
             type="email"
             label="Correu electrònic"
             required
+            :rules="[e => isValidEmail]"
+            hint="El correu ha de ser vàlid"
           ></v-text-field>
         </v-col>
+        <v-col cols="12" md="6"/>
         <v-col cols="12" md="6">
           <v-text-field
             v-model="password"
             type="password"
             label="Contrasenya"
             required
+            :rules="[p => p !== '' &&  p.length >= 4]"
+            hint="La constrasenya ha de tindre 4 caracters com a mínim"
+          ></v-text-field>
+        </v-col>
+        <v-col cols="12" md="6">
+          <v-text-field
+            v-model="repeatPassword"
+            type="password"
+            label="Repetir contrasenya"
+            required
+            :rules="[p => p !== '' &&  p.length >= 4 && p === password]"
           ></v-text-field>
         </v-col>
         <v-col cols="12" md="6">
@@ -24,38 +38,34 @@
             v-model="name"
             type="text"
             label="Nom"
+            :rules="[n => n !== '']"
             required
+            hint="El nom no pot estar buit"
           ></v-text-field>
         </v-col>
-        <v-col cols="12" md="6">
-          <v-text-field
-            v-model="nickname"
-            type="text"
-            label="Malnom"
-            required
-          ></v-text-field>
-        </v-col>
-
-        <v-col cols="12" md="6">
-          <v-text-filed
-            v-model="nickname"
-            type="text"
-            label="Malnom"
-            required
-          ></v-text-filed>
-        </v-col>
-        <v-col></v-col>
+        
         <v-col cols="12" md="6">
           <v-text-field
             v-model="surname"
             type="text"
             label="Cognoms"
             required
+            :rules ="[sn => sn !== '']"
+            hint="Els cognoms no poden estar buits"
           ></v-text-field>
         </v-col>
+        <v-col cols="12" md="6">
+          <v-text-field
+            v-model="nickname"
+            type="text"
+            label="Malnom"
+            required
+          ></v-text-field>
+        </v-col>
+        
         <v-col cols="12" class="py-0">
           <v-text-field
-            class="text-black"
+            class="text-secondary"
             v-model="formattedDate"
             label="Data d'aniversari"
             prepend-inner-icon="mdi-calendar"
@@ -67,11 +77,12 @@
           <v-dialog v-model="menu" max-width="340">
             <v-card>
               <v-date-picker
-                class="text-black text-h6"
+                class="text-secondary text-h6"
                 v-model="birthday"
                 picker-date="initialPickerDate"
                 title="Selecciona la data"
                 header="Aniversari"
+                :allowed-dates="allowedDates"
                 @update:model-value="menu = false"
               ></v-date-picker>
               <v-card-actions>
@@ -89,26 +100,32 @@
         <v-col cols="12" md="6">
           <v-switch label="Aniversari públic" v-model="showBday"> </v-switch>
         </v-col>
+        <v-col cols="12" md="6">
+          <v-file-input
+            v-model="selectedFile"
+            label="Selecciona la nova imatge de perfil"
+            accept="image/jpeg, image/png"
+            prepend-icon="mdi-camera"
+            class="pa-2"
+
+            variant="filled"
+            :show-size="1024"
+            @update:model-value="onFileChange"
+            ></v-file-input>
+  
+        </v-col>
       </v-row>
       <v-card-actions>
         <v-btn
           type="submit"
-          class=""
-          :disabled="
-            name == '' ||
-            surname == '' ||
-            email == '' ||
-            password == '' ||
-            !email.includes('@') ||
-            email.endsWith('@')
-          "
+          :disabled="!valid"
           icon="mdi-account-plus"
         />
       </v-card-actions>
     </v-card>
   </v-form>
   <ErrorDialog
-    @closed="showErrorDiag = false"
+    @closed="closeError"
     :message="error"
     v-model="showErrorDiag"
   />
@@ -119,6 +136,7 @@ import router from "@/router";
 import { useAuthStore } from "@/stores/auth";
 import ErrorDialog from "./ErrorDialog.vue";
 import { ref, computed } from "vue";
+import { isValidEmail } from "@/stores/util.js";
 
 const error = ref("");
 const menu = ref(false);
@@ -127,8 +145,13 @@ const closeError = () => {
   error.value = "";
   showErrorDiag.value = false;
 };
-const targetYear = new Date().getFullYear - 18;
-const initialPickerDate = ref(`${targetYear}-01`);
+const maxDate = new Date(new Date().setFullYear(new Date().getFullYear() - 18)).toISOString().substring(0, 10)
+const selectedFile = ref(null)
+
+
+const allowedDates = (val) => {
+  return new Date(val) <= new Date(maxDate)
+}
 
 const formattedDate = computed(() => {
   if (!birthday.value) return "";
@@ -142,14 +165,15 @@ const formattedDate = computed(() => {
 });
 const auth = useAuthStore();
 const form = ref(null);
-const valid = ref(false);
-const email = ref("");
-const password = ref("");
+const valid = ref(false)
+const email = ref("")
+const password = ref("")
+const repeatPassword = ref("")
 const name = ref("");
 const surname = ref("");
 const nickname = ref("");
 const fallaId = ref(1);
-const birthday = ref(new Date());
+const birthday = ref(maxDate);
 const showBday = ref(false);
 const accessType = ref(false);
 const submitForm = async () => {
@@ -160,17 +184,16 @@ const submitForm = async () => {
       name: name.value,
       surname: surname.value,
       nickanme: nickname.value,
-      fallaId: 1,
+      fallaId: null,
       birthday: birthday.value,
       showBday: showBday.value,
       email: email.value,
       password: password.value,
       accessType: "Representatiu",
-      creationDate: new Date(),
+      creationDate: new Date()
     };
-    await auth.createUser(user);
+    await auth.createUser(user, selectedFile.value);
     await auth.login(user.email, user.password);
-    router.push("/user");
   } catch (err) {
     error.value = err;
     showErrorDiag.value = true;

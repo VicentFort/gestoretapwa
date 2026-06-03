@@ -6,7 +6,7 @@
         <v-row>
           <v-col cols="12">
             <v-text-field
-              class="text-black"
+              class="text-secondary"
               v-model="tagName"
               :counter="100"
               label="Nom d'etiqueta"

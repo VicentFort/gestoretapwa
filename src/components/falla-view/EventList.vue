@@ -13,30 +13,26 @@
           >
             <!-- Date Chip -->
             <template #prepend>
-              <div
-                class="flex-column justify-center mr-4 align-center date-chip d-flex"
-              >
-                <span class="text-caption font-weight-bold text-grey-darken-1">
-                  {{ monthLabel(event.date) }}
-                </span>
-                <span
-                  class="font-weight-bold text-tertiary"
-                  style="
-                    font-family: 'Instrument Serif', serif;
-                    font-size: 1.125rem;
-                  "
-                >
-                  {{ dayLabel(event.date) }}
-                </span>
-              </div>
-            </template>
-
-            <v-list-item-title class="font-weight-medium text-body-1">
-              {{ event.title }}
-            </v-list-item-title>
-            <v-list-item-subtitle class="text-medium-emphasis">
-              {{ event.date }} · {{ event.startHour }}
-            </v-list-item-subtitle>
+            <div class="date-chip">
+              <span class="date-chip__month">{{ monthLabel(event.date) }}</span>
+              <span class="date-chip__day">{{ dayLabel(event.date) }}</span>
+            </div>
+          </template>
+          <v-list-item-title class="font-weight-medium">{{
+            event.title
+          }}</v-list-item-title>
+          <v-list-item-subtitle
+            >{{ event.startHour }} · {{ event.tagName }}</v-list-item-subtitle
+          >
+          <template #append>
+            <v-chip
+              size="small"
+              :color="event.active ? 'success' : 'error'"
+              variant="tonal"
+            >
+              {{ event.active ? "Obert" : "Tancat" }}
+            </v-chip>
+          </template>
           </v-list-item>
         </v-list>
         <v-card-actions>
@@ -69,14 +65,13 @@ const toggleClosed = () => {
   showClosed.value = !showClosed.value;
 };
 const eventsToShow = computed(() => {
-  let base = auth.userInfo.fallaInfo?.events;
+  if(!auth.userInfo?.fallaInfo) return []
+  let base = auth.userInfo?.fallaInfo?.events;
 
-  // 2. Filtramos por estado abierto SOLO si el usuario no ha activado el "ojo"
   if (!showClosed.value) {
     base = base.filter((e) => e.active === true);
   }
 
-  // 3. Ordenamos: Abiertos arriba, cerrados abajo
   return base.sort((a, b) => (b.active ? 1 : 0) - (a.active ? 1 : 0));
 });
 const isDialogOpen = ref(false);

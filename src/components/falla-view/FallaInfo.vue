@@ -1,6 +1,10 @@
 <template>
   <v-container>
-    <v-label clasS="">{{ auth.userInfo.fallaInfo.name }}</v-label>
+    <v-row justify="center">
+      <v-col cols="12" md="6" class="flex-column align-center text-center d-flex">
+        
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 

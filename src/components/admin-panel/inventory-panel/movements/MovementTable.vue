@@ -13,21 +13,32 @@
         />
       </template>
       <v-card-actions>
-        <v-btn
-          v-if="inventoryMovements.length > 25"
-          variant="text"
-          :icon="showAllMovements ? 'mdi-filter' : 'mdi-clock-outline'"
-          @click="showAllMovements = !showAllMovements"
-        />
-        <span class="text-caption">
-          {{
-            !showAllMovements
-              ? `Mostrant només els primers ${xs ? 5 : 25}`
-              : `Mostrant tots (${inventoryMovements.length})`
-          }}
-        </span>
-        <v-spacer />
-        <v-btn variant="text" icon="mdi-plus" @click="showAddMovement = true" />
+        <v-row>
+          <v-col cols="12" md="6">
+            <v-btn
+              v-if="inventoryMovements.length > 25 && !filteredMovements"
+              variant="text"
+              :icon="showAllMovements ? 'mdi-filter' : 'mdi-clock-outline'"
+              @click="showAllMovements = !showAllMovements"
+            />
+            <span class="text-caption" v-if="!filteredMovements">
+              {{
+                !showAllMovements
+                  ? `Mostrant només els primers ${xs ? 5 : 25}`
+                  : `Mostrant tots (${inventoryMovements.length})`
+              }}
+            </span>
+          </v-col>
+
+          <v-col cols="12" md="6">
+            <v-btn variant="text" icon="mdi-filter" @click="showMovementFilter = true"/>
+            <v-btn variant="text" icon="mdi-filter-remove" @click="filteredMovements=null" :disabled="!filteredMovements"/>
+          </v-col>
+          <v-col cols="12" md="6">
+                        <v-btn variant="text" icon="mdi-plus" @click="showAddMovement = true" />
+
+          </v-col>
+        </v-row>
       </v-card-actions>
       <v-data-table-virtual
         :items="displayedMovements"
@@ -104,12 +115,16 @@
     <v-dialog v-model="showReturnDialog">
       <ReturnDialog @closed="showReturnDialog = false" :loan="selectedLoan" />
     </v-dialog>
+    <v-dialog v-model="showMovementFilter" scrollable max-width="600px">
+      <FilterMovementsDialog @update-filter="handleFilter"/>
+    </v-dialog>
   </v-container>
 </template>
 
 <script setup>
 import { useAuthStore } from "@/stores/auth";
 import { computed, ref } from "vue";
+import FilterMovementsDialog from "./FilterMovementsDialog.vue";
 import AddMovementDialog from "@/components/admin-panel/inventory-panel/movements/AddMovementDialog.vue";
 import ReturnDialog from "@/components/admin-panel/inventory-panel/movements/ReturnDialog.vue";
 import { useDisplay } from "vuetify/lib/composables/display";
@@ -120,6 +135,13 @@ const auth = useAuthStore();
 const inventoryMovements = computed(
   () => auth.fallaAdminInfo?.inventoryMovements || []
 );
+
+const handleFilter = (list) => {
+  filteredMovements.value = list
+  showMovementFilter.value = false
+}
+const showMovementFilter = ref(false)
+const filteredMovements = ref(null)
 const showAllMovements = ref(false);
 const search = ref("");
 const selectedLoan = ref(null);
@@ -133,6 +155,9 @@ const displayedMovements = computed(() => {
     return new Date(b.date) - new Date(a.date);
   });
 
+   if(filteredMovements.value !== null) {
+    return filteredMovements.value.sort((a, b) => (b.active ? 1 : 0) - (a.active ? 1 : 0))
+  }
   // 2. Si "Mostrar todos" está activo, no cortamos nada
   if (showAllMovements.value) {
     return sorted;
@@ -181,6 +206,7 @@ const formattedDate = (dateString) => {
   return date.toLocaleString("es-ES"); // Simplificado para el ejemplo
 };
 
+
 const headers = [
   {
     title: "Data del moviment",
@@ -198,10 +224,7 @@ const headers = [
     title: "Tipus",
     align: "center",
     key: "movementType",
-    sort: (a, b) => {
-      const priority = { Entrada: 1, Eixida: 2, Préstec: 3 };
-      return priority[a] - priority[b];
-    },
+    sortable: true,
     cellProps: {
       class: "",
     },

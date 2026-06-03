@@ -72,7 +72,7 @@
             </v-col>
             <v-col cols="12" md="6" v-if="selectedType == 'Préstec'">
               <v-text-field
-                class="text-black"
+                class="text-secondary"
                 v-model="formattedAdquisitionDate"
                 label="Data de préstec"
                 prepend-inner-icon="mdi-calendar"
@@ -84,7 +84,7 @@
               <v-dialog v-model="adquisitonDateMenu" max-width="340">
                 <v-card>
                   <v-date-picker
-                    class="text-black"
+                    class="text-secondary"
                     :min="new Date()"
                     v-model="adquistionDate"
                     title="Selecciona la data"
@@ -103,7 +103,7 @@
             </v-col>
             <v-col cols="12" md="6" v-if="selectedType == 'Préstec'">
               <v-text-field
-                class="text-black"
+                class="text-secondary"
                 v-model="formattedIdealReturnDate"
                 label="Data de retorn"
                 prepend-inner-icon="mdi-calendar"
@@ -115,7 +115,7 @@
               <v-dialog v-model="idealReturnDateMenu" max-width="340">
                 <v-card>
                   <v-date-picker
-                    class="text-black"
+                    class="text-secondary"
                     :min="new Date()"
                     v-model="idealReturnDate"
                     title="Selecciona la data"

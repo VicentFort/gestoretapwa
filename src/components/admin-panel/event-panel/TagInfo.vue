@@ -32,7 +32,7 @@
             Estàs a punt d'eliminar la etiqueta:
             <strong>{{ tag?.name }}</strong
             >. <br /><br />
-            <span class="text-caption text-black"
+            <span class="text-caption text-secondary"
               >Esta acció no es pot desfer i s'eliminaran tots els events
               associats.</span
             >

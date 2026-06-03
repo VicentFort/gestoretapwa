@@ -50,7 +50,7 @@ const exit = () => {
       <v-col>
         <v-card>
           <v-card-title :style="{ fontSize: titleSize }" class="">
-            Eliminar la necessitat alimentària?
+            Eliminar la preferència alimentària?
           </v-card-title>
           <v-divider></v-divider>
           <v-card-text>

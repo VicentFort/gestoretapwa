@@ -1,10 +1,28 @@
 <template>
   <v-container>
-    <v-card-title> Panel de control de la falla: </v-card-title>
-    <v-card-title>
-      {{ auth.fallaAdminInfo?.name }}
-    </v-card-title>
-    <v-sheet elevation="2" rounded="lg" :class="xs ? 'pa-1' : 'pa-2'">
+    <v-row justify="center">
+      <v-col cols="12" md="6" class="flex-column align-center text-center d-flex">
+        <v-card-title> Panel de control de la falla: </v-card-title>
+        <v-card-title>
+          {{ auth.fallaAdminInfo?.name }}
+        </v-card-title>
+          <v-img
+          :src="auth.fallaAdminInfo?.shield"
+          v-if="auth.fallaAdminInfo?.shield !== null"
+          max-width="200"
+          class="w-100"
+        />
+        <v-card-actions>
+          <v-row>
+            <v-col cols="12" md="6">
+              <v-btn @click="showEditDiag=true" icon="mdi-content-save-edit"/>
+            </v-col>
+          </v-row>
+        </v-card-actions>
+      </v-col>
+    </v-row>
+    
+    <v-sheet elevation="2" rounded="lg" :class="xs ?'pa-1' : 'pa-2'">
       <v-tabs
         v-model="tab"
         align-tabs="start"
@@ -50,6 +68,9 @@
       </v-tabs-window-item>
     </v-window>
   </v-container>
+  <v-dialog v-model="showEditDiag" min-width="200px">
+    <EditFallaDialog @closed="showEditDiag=false"/>
+  </v-dialog>
 </template>
 
 <script setup>
@@ -66,11 +87,10 @@ import ContactTable from "./inventory-panel/movements/ContactTable.vue";
 import PaymentPanel from "./payment-panel/PaymentPanel.vue";
 import { useDisplay } from "vuetify/lib/composables/display";
 import CouponTable from "./payment-panel/CouponTable.vue";
+import EditFallaDialog from "./EditFallaDialog.vue";
 
 const auth = useAuthStore();
-if (!auth.fallaAdminInfo) {
-  auth.fetchFallaAdminInfo();
-}
 const { xs } = useDisplay();
 const tab = ref("one");
+const showEditDiag = ref(false)
 </script>

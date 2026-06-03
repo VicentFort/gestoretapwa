@@ -16,6 +16,7 @@
             </td>
             <td class="responsive-td" data-label="Accions">
               <div class="justify-center align-center d-flex">
+                <v-btn @click="updateRequest(item)" icon="mdi-plus"/>
                 <v-btn @click="openRequestDetails(item)" icon="mdi-magnify" />
               </div>
             </td>
@@ -25,7 +26,10 @@
       <v-divider></v-divider>
 
       <v-dialog v-model="isDetailsOpen" width="auto">
-        <RequestDetails v-model="isDetailsOpen" :request="selectedRequest" />
+        <RequestDetails v-model="isDetailsOpen" :request="selectedRequest" @closed="isDetailsOpen=false" />
+      </v-dialog>
+      <v-dialog v-model="isUpdateOpen"">
+        <RequestUpdateDialog :request="selectedRequest" @closed="isUpdateOpen=false"/>
       </v-dialog>
     </v-card>
   </v-container>
@@ -35,15 +39,23 @@
 import { useAuthStore } from "@/stores/auth";
 import { computed, ref } from "vue";
 import RequestDetails from "./RequestDetails.vue";
+import RequestUpdateDialog from "./RequestUpdateDialog.vue";
 
 const auth = useAuthStore();
 const isDetailsOpen = ref(false);
 const selectedRequest = ref(null);
 
+const isUpdateOpen = ref(false)
+
 const openRequestDetails = (req) => {
   isDetailsOpen.value = true;
   selectedRequest.value = req;
 };
+
+const updateRequest = (req) => {
+  isUpdateOpen.value = true;
+  selectedRequest.value = req
+}
 
 const computedRequests = computed(() => {
   return auth.fallaAdminInfo.requests.filter((r) => r.aproved === null);

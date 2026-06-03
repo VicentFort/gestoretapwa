@@ -22,8 +22,10 @@ const unreadNotifications = computed(() => {
 });
 
 const handleCouponExit = async () => {
-  this.showCouponTable.value = false
+    showCouponTable.value = false
+
   await auth.fetchUserInfo()
+
 }
 
 const handleLogout = async () => {
@@ -88,10 +90,10 @@ const handleLogout = async () => {
     <v-btn @click="handleLogout" class="log-out" icon="mdi-logout" />
   </v-container>
   <v-dialog v-model="showCouponTable" min-width="200px">
-    <CouponTable @closed="showCouponTable = false; auth.fetchUserInfo()" />
+    <CouponTable @closed="handleCouponExit" />
   </v-dialog>
   <v-dialog v-model="showNotificationsTable" min-width="200px">
-    <NotificationList @closed="handleCouponExit" />
+    <NotificationList @closed="showNotificationsTable=false" />
   </v-dialog>
   <v-container v-if="!auth.token">
     <LoginForm />

@@ -69,10 +69,21 @@ export const useAuthStore = defineStore("auth", {
     /*
      * Crea un usuario en la bd a partir del parámetro de entrada.
      */
-    async createUser(user) {
+    async createUser(user, image) {
       try {
+        const formData = new FormData()
+
+        const userBlob = new Blob([JSON.stringify(user)], {
+          type: 'application/json'
+        })
+        formData.append('user', userBlob)
+        if(image) {
+          formData.append("pfp", image)
+        }
         const response = await api
-          .post("/user/create", user)
+          .post("/user/create", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+          })
           .catch(handleApiError);
       } catch (error) {
         throw error;
@@ -108,7 +119,6 @@ export const useAuthStore = defineStore("auth", {
         throw error;
       } finally {
         this.fetchUserInfo();
-        this.fetchFallaAdminInfo();
       }
     },
     /*
@@ -227,7 +237,6 @@ export const useAuthStore = defineStore("auth", {
         console.error(error);
         throw error;
       } finally {
-        this.fetchFallaAdminInfo();
         this.fetchUserInfo();
       }
     },
@@ -245,6 +254,7 @@ export const useAuthStore = defineStore("auth", {
         console.error(error);
         throw error;
       } finally {
+        await this.fetchUserInfo()
       }
     },
     /*
@@ -264,7 +274,40 @@ export const useAuthStore = defineStore("auth", {
         throw error;
       }
     },
+    /*
+    * Actualiza el escudo de la falla
+    */
+    async updateFallaShield(shieldImage, fallaId) {
+      try {
+        const formData = new FormData()
+        formData.append("shieldImage", shieldImage)
+        formData.append("fallaId", fallaId)
+        const response = await api.post('/falla/updateShield', formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+          }).catch(handleApiError)
+      } catch(err) {
+        throw err
+      } finally {
+        await this.fetchUserInfo()
+      }
+    },
+    async updateRequest(req) {
+      try {
+        const response = await api.post('/falla/updateRequest', req).catch(handleApiError)
 
+      } catch(err) {
+        throw err
+      } finally {
+        await this.fetchUserInfo()
+      }
+    },
+    async sendRequest(req) {
+      try {
+        const response = await api.post('/falla/createRequest', req).catch(handleApiError)
+      } catch(err) {
+        throw err
+      }
+    },
     //SECCIÓN EVENTOS
 
     /*
@@ -302,11 +345,18 @@ export const useAuthStore = defineStore("auth", {
       } catch (error) {
         throw error;
       } finally {
-        await this.fetchFallaAdminInfo();
         await this.fetchUserInfo();
       }
     },
-
+    async updateFalla(req) {
+      try {
+        const response = await api.put("/falla/update", req).catch(handleApiError)
+      }catch(err) {
+        throw err
+      } finally {
+        await this.fetchUserInfo();
+      }
+    },
     //SECCIÓN EVENTOS
 
     /*
@@ -335,7 +385,6 @@ export const useAuthStore = defineStore("auth", {
         console.error(error);
         throw error;
       } finally {
-        await this.fetchFallaAdminInfo();
         await this.fetchUserInfo();
       }
     },
@@ -350,7 +399,6 @@ export const useAuthStore = defineStore("auth", {
       } catch (error) {
         throw error;
       } finally {
-        this.fetchFallaAdminInfo();
         this.fetchUserInfo();
       }
     },
@@ -365,7 +413,6 @@ export const useAuthStore = defineStore("auth", {
       } catch (error) {
         throw error;
       } finally {
-        await this.fetchFallaAdminInfo();
         await this.fetchUserInfo();
       }
     },

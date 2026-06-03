@@ -1,12 +1,15 @@
 <template>
   <v-dialog v-model="show" width="500">
     <v-card v-if="user" class="">
-      <v-card-title class="text-h5 text-black"
+      <v-card-title class="text-h5 text-secondary"
         >{{ user.name }} {{ user.surname }}</v-card-title
       >
       <v-card-text class="font-weight-bold"
         >Malnom: {{ showNick() }}</v-card-text
       >
+      <v-card-text class="font-weight-bold">
+        Correu electrònic: {{ user?.email }}
+      </v-card-text>
       <v-card-text class="font-weight-bold"
         >Preferències alimentàries
       </v-card-text>

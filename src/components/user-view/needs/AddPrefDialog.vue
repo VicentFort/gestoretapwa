@@ -64,7 +64,7 @@ const tag = ref({
   name: "",
 });
 
-const fallaTags = ref(auth.userInfo?.fallaInfo?.tags);
+const fallaTags = ref([auth.userInfo?.fallaInfo?.tags || []]);
 const userPrefTags = ref(auth.userInfo?.eventTagPrefs);
 
 const emit = defineEmits(["update:modelValue"]);

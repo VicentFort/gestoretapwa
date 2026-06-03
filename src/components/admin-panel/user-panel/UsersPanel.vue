@@ -23,7 +23,7 @@
             <td class="responsive-td" data-label="Accions">
               <div class="justify-center align-center d-flex">
                 <v-btn
-                  icon="mdi-plus"
+                  icon="mdi-magnify"
                   variant="text"
                   @click="openUserDetails(item)"
                 />
@@ -35,7 +35,7 @@
                 />
               </div>
             </td>
-            <td class="responsive-td" data-label="Faller des de">
+            <td class="responsive-td" data-label="Data de unió">
               {{ item.joinDate }}
             </td>
             <td class="responsive-td" data-label="Aniversari">

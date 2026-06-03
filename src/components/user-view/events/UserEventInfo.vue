@@ -16,17 +16,14 @@ const filteredEvents = ref(null);
 const showAllAttEvents = ref(false);
 const shouldShowClosed = ref(false); // Estado que viene del hijo
 const eventsToShow = computed(() => {
-  // 1. Tomamos los eventos del filtro o, si no hay filtro, los del store
   let base = filteredEvents.value
     ? [...filteredEvents.value]
     : [...(auth.userInfo?.events || [])];
 
-  // 2. Filtramos por estado abierto SOLO si el usuario no ha activado el "ojo"
   if (!shouldShowClosed.value) {
     base = base.filter((e) => e.active === true);
   }
 
-  // 3. Ordenamos: Abiertos arriba, cerrados abajo
   return base.sort((a, b) => (b.active ? 1 : 0) - (a.active ? 1 : 0));
 });
 
@@ -81,32 +78,27 @@ const showEvent = (event) => {
                 :key="event.id"
                 @click="showEvent(event)"
               >
-                <template #prepend>
-                  <div class="date-chip">
-                    <span class="date-chip__month">{{
-                      monthLabel(event.date)
-                    }}</span>
-                    <span class="date-chip__day">{{
-                      dayLabel(event.date)
-                    }}</span>
-                  </div>
-                </template>
-                <v-list-item-title class="font-weight-medium">{{
-                  event.title
-                }}</v-list-item-title>
-                <v-list-item-subtitle
-                  >{{ event.startHour }} ·
-                  {{ event.tagName }}</v-list-item-subtitle
-                >
-                <template #append>
-                  <v-chip
-                    size="small"
-                    :color="event.active ? 'success' : 'error'"
-                    variant="tonal"
-                  >
-                    {{ event.active ? "Obert" : "Tancat" }}
-                  </v-chip>
-                </template>
+            <template #prepend>
+              <div class="date-chip">
+                <span class="date-chip__month">{{ monthLabel(event.date) }}</span>
+                <span class="date-chip__day">{{ dayLabel(event.date) }}</span>
+              </div>
+            </template>
+          <v-list-item-title class="font-weight-medium">{{
+            event.title
+          }}</v-list-item-title>
+          <v-list-item-subtitle
+            >{{ event.startHour }} · {{ event.tagName }}</v-list-item-subtitle
+          >
+          <template #append>
+            <v-chip
+              size="small"
+              :color="event.active ? 'success' : 'error'"
+              variant="tonal"
+            >
+              {{ event.active ? "Obert" : "Tancat" }}
+            </v-chip>
+          </template>
               </v-list-item>
             </v-list>
           </v-card>
@@ -134,31 +126,26 @@ const showEvent = (event) => {
                 @click="showAttEvent(event)"
               >
                 <template #prepend>
-                  <div class="date-chip">
-                    <span class="date-chip__month">{{
-                      monthLabel(event.date)
-                    }}</span>
-                    <span class="date-chip__day">{{
-                      dayLabel(event.date)
-                    }}</span>
-                  </div>
-                </template>
-                <v-list-item-title class="font-weight-medium">{{
-                  event.title
-                }}</v-list-item-title>
-                <v-list-item-subtitle
-                  >{{ event.startHour }} ·
-                  {{ event.tagName }}</v-list-item-subtitle
-                >
-                <template #append>
-                  <v-chip
-                    size="small"
-                    :color="event.active ? 'success' : 'error'"
-                    variant="tonal"
-                  >
-                    {{ event.active ? "Obert" : "Tancat" }}
-                  </v-chip>
-                </template>
+            <div class="date-chip">
+              <span class="date-chip__month">{{ monthLabel(event.date) }}</span>
+              <span class="date-chip__day">{{ dayLabel(event.date) }}</span>
+            </div>
+          </template>
+          <v-list-item-title class="font-weight-medium">{{
+            event.title
+          }}</v-list-item-title>
+          <v-list-item-subtitle
+            >{{ event.startHour }} · {{ event.tagName }}</v-list-item-subtitle
+          >
+          <template #append>
+            <v-chip
+              size="small"
+              :color="event.active ? 'success' : 'error'"
+              variant="tonal"
+            >
+              {{ event.active ? "Obert" : "Tancat" }}
+            </v-chip>
+          </template>
               </v-list-item>
             </v-list>
             <v-card-actions>

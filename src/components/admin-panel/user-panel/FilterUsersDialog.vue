@@ -2,7 +2,7 @@
   <v-container>
     <v-form @submit.prevent="submitForm" ref="form" v-model="valid">
       <v-card>
-        <v-card-title class="font-weight-bold"> Filtrar usuaris </v-card-title>
+        <v-card-title class="font-weight-bold"> Filtrar membres </v-card-title>
         <v-row>
           <v-col cols="12" md="6">
             <v-text-field label="Nom i cognoms" v-model="name" />
@@ -19,7 +19,7 @@
           </v-col>
           <v-col cols="12" md="6">
             <v-text-field
-              class="text-black"
+              class="text-secondary"
               v-model="formattedDate"
               label="Data de uniò anterior a"
               prepend-inner-icon="mdi-calendar"
@@ -30,7 +30,7 @@
             <v-dialog v-model="dateMenu" max-width="340" a>
               <v-card>
                 <v-date-picker
-                  class="text-black"
+                  class="text-secondary"
                   v-model="date"
                   header="Data de unió"
                   @update:model-value="dateMenu = false"
@@ -48,7 +48,7 @@
           </v-col>
           <v-col cols="12" md="6">
             <v-text-field
-              class="text-black"
+              class="text-secondary"
               v-model="formattedBDay"
               label="Aniversari anterior a"
               prepend-inner-icon="mdi-calendar"
@@ -59,7 +59,7 @@
             <v-dialog v-model="bDayDateMenu" max-width="340" a>
               <v-card>
                 <v-date-picker
-                  class="text-black"
+                  class="text-secondary"
                   v-model="birthday"
                   header="Aniversari"
                   @update:model-value="bDayDateMenu = false"

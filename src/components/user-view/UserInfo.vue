@@ -9,6 +9,12 @@ const { xs } = useDisplay();
 
 const showNotificationsTable = ref(false);
 const showCouponTable = ref(false);
+const handleCouponExit = async () => {
+    showCouponTable.value = false
+
+  await auth.fetchUserInfo()
+
+}
 
 const unreadNotifications = computed(() => {
   return auth.userInfo.notifications.filter((n) => n.read == false).length;
@@ -17,17 +23,20 @@ const unreadNotifications = computed(() => {
 
 <template>
   <v-container class="justify-center">
-   <v-row class="justify-center ma-4">
+   <v-row class="flex-column justify-center align-center text-center ma-4 d-flex">
       <v-col cols="12" md="6">
-        <v-label class="text-secondary ma-4 pa-2">Hola: {{ auth.userInfo.name }} {{ auth.userInfo.surname }} </v-label>
+        <v-card-title>Hola: {{ auth.userInfo.name }} {{ auth.userInfo.surname }} </v-card-title>
         <br v-if="auth.userInfo?.nickname" />
-        <v-label v-if="auth.userInfo?.nickname" class="text-secondary ma-4 pa-2">({{auth.userInfo?.nickname}})</v-label>
+        <v-card-title v-if="auth.userInfo?.nickname">({{auth.userInfo?.nickname}})</v-card-title>
       </v-col>
       <v-spacer/>
-      <v-col cols="12" md="6">
-        <v-img v-if="auth.userPfp">
-          <img width="120" height="120" :src="auth.userPfp" />
-        </v-img>
+      <v-col cols="12" md="6" class="flex-column justify-center align-center text-center ma-4 d-flex">
+        <v-img v-if="auth.userPfp"
+        :src="auth.userPfp"
+        class="w-100"
+        max-width="200px"
+        />
+          
       </v-col>
     </v-row>
     <v-spacer />
@@ -46,7 +55,7 @@ const unreadNotifications = computed(() => {
         />
     </v-row>
     <v-dialog v-model="showCouponTable" width="auto">
-      <CouponTable @closed="showCouponTable = false" />
+      <CouponTable @closed="handleCouponExit" />
     </v-dialog>
     <v-dialog v-model="showNotificationsTable" width="auto">
       <NotificationList @closed="showNotificationsTable = false" />

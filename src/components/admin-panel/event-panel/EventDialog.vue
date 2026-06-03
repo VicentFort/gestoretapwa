@@ -2,8 +2,9 @@
   <v-dialog v-model="show" width="500">
     <v-card
       v-if="event"
-      :class="(event.active ? '' : 'event-closed-dialog', 'text-black')"
-    >
+      :class="(event.active ?'' : 'event-closed-dialog', 'text-secondary')"
+    > 
+      
       <v-img
         v-if="eventImageUrl"
         :src="eventImageUrl"
@@ -12,7 +13,14 @@
         class="align-end text-white"
       >
       </v-img>
-      <v-card-title :class="event.active ? '' : 'event-closed-dialog'">
+      <v-img
+        v-else
+        src="@/assets/ic_gestoreta_logo.png"
+        height="100"
+        cover
+        class="align-end text-white"
+      />
+      <v-card-title :class="event.active ?'' : 'event-closed-dialog'">
         {{ event.title }}
       </v-card-title>
       <v-card-text class="pa-4">
@@ -29,7 +37,7 @@
       <v-card-text
         v-if="event.checkNeeds == true && event.foodNeeds.length > 0"
       >
-        Necessitats alimentaries de l'esdeveniment:
+        Preferències alimentaries de l'esdeveniment:
         {{ event.foodNeeds?.length }}
       </v-card-text>
       <v-card-text v-if="event.attendants.length > 0">
@@ -97,7 +105,7 @@
       <v-dialog v-model="showDeleteDialog" max-width="400">
         <v-card>
           <v-card-title class="text-h5 text-white bg-error"
-            >¿Vols eliminar el event?</v-card-title
+            >¿Vols eliminar l'esdeveniment?</v-card-title
           >
 
           <v-card-text class="pa-4">

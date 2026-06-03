@@ -2,14 +2,14 @@
   <v-row class="fill-height">
     <v-col>
       <v-card>
-        <v-sheet height="64">
+        <v-sheet>
           <v-card-title v-if="calendar">
             Calendari d'esdeveniments</v-card-title
           >
-          <v-toolbar flat density="comfortable">
-            <v-spacer></v-spacer>
+          <v-toolbar flat>
 
-            <v-btn @click="setToday" icon-mobile variant="flat">
+
+            <v-btn @click="setToday" icon-mobile variant="flat" >
               <v-icon d-sm-none>mdi-calendar-today</v-icon>
               <span class="d-none d-sm-inline">Huí</span>
             </v-btn>
@@ -52,14 +52,12 @@
             <v-card
               min-width="300px"
               flat
-              :class="
-                selectedEvent.active
-                  ? 'event-dialog-open'
+              :class="selectedEvent.active ?'event-dialog-open'
                   : 'event-closed-dialog'
               "
             >
               <v-card-title
-                :class="event.active ? '' : 'event-closed-dialog'"
+                :class="selectedEvent.active ?'' : 'event-closed-dialog'"
                 >{{ selectedEvent.title }}</v-card-title
               >
               <v-card-text>
@@ -75,7 +73,7 @@
                 <div><strong>Fí:</strong> {{ selectedEvent.endHour }}</div>
               </v-card-text>
               <v-card-actions>
-                <v-btn variant="text" @click="joinEvent" icon="mdi-plus" />
+                <v-btn variant="text" @click="joinEvent" icon="mdi-plus" :disabled="!selectedEvent.active" />
                 <v-btn
                   variant="text"
                   @click="selectedOpen = false"
@@ -107,11 +105,12 @@
       </v-card>
     </v-col>
   </v-row>
+  <ErrorDialog :message="error" v-model="showErrorDiag" @closed="handleError"/>
 </template>
 
 <script setup>
 import { useAuthStore } from "@/stores/auth";
-import { ref, computed } from "vue";
+import { ref, computed, handleError } from "vue";
 import "@mdi/font/css/materialdesignicons.css";
 import ErrorDialog from "@/components/ErrorDialog.vue";
 const auth = useAuthStore();
@@ -137,6 +136,7 @@ const closeError = () => {
   showErrorDiag.value = false;
 };
 const formattedEvents = computed(() => {
+  if(!auth.userInfo?.fallaInfo) return []
   const rawEvents = auth.userInfo?.fallaInfo?.events || [];
 
   return rawEvents.map((event) => {
@@ -158,6 +158,7 @@ const formattedEvents = computed(() => {
       end: endDateTime,
       timed: !!(event.startHour && event.endHour),
       color: event.active ? "secondary" : "error",
+      active: event.active
     };
   });
 });

@@ -6,9 +6,9 @@
         :items="displayNotifications"
         :headers="headers"
         hide-details
-        hide-no-data
+        no-data-text="No tens notificacions"
         single-line
-        :class="xs ? 'bg-secondary' : 'bg-background'"
+        :class="xs ?'bg-secondary' : 'bg-background'"
       >
         <template #item.date="{ item }">
           {{ formattedDateTime(item.date) }}

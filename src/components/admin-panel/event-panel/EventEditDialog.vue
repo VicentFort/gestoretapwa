@@ -22,7 +22,7 @@
 
         <v-col cols="12" class="justify-center d-flex">
           <v-text-field
-            class="text-black"
+            class="text-secondary"
             v-model="formattedStartDate"
             label="Data d'inici"
             prepend-inner-icon="mdi-calendar"
@@ -33,7 +33,7 @@
           <v-dialog v-model="dateMenu" max-width="340 ">
             <v-card>
               <v-date-picker
-                class="text-black"
+                class="text-secondary"
                 v-model="localEvent.date"
                 :min="new Date()"
                 title="Selecciona la data"
@@ -54,7 +54,7 @@
 
         <v-col cols="12" class="justify-center d-flex">
           <v-text-field
-            class="text-black"
+            class="text-secondary"
             v-model="formattedEndDate"
             label="Data de fi"
             prepend-inner-icon="mdi-calendar"
@@ -65,7 +65,7 @@
           <v-dialog v-model="endDateMenu" max-width="340">
             <v-card>
               <v-date-picker
-                class="text-black"
+                class="text-secondary"
                 :min="new Date()"
                 v-model="localEvent.endDate"
                 title="Selecciona la data"
@@ -108,7 +108,7 @@
         <v-col cols="12" md="6">
           <v-switch
             v-model="localEvent.checkNeeds"
-            label="Event amb necessitats alimentàries"
+            label="Event amb preferències alimentàries"
           >
           </v-switch>
         </v-col>
@@ -133,7 +133,7 @@
             multiple
             return-object
             :value-comparator="(a, b) => (a?.id || a) === (b?.id || b)"
-            label="Usuaris disponibles"
+            label="Membres disponibles"
             variant="outlined"
             chips
             closable-chips
@@ -141,7 +141,7 @@
             <template v-slot:no-data>
               <v-list-item class="">
                 <v-list-item-title>
-                  No hi ha usuaris disponibles per a l'etiqueta "{{
+                  No hi ha membres disponibles per a l'etiqueta "{{
                     selectedTag?.name
                   }}"
                 </v-list-item-title>
@@ -225,7 +225,6 @@ const localEvent = ref({
 watch(
   () => props.event.id,
   (newId, oldId) => {
-    // SOLO reseteamos si realmente hemos cambiado de ID de evento
     if (newId !== oldId) {
       localEvent.value = {
         ...props.event,
@@ -276,7 +275,8 @@ const showErrorDiag = ref(false);
 
 const submitForm = async () => {
   try {
-    const { valid: isValid } = await form.value.validate();
+    const { valid: formValid } = await form.value.validate();
+    if(!formValid) return
     let img = null;
     if (selectedFile.value) {
       img = await fileToBase64(selectedFile.value);

@@ -3,7 +3,7 @@ import { useLoadingStore } from "./loadingStore";
 import { useAuthStore } from "./auth";
 
 const API_IP =
-  "https://nondistributive-nonhedonistically-monserrate.ngrok-free.dev";
+  "https://gestoretaapp-production.up.railway.app"
 const LOCAL_API_IP = "http://37.135.29.68:8080";
 const GOOGLE_CALLENDAR_API = "https://www.googleapis.com/auth/calendar";
 const api = axios.create({

@@ -3,7 +3,7 @@
     <v-form @submit.prevent="submitForm" ref="form" v-model="valid">
       <v-card>
         <v-card-title class="font-weight-bold">
-          Filtrar esdeveniments
+          Filtrar pagaments
         </v-card-title>
         <v-col>
           <v-row rows="12" md="6">
@@ -16,7 +16,7 @@
           </v-row>
           <v-row rows="12" md="6">
             <v-text-field
-              class="text-black"
+              class="text-secondary"
               v-model="formattedDate"
               label="Pagaments realitzats abans de: "
               prepend-inner-icon="mdi-calendar"
@@ -27,7 +27,7 @@
             <v-dialog v-model="dateMenu" max-width="340" a>
               <v-card>
                 <v-date-picker
-                  class="text-black"
+                  class="text-secondary"
                   v-model="date"
                   title="Selecciona la data"
                   header="Data dels pagaments"

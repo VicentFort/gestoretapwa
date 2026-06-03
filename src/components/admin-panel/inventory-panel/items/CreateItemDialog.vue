@@ -81,7 +81,6 @@ const submitForm = async () => {
       description: description.value,
       category: selectedCategory.value,
     };
-    console.log(newItem)
     await auth.createNewInventoryItem(newItem);
     emit("closed");
   } catch (err) {

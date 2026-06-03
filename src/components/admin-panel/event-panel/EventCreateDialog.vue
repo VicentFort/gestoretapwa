@@ -24,7 +24,7 @@
 
         <v-col cols="12" class="justify-center d-flex">
           <v-text-field
-            class="text-black"
+            class="text-secondary"
             :model-value="formattedStartDate"
             label="Data d'inici"
             prepend-inner-icon="mdi-calendar"
@@ -36,7 +36,7 @@
           <v-dialog v-model="dateMenu" max-width="340">
             <v-card>
               <v-date-picker
-                class="text-black"
+                class="text-secondary"
                 :min="new Date()"
                 v-model="event.date"
                 title="Selecciona la data"
@@ -57,7 +57,7 @@
 
         <v-col cols="12" class="justify-center d-flex">
           <v-text-field
-            class="text-black"
+            class="text-secondary"
             v-model="formattedEndDate"
             label="Data de fi"
             prepend-inner-icon="mdi-calendar"
@@ -69,7 +69,7 @@
           <v-dialog v-model="endDateMenu" max-width="340">
             <v-card>
               <v-date-picker
-                class="text-black"
+                class="text-secondary"
                 :min="new Date()"
                 v-model="event.endDate"
                 title="Selecciona la data"
@@ -110,7 +110,7 @@
         <v-col cols="12" md="6">
           <v-switch
             v-model="event.checkNeeds"
-            label="Event amb necessitats alimentàries"
+            label="Event amb preferències alimentàries"
           >
           </v-switch>
         </v-col>
@@ -135,12 +135,12 @@
             :hint="
               !selectedTag
                 ? 'Selecciona una etiqueta primer'
-                : 'Usuaris disponibles'
+                : 'Membres disponibles'
             "
             persistent-hint
             item-title="name"
             item-value="id"
-            label="Usuaris disponibles"
+            label="Membres disponibles"
             multiple
             chips
             variant="outlined"
@@ -152,7 +152,7 @@
             <template v-slot:no-data>
               <v-list-item class="">
                 <v-list-item-title>
-                  No hi ha usuaris disponibles per a l'etiqueta "{{
+                  No hi ha membres disponibles per a l'etiqueta "{{
                     selectedTag?.name
                   }}"
                 </v-list-item-title>
