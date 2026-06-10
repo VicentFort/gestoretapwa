@@ -1,5 +1,5 @@
 <template>
-  <v-form ref="form" v-model="valid" @submit.prevent="submitForm">
+  <v-form ref="form" v-model="isValid" @submit.prevent="submitForm">
     <v-card>
       <v-card-title class="text-h6">Editar esdeveniment</v-card-title>
       <v-row>
@@ -181,7 +181,7 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn type="submit" :disabled="!valid" icon="mdi-calendar-edit" />
+        <v-btn type="submit" :disabled="!isValid" icon="mdi-calendar-edit" />
         <v-btn variant="text" @click="emit('closed')" icon="mdi-cancel" />
       </v-card-actions>
     </v-card>
@@ -205,7 +205,7 @@ const auth = useAuthStore();
 const dateMenu = ref(false);
 const endDateMenu = ref(false);
 
-const valid = ref(false);
+const isValid = ref(false);
 const form = ref(null);
 
 const props = defineProps({
@@ -275,7 +275,7 @@ const showErrorDiag = ref(false);
 
 const submitForm = async () => {
   try {
-    const { valid: formValid } = await form.value.validate();
+    const { isValid: formValid } = await form.value.validate();
     if(!formValid) return
     let img = null;
     if (selectedFile.value) {

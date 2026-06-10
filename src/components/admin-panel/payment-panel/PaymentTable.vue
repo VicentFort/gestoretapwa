@@ -36,7 +36,7 @@
       no-data-text="Sense pagaments"
       :sort-by="initialSort"
       :headers="headers"
-      :key="paymentsToShow.length"
+      
     >
       <template #item.actions="{ item }">
         <v-btn
@@ -141,9 +141,9 @@ const getPTypeIcon = (type) => {
 const filteredPayments = ref(null);
 
 const payments = computed(() => {
-  const base = !filterPayments.value
+  const base = !filteredPayments.value
     ? [...(auth.fallaAdminInfo?.payments || [])]
-    : filterPayments.value;
+    : filteredPayments.value;
 
   return base
 });

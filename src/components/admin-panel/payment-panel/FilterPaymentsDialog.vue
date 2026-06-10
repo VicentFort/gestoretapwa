@@ -110,7 +110,7 @@ const submitForm = async () => {
   try {
     let filtered = auth.fallaAdminInfo.payments.filter((payment) => {
       const meetsType =
-        type.value != null ? payment.type === type.value.value : true;
+        type.value != null ? payment.type === type.value.name : true;
       const meetsDate =
         date.value != null
           ? new Date(payment.date) <= new Date(date.value)
